@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>NLSS Mod</name>
+    <directory>nlss mod</directory>
+    <id>848747396</id>
+    <description>Adds NLSS themed items to the game! So far this mod includes 27 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
+
+If you want easy access to all new items, there's a variable called PREVIEW_ITEMS at the top of the main.lua file. Just turn that variable from false to true, and all items will spawn when you start a run!
+
+Items and their descriptions:
+
+PASSIVES:
+
+- Gungeon Master : Tears turn into bullets, damage + shotspeed up
+- LaCroix : Health + tears up
+- Eye for Aesthetic : Stats up, tears now fire with a small spread, and varying colors and shotspeeds
+- The Coin : Gain damage for every enemy in the room
+- Cracked Eggshell : Explode tears whenever you get hit
+- Tennis : All stats up
+- Red Shirt : At the start of a room, enemies have a chance to be charmed immediately
+- Mind Flood : Stats up + leave creep whenever enemies get too close
+- Twitchy Chatter : Spawns Twitchy Helpers around the room, giving damage for every Helper collected
+- Mr Greenman : Glitches around the room, damaging and inflicting status effects on enemies
+- Madrinas Coffee : Speed + shotspeed + luck up
+- Cobalt's Streak : Gain damage the longer you last without taking damage
+- Purple Lord : Your tears turn purple, become piercing and leave a purple creep in their wake
+- Ryuka Buddy : Speed up + rooms now stay open
+
+FAMILIARS:
+
+- Pet Rock : Follows the player, turning enemies to gold on touch
+- Pile of Jellies : Spawns 2 out of 4 possible jellies that follow the player. Jellies have different effects
+- Ocean Man : Bounces around the room with a stats up aura
+- Ghost Bill : Throws ghost cheetos
+- Teratomo : Bounces around + chance to split when touching an enemy
+- Scumbo : Feeds off of bad damage, has multiple phases with different effects
+
+ACTIVES:
+
+- The Beretta : Shoots a single, piercing, high damage tear at a very high speed
+- Chicken Nugget : Damage up + speed down every time you eat one. Eat as many as you can!
+- Murph : Places a black hole that sucks up enemies and attracts tears
+- The Stapler : Damage yourself in exchange for max tears for the rest of the room
+- Black Glove : Judo Chops enemies, which confuses them and cuts their health in half
+
+TRINKETS:
+
+- Marfle-Pop! : Has a chance to obliterate an enemy upon entering a room</description>
+    <version>1.25</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+    <tag id="Items"/>
+    <tag id="Active Items"/>
+    <tag id="Trinkets"/>
+    <tag id="Pills"/>
+</metadata>

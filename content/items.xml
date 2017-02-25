@@ -1,0 +1,34 @@
+<items gfxroot="gfx/items/" version="1">
+	<passive name="Gungeon Master" description="Bullet Tears" cache="damage shotspeed" gfx="collectible_gungeonMaster.png" />
+	<passive name="LaCroix" description="Nothing Artificial" cache="firedelay" gfx="collectible_laCroix.png" maxhearts="2" hearts="2" />
+	<passive name="Eye for Aesthetic" description="Zany Tears" cache="firedelay range speed" gfx="collectible_eyeForAesthetic.png" />
+	<passive name="The Coin" description="It's mine!" gfx="collectible_theCoin.png" />
+	<passive name="Cracked Eggshell" description="Badly Damaged" gfx="collectible_crackedEgg.png" />
+	<passive name="Nug King's Crown" description="Eternal Glory" gfx="collectible_nugCrown.png" cache="firedelay speed luck" maxhearts="2" hearts="2" />
+	<passive name="Tennis" description="King of Context" cache="speed damage range shotspeed" gfx="collectible_tennis.png" />
+	<passive name="Red Shirt" description="Social Engineering" gfx="collectible_redShirt.png" />
+	<passive name="Mind Flood" description="Can't think straight!" gfx="collectible_mindFlood.png" />
+	<passive name="Twitchy Chatter" description="Strength in numbers" gfx="collectible_chatter.png" />
+	<passive name="Mr Greenman" description="Gli&amp-8182budd%p91##" gfx="collectible_greenman.png" />
+	<passive name="Matricide" description="Heartless" gfx="collectible_matricide.png" cache="damage" />
+	<passive name="Madrinas Coffee" description="All Natural" gfx="collectible_madrinas.png" cache="speed shotspeed luck" />
+	<passive name="Cobalt's Streak" description="I never lose!" gfx="collectible_cobalt.png" />
+	<passive name="Purple Lord" description="True ascension" gfx="collectible_purpleLord.png" cache="damage" />
+	<passive name="Ryuka Buddy" description="Open the door!" gfx="collectible_ryuka.png" cache="speed" />
+	<passive name="Golden Hat" description="He's here, baby!" gfx="collectible_goldHat.png" />
+	
+	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
+	<familiar name="Pile of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />
+	<familiar name="Ocean Man" cache="familiars" description="Take him by the hand" gfx="collectible_oceanMan.png" />
+	<familiar name="Ghost Bill" cache="familiars" description="Works at the cheeto factory" gfx="collectible_ghostBill.png" />
+	<familiar name="Teratomo" cache="familiars" description="What's the matter buddy?" gfx="collectible_teratomo.png" />
+	<familiar name="Scumbo" cache="familiars" description="Scumbo want bad damage!" gfx="collectible_scumbo.png" />
+	
+	<active name="The Beretta" description="Do it" gfx="collectible_theBeretta.png" maxcharges="1" />
+	<active name="Chicken Nugget" description="How many can you handle?" gfx="collectible_nug.png" maxcharges="1" />
+	<active name="Murph" description="Don't let me leave!" gfx="collectible_murph.png" maxcharges="4" />
+	<active name="The Stapler" description="For nuts only" gfx="collectible_stapler.png" maxcharges="2" />
+	<active name="Black Glove" description="Can I interest you in a J U D O C H O P?" gfx="collectible_judo.png" maxcharges="3" />
+	
+	<trinket name="Marfle-Pop!" description="???" gfx="trinket_marflePop.png" />
+</items>

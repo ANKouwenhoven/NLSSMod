@@ -1,0 +1,44 @@
+<ItemPools>
+	<Pool Name="treasure">
+		<Item Name="Gungeon Master" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Pet Rock" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Eye for Aesthetic" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Cracked Eggshell" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Chicken Nugget" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Pile of Jellies" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Ocean Man" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Red Shirt" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="The Stapler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Murph" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Mind Flood" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Twitchy Chatter" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Mr Greenman" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Ghost Bill" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Black Glove" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Teratomo" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Scumbo" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+	</Pool>
+	
+	<Pool Name="boss">
+		<Item Name="LaCroix" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Tennis" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Madrinas Coffee" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+	</Pool>
+	
+	<Pool Name="devil">
+		<Item Name="The Coin" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="The Beretta" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Cobalt's Streak" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+	</Pool>
+	
+	<Pool Name="angel">
+		<Item Name="Purple Lord" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+	</Pool>
+	
+	<Pool Name="shop">
+		<Item Name="Twitchy Chatter" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Red Shirt" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Cracked Eggshell" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Ryuka Buddy" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+	</Pool>
+</ItemPools>

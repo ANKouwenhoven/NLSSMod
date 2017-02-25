@@ -1,0 +1,44 @@
+<entities anm2root="gfx/" version="5">
+	<entity anm2path="familiar/petRock.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="petRock" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1001">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/jelly1.anm2" baseHP="0" boss="0" champion="0" collisionDamage="3" collisionMass="3" collisionRadius="20" friction="1.0" id="3" name="jelly1" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1002">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/jelly2.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="jelly2" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1003">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/jelly3.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="jelly3" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1004">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/jelly4.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="jelly4" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1005">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/oceanMan.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="oceanMan" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1006">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/murph.anm2" baseHP="0" boss="0" champion="0" collisionDamage="5" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="murph" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1007">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/chatter.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="chatter" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1008">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/greenman.anm2" baseHP="0" boss="0" champion="0" collisionDamage="10" collisionMass="3" collisionRadius="32" friction="1.0" id="3" name="greenman" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1009">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/ghostBill.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="ghostBill" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1011">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/teratomo.anm2" baseHP="0" boss="0" champion="0" collisionDamage="5" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="teratomo" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1013">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="familiar/scumbo.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="scumbo" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1014">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="effects/oceanWhirl.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="oceanWhirl" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1010">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="effects/badDamage.anm2" baseHP="0" boss="0" champion="0" collisionDamage="5" collisionMass="3" collisionRadius="32" friction="1.0" id="3" name="badDamage" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1015">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+</entities>
