@@ -18,7 +18,7 @@
 	<passive name="Golden Hat" description="He's here, baby!" gfx="collectible_goldHat.png" />
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
-	<familiar name="Pile of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />
+	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />
 	<familiar name="Ocean Man" cache="familiars" description="Take him by the hand" gfx="collectible_oceanMan.png" />
 	<familiar name="Ghost Bill" cache="familiars" description="Works at the cheeto factory" gfx="collectible_ghostBill.png" />
 	<familiar name="Teratomo" cache="familiars" description="What's the matter buddy?" gfx="collectible_teratomo.png" />

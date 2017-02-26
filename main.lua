@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = true;
+local PREVIEW_ITEMS = false;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -81,7 +81,7 @@ local itemList = {
   theBeretta = Isaac.GetItemIdByName("The Beretta");
   nug = Isaac.GetItemIdByName("Chicken Nugget");
   nugCrown = Isaac.GetItemIdByName("Nug King's Crown");
-  jellies = Isaac.GetItemIdByName("Pile of Jellies");
+  jellies = Isaac.GetItemIdByName("Jar of Jellies");
   oceanMan = Isaac.GetItemIdByName("Ocean Man");
   tennis = Isaac.GetItemIdByName("Tennis");
   murph = Isaac.GetItemIdByName("Murph");
@@ -1597,25 +1597,25 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasEyeForA = true
   end
   
-  -- Coin eyes
+  -- Chicken mohawk + beak
   if not NLSSMod.hasTheCoin and player:HasCollectible(itemList.theCoin) then
     player:AddNullCostume(costumeList.theCoin)
     NLSSMod.hasTheCoin = true
   end
   
-  -- Watery mouth
+  -- Watery mouth + can mark
   if not NLSSMod.hasLaCroix and player:HasCollectible(itemList.laCroix) then
     player:AddNullCostume(costumeList.laCroix)
     NLSSMod.hasLaCroix = true
   end
   
-  -- Forehead bullet
+  -- Bullethead
   if not NLSSMod.hasGungeonMaster and player:HasCollectible(itemList.gungeonMaster) then
     player:AddNullCostume(costumeList.gungeonMaster)
     NLSSMod.hasGungeonMaster = true
   end
   
-  -- Forehead nug emblem
+  -- Nug Crown
   if not NLSSMod.hasNugCrown and player:HasCollectible(itemList.nugCrown) then
     player:AddNullCostume(costumeList.nugCrown)
     NLSSMod.hasNugCrown = true
@@ -1651,7 +1651,7 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasPurpleLord = true
   end
   
-  -- Whiskers
+  -- Whiskers, nose and ears
   if not NLSSMod.hasRyuka and player:HasCollectible(itemList.ryuka) then
     player:AddNullCostume(costumeList.ryuka)
     NLSSMod.hasRyuka = true

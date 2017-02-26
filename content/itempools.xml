@@ -5,7 +5,7 @@
 		<Item Name="Eye for Aesthetic" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Cracked Eggshell" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Chicken Nugget" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
-		<Item Name="Pile of Jellies" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Jar of Jellies" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Ocean Man" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Red Shirt" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="The Stapler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
@@ -17,6 +17,11 @@
 		<Item Name="Black Glove" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Teratomo" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Scumbo" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="The Coin" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="The Beretta" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Cobalt's Streak" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Purple Lord" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Ryuka Buddy" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
