@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = false;
+local PREVIEW_ITEMS = true;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;

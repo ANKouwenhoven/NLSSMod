@@ -3,7 +3,7 @@
     <name>NLSS Mod</name>
     <directory>nlss mod</directory>
     <id>848747396</id>
-    <description>Adds NLSS themed items to the game! So far this mod includes 27 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
+    <description>Adds NLSS themed items to the game! So far this mod includes 28 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
 
 If you want easy access to all new items, there's a variable called PREVIEW_ITEMS at the top of the main.lua file. Just turn that variable from false to true, and all items will spawn when you start a run!
 
@@ -25,11 +25,12 @@ PASSIVES:
 - Cobalt's Streak : Gain damage the longer you last without taking damage
 - Purple Lord : Your tears turn purple, become piercing and leave a purple creep in their wake
 - Ryuka Buddy : Speed up + rooms now stay open
+- Golden Hat : Pennies have a 25% of being nickels instead, damage up when at 99 coins.
 
 FAMILIARS:
 
 - Pet Rock : Follows the player, turning enemies to gold on touch
-- Pile of Jellies : Spawns 2 out of 4 possible jellies that follow the player. Jellies have different effects
+- Jar of Jellies : Spawns 2 out of 4 possible jellies that follow the player. Jellies have different effects
 - Ocean Man : Bounces around the room with a stats up aura
 - Ghost Bill : Throws ghost cheetos
 - Teratomo : Bounces around + chance to split when touching an enemy
@@ -46,7 +47,7 @@ ACTIVES:
 TRINKETS:
 
 - Marfle-Pop! : Has a chance to obliterate an enemy upon entering a room</description>
-    <version>1.25</version>
+    <version>1.26</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
