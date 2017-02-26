@@ -1,10 +1,10 @@
 <items gfxroot="gfx/items/" version="1">
 	<passive name="Gungeon Master" description="Bullet Tears" cache="damage shotspeed" gfx="collectible_gungeonMaster.png" />
 	<passive name="LaCroix" description="Nothing Artificial" cache="firedelay" gfx="collectible_laCroix.png" maxhearts="2" hearts="2" />
-	<passive name="Eye for Aesthetic" description="Zany Tears" cache="firedelay range speed" gfx="collectible_eyeForAesthetic.png" />
+	<passive name="Eye for Aesthetic" description="Zany Tears" cache="firedelay" gfx="collectible_eyeForAesthetic.png" />
 	<passive name="The Coin" description="It's mine!" gfx="collectible_theCoin.png" />
 	<passive name="Cracked Eggshell" description="Badly Damaged" gfx="collectible_crackedEgg.png" />
-	<passive name="Nug King's Crown" description="Eternal Glory" gfx="collectible_nugCrown.png" cache="firedelay speed luck" maxhearts="2" hearts="2" />
+	<passive name="Nug King's Crown" description="Eternal Glory" gfx="collectible_nugCrown.png" cache="damage speed luck" maxhearts="2" hearts="2" />
 	<passive name="Tennis" description="King of Context" cache="speed damage range shotspeed" gfx="collectible_tennis.png" />
 	<passive name="Red Shirt" description="Social Engineering" gfx="collectible_redShirt.png" />
 	<passive name="Mind Flood" description="Can't think straight!" gfx="collectible_mindFlood.png" />

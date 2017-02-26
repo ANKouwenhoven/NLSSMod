@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = true;
+local PREVIEW_ITEMS = false;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -777,7 +777,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   fireDelayChange = 0;
   addFlatStat(itemList.laCroix, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);
   addFlatStat(itemList.eyeForA, 4, CacheFlag.CACHE_FIREDELAY, cacheFlag);
-  addFlatStat(itemList.nugCrown, 3, CacheFlag.CACHE_FIREDELAY, cacheFlag);
   
   -- Damage Stats
   addFlatStat(itemList.gungeonMaster, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
@@ -786,6 +785,7 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.cobalt, 0.25 * cobaltBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.purpleLord, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
+  addFlatStat(itemList.nugCrown, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
   if goldHatBuff then
     addFlatStat(itemList.goldHat, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
@@ -801,14 +801,12 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   
   -- Speed Stats
-  addFlatStat(itemList.eyeForA, 0.10, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.nugCrown, 0.30, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.tennis, 0.15, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
   
   -- Range Stats
-  addFlatStat(itemList.eyeForA, 5, CacheFlag.CACHE_RANGE, cacheFlag);
   addFlatStat(itemList.tennis, 2, CacheFlag.CACHE_RANGE, cacheFlag);
   
   -- Mind Flood Stats
@@ -822,15 +820,15 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
     addFlatStat(itemList.chatter, 0.75 * chatterBuffs, CacheFlag.CACHE_DAMAGE, cacheFlag);
     if oceanManCheck then
-      addFlatStat(itemList.oceanMan, 1, CacheFlag.CACHE_DAMAGE, cacheFlag);
-      addFlatStat(itemList.oceanMan, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);
+      addFlatStat(itemList.oceanMan, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
+      addFlatStat(itemList.oceanMan, 5, CacheFlag.CACHE_RANGE, cacheFlag);
       addFlatStat(itemList.oceanMan, 0.2, CacheFlag.CACHE_SPEED, cacheFlag);
     end
   else
     addFlatStat(itemList.chatter, 0.5 * chatterBuffs, CacheFlag.CACHE_DAMAGE, cacheFlag);
     if oceanManCheck then
-      addFlatStat(itemList.oceanMan, 0.5, CacheFlag.CACHE_DAMAGE, cacheFlag);
-      addFlatStat(itemList.oceanMan, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);
+      addFlatStat(itemList.oceanMan, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
+      addFlatStat(itemList.oceanMan, 3, CacheFlag.CACHE_RANGE, cacheFlag);
       addFlatStat(itemList.oceanMan, 0.1, CacheFlag.CACHE_SPEED, cacheFlag);
     end
   end
@@ -1208,7 +1206,7 @@ function NLSSMod:oceanManUpdate(familiar)
     oceanAura.Velocity = Vector(0, 0);
   end
   
-  player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY);
+  player:AddCacheFlags(CacheFlag.CACHE_RANGE);
   player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
   player:AddCacheFlags(CacheFlag.CACHE_SPEED);
   player:EvaluateItems();
