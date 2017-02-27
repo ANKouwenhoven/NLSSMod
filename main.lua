@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = false;
+local PREVIEW_ITEMS = true;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -70,6 +70,11 @@ local scumboStage = 1;
 -- Golden hat damage buff
 local goldHatBuff = false;
 
+-- Stammer variables
+local orbitalAmount = 1;
+local orbitals = {};
+local startrun = 0;
+
 -- List of all new items
 local itemList = {
   gungeonMaster = Isaac.GetItemIdByName("Gungeon Master");
@@ -100,6 +105,7 @@ local itemList = {
   teratomo = Isaac.GetItemIdByName("Teratomo");
   scumbo = Isaac.GetItemIdByName("Scumbo");
   goldHat = Isaac.GetItemIdByName("Golden Hat");
+  stammer = Isaac.GetItemIdByName("Staggered Stammer");
 }
 
 local trinketList = {
@@ -133,6 +139,7 @@ local familiarList = {
   ghostBill = Isaac.GetEntityVariantByName("ghostBill");
   teratomo = Isaac.GetEntityVariantByName("teratomo");
   scumbo = Isaac.GetEntityVariantByName("scumbo");
+  stammer = Isaac.GetEntityVariantByName("stammer");
 }
 
 -- List of all new costumes
@@ -370,6 +377,53 @@ function ryukaEffect(player)
   end
 end
 
+function stammerEffect(player)  
+  local entities = Isaac.GetRoomEntities()
+
+	if startrun ~= 1 then
+		for i = 1, #entities do
+			if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
+			entities[i]:Remove()
+			startrun = 1;
+			end
+		end
+	end
+  
+	if player:HasCollectible(itemList.stammer) then
+		local orbitalAmount = 1
+	
+		for i = 1, orbitalAmount, 1 do
+			orbitalEntity = orbitals[i]
+			
+			if orbitalEntity == nil then
+				orbitalEntity = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.stammer, 0, player.Position, Vector(0, 0), player):ToFamiliar()
+				orbitalEntity.OrbitLayer = 2
+				orbitalEntity:RecalculateOrbitOffset(orbitalEntity.OrbitLayer, true)
+				orbitals[i] = orbitalEntity
+			end
+			
+			if orbitalEntity ~= nil then
+				if not orbitalEntity:Exists() or orbitalEntity:IsDead() then
+					orbitalEntity:Remove()
+					orbitals[i] = nil
+				else
+					local targetLocation = orbitalEntity:GetOrbitPosition(player.Position)
+					orbitalEntity.OrbitDistance = Vector(30, 30)
+					orbitalEntity.Velocity = targetLocation - orbitalEntity.Position
+				end
+			end
+		end
+	
+  elseif player:HasCollectible(itemList.stammer) == false then
+    for i = 1, #entities do
+      if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
+				entities[i]:Remove()
+      end
+    end
+		orbitalAmount = 0;
+	end
+end
+
 -- The Coin's effect
 function coinEffect(player)
   local entities = Isaac.GetRoomEntities();
@@ -567,14 +621,11 @@ function updateBeretta(player)
       shootingDirection = Vector(0, 1)
     end
 
-    if shootingDirection ~= nil then      
-      local oldDamage = player.Damage;
-      local oldColor = player.TearColor;
-      player.Damage = player.Damage + 30;
-      player.TearColor = Color(0, 0, 0, 1, 0, 0, 0);
-      
+    if shootingDirection ~= nil then            
       tear = player:FireTear(player.Position, shootingDirection, false, false, false)
       tear.Velocity = tear.Velocity * 50;
+      tear.CollisionDamage = player.Damage + 30;
+      tear.Color = Color(0, 0, 0, 1, 0, 0, 0);
       tear.TearFlags = 1<<1;
       
       local entities = Isaac.GetRoomEntities();
@@ -586,9 +637,6 @@ function updateBeretta(player)
           Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, itemList.matricide, Vector(320, 350), Vector(0, 0), nil)
         end
       end
-
-      player.Damage = oldDamage;
-      player.TearColor = oldColor;
       
       player:AnimateCollectible(itemList.theBeretta, "HideItem", "Idle")
       activeUses.holdingBeretta = false
@@ -607,7 +655,6 @@ function NLSSMod:useJudo()
     if entities[i]:IsVulnerableEnemy() then
       entities[i].HitPoints = entities[i].HitPoints / 2;
       entities[i]:AddConfusion(EntityRef(player), 180, false);
-      chop = Isaac.Spawn(EntityType.ENTITY_EFFECT, effectList.judoChop, 0, entities[i].Position, Vector(0, 0), player);
     end
   end
 end
@@ -927,6 +974,20 @@ NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familia
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.jelly4)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.teratomo)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.scumbo)
+
+-- Handles Stammer AI
+function NLSSMod:stammerUpdate(familiar)
+  if familiar.FrameCount % 30 == 0 then
+    local player = Isaac.GetPlayer(0);
+    directionVector = familiar.Position - player.Position;
+    directionVector = directionVector:Normalized() * 50;
+    tear = Isaac.GetPlayer(0):FireTear(familiar.Position, directionVector, false, false, false):ToTear();
+    tear.CollisionDamage = 50;
+    tear.Color = Color(0, 0, 0, 1, 0, 0, 0);
+  end
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.stammerUpdate, familiarList.stammer)
 
 -- Handles Pet Rock AI
 function NLSSMod:petRockUpdate(familiar)
@@ -1379,15 +1440,6 @@ end
 function NLSSMod:onUpdate()
   local player = Isaac.GetPlayer(0);
   
-  local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    if entities[i].Type == EntityType.ENTITY_EFFECT then
-      if entities[i]:GetSprite():IsFinished("Chop") then
-        entities[i]:Remove();
-      end
-    end
-  end
-  
   -- Spawn all mod items on the very first frame
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
     SpawnItem(itemList.crackedEgg, 470, 300)
@@ -1419,6 +1471,7 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.teratomo, 370, 150)
     SpawnItem(itemList.scumbo, 320, 150)
     SpawnItem(itemList.goldHat, 270, 150)
+    SpawnItem(itemList.stammer, 220, 150)
   end
   
   -- Workaround for the wonky firedelay stat
@@ -1454,6 +1507,9 @@ function NLSSMod:onUpdate()
     coinEffect(player);
   end
   
+  -- Stammer orbital maintaining
+  stammerEffect(player);
+    
   -- Purple Lord effect
   if player:HasCollectible(itemList.purpleLord) then
     purpleEffect(player);

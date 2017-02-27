@@ -35,6 +35,9 @@
 	<entity anm2path="familiar/scumbo.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="scumbo" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1014">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
+	<entity anm2path="familiar/stammer.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="stammer" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1016">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
 	<entity anm2path="effects/oceanWhirl.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="oceanWhirl" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1010">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>

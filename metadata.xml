@@ -13,7 +13,7 @@ PASSIVES:
 
 - Gungeon Master : Tears turn into bullets, damage + shotspeed up
 - LaCroix : Health + tears up
-- Eye for Aesthetic : Stats up, tears now fire with a small spread, and varying colors and shotspeeds
+- Eye for Aesthetic : Tears up, tears now fire with a small spread, and varying colors and shotspeeds
 - The Coin : Gain damage for every enemy in the room
 - Cracked Eggshell : Explode tears whenever you get hit
 - Tennis : All stats up
@@ -47,7 +47,7 @@ ACTIVES:
 TRINKETS:
 
 - Marfle-Pop! : Has a chance to obliterate an enemy upon entering a room</description>
-    <version>1.26</version>
+    <version>1.28</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
