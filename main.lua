@@ -78,7 +78,6 @@ local stammers = {};
 local nightmareAmount = 0;
 local nightmares = {};
 local nightmareDistance = 5;
-local nightmareFlip = false;
 
 -- List of all new items
 local itemList = {
@@ -400,7 +399,7 @@ function ryukaEffect(player)
   end
 end
 
--- Nightmare orbit maintaining
+-- Nightmare AI
 function nightmareEffect(player)  	
   for i = 1, nightmareAmount, 1 do
     currentNightmare = nightmares[i]
@@ -431,25 +430,29 @@ function nightmareEffect(player)
           end
         end
         if targetLocation == nil then
-          targetLocation = currentNightmare:GetOrbitPosition(player.Position)
-          currentNightmare.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
-          if nightmareDistance < 50 then
-            nightmareDistance = nightmareDistance + 1;
+          if currentNightmare.Position:Distance(player.Position, currentNightmare.Position) > 75 then
+            targetLocation = player.Position;
+            directionVector = player.Position - currentNightmare.Position;
+            directionVector = directionVector:Normalized() * 5;
+            currentNightmare.Velocity = directionVector
           else
-            if nightmareFlip then
-              nightmareDistance = nightmareDistance - 1;
-            elseif nightmareDistance < 80 then
+            targetLocation = currentNightmare:GetOrbitPosition(player.Position)
+            currentNightmare.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
+            if nightmareDistance < 35 then
               nightmareDistance = nightmareDistance + 1;
-            end            
-          end
-          if Game():GetFrameCount() % 30 == 0 then
-            if nightmareFlip then
-              nightmareFlip = false
             else
-              nightmareFlip = true
+              nightmareDistance = 50 + 15 * math.sin((math.pi / 180) * (Game():GetFrameCount() * 6))       
+            end
+            currentNightmare.Velocity = targetLocation - currentNightmare.Position
+          end
+        end
+        for i = 1, #entities do
+          entity = entities[i]
+          if entity:IsVulnerableEnemy() then
+            if currentNightmare.Position:Distance(entity.Position, currentNightmare.Position) < 50 then
+              entity:AddFear(EntityRef(currentNightmare), 150)
             end
           end
-          currentNightmare.Velocity = targetLocation - currentNightmare.Position
         end
       end
     end
@@ -1091,7 +1094,11 @@ function NLSSMod:stammerUpdate(familiar)
     directionVector = familiar.Position - player.Position;
     directionVector = directionVector:Normalized() * 50;
     tear = Isaac.GetPlayer(0):FireTear(familiar.Position, directionVector, false, false, false):ToTear();
-    tear.CollisionDamage = 50;
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+      tear.CollisionDamage = 50;
+    else
+      tear.CollisionDamage = 50;
+    end
     tear.Color = Color(0, 0, 0, 1, 0, 0, 0);
   end
 end
