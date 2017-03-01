@@ -71,9 +71,14 @@ local scumboStage = 1;
 local goldHatBuff = false;
 
 -- Stammer variables
-local orbitalAmount = 1;
-local orbitals = {};
-local startrun = 0;
+local stammerAmount = 1;
+local stammers = {};
+
+-- Nightmare variables
+local nightmareAmount = 0;
+local nightmares = {};
+local nightmareDistance = 5;
+local nightmareFlip = false;
 
 -- List of all new items
 local itemList = {
@@ -106,6 +111,7 @@ local itemList = {
   scumbo = Isaac.GetItemIdByName("Scumbo");
   goldHat = Isaac.GetItemIdByName("Golden Hat");
   stammer = Isaac.GetItemIdByName("Staggered Stammer");
+  boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
 }
 
 local trinketList = {
@@ -123,6 +129,7 @@ local activeUses = {
   holdingMurph = false;
   holdingStapler = false;
   holdingJudo = false;
+  holdingBoardgame = false;
 }
 
 -- List of all new familiars
@@ -140,6 +147,7 @@ local familiarList = {
   teratomo = Isaac.GetEntityVariantByName("teratomo");
   scumbo = Isaac.GetEntityVariantByName("scumbo");
   stammer = Isaac.GetEntityVariantByName("stammer");
+  nightmare = Isaac.GetEntityVariantByName("nightmare");
 }
 
 -- List of all new costumes
@@ -182,6 +190,21 @@ function NLSSMod:reset()
   damageFrames = 0;
   scumboStage = 1;
   counterDelay = 0;
+  stammerAmount = 1;
+  stammers = {};
+  nightmareAmount = 0;
+  nightmares = {};
+  local entities = Isaac.GetRoomEntities();
+  for i = 1, #entities do
+    if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
+			entities[i]:Remove()
+    end
+  end
+  for i = 1, #entities do
+    if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.nightmare then
+			entities[i]:Remove()
+    end
+  end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, NLSSMod.reset)
@@ -377,50 +400,97 @@ function ryukaEffect(player)
   end
 end
 
+-- Nightmare orbit maintaining
+function nightmareEffect(player)  	
+  for i = 1, nightmareAmount, 1 do
+    currentNightmare = nightmares[i]
+			
+    if currentNightmare == nil then
+      currentNightmare = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.nightmare, 0, player.Position, Vector(0, 0), player):ToFamiliar()
+      currentNightmare.OrbitLayer = 3
+      currentNightmare:RecalculateOrbitOffset(currentNightmare.OrbitLayer, true)
+      nightmares[i] = currentNightmare
+    end
+			
+    if currentNightmare ~= nil then
+      if not currentNightmare:Exists() or currentNightmare:IsDead() then
+        currentNightmare:Remove()
+        nightmares[i] = nil
+      else
+        local targetLocation;
+        local entities = Isaac.GetRoomEntities();
+        for i = 1, #entities do
+          entity = entities[i]
+          if entity:IsVulnerableEnemy() then
+            if currentNightmare.Position:Distance(entity.Position, currentNightmare.Position) < 100 then
+              targetLocation = entity.Position;
+              directionVector = entity.Position - currentNightmare.Position;
+              directionVector = directionVector:Normalized() * 5;
+              currentNightmare.Velocity = directionVector
+            end
+          end
+        end
+        if targetLocation == nil then
+          targetLocation = currentNightmare:GetOrbitPosition(player.Position)
+          currentNightmare.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
+          if nightmareDistance < 50 then
+            nightmareDistance = nightmareDistance + 1;
+          else
+            if nightmareFlip then
+              nightmareDistance = nightmareDistance - 1;
+            elseif nightmareDistance < 80 then
+              nightmareDistance = nightmareDistance + 1;
+            end            
+          end
+          if Game():GetFrameCount() % 30 == 0 then
+            if nightmareFlip then
+              nightmareFlip = false
+            else
+              nightmareFlip = true
+            end
+          end
+          currentNightmare.Velocity = targetLocation - currentNightmare.Position
+        end
+      end
+    end
+  end
+end
+
+-- Staggered Stammer orbit maintaining
 function stammerEffect(player)  
   local entities = Isaac.GetRoomEntities()
-
-	if startrun ~= 1 then
-		for i = 1, #entities do
-			if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
-			entities[i]:Remove()
-			startrun = 1;
-			end
-		end
-	end
   
 	if player:HasCollectible(itemList.stammer) then
-		local orbitalAmount = 1
+		local stammerAmount = 1
 	
-		for i = 1, orbitalAmount, 1 do
-			orbitalEntity = orbitals[i]
+		for i = 1, stammerAmount, 1 do
+			currentStammer = stammers[i]
 			
-			if orbitalEntity == nil then
-				orbitalEntity = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.stammer, 0, player.Position, Vector(0, 0), player):ToFamiliar()
-				orbitalEntity.OrbitLayer = 2
-				orbitalEntity:RecalculateOrbitOffset(orbitalEntity.OrbitLayer, true)
-				orbitals[i] = orbitalEntity
+			if currentStammer == nil then
+				currentStammer = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.stammer, 0, player.Position, Vector(0, 0), player):ToFamiliar()
+				currentStammer.OrbitLayer = 2
+				currentStammer:RecalculateOrbitOffset(currentStammer.OrbitLayer, true)
+				stammers[i] = currentStammer
 			end
 			
-			if orbitalEntity ~= nil then
-				if not orbitalEntity:Exists() or orbitalEntity:IsDead() then
-					orbitalEntity:Remove()
-					orbitals[i] = nil
+			if currentStammer ~= nil then
+				if not currentStammer:Exists() or currentStammer:IsDead() then
+					currentStammer:Remove()
+					stammers[i] = nil
 				else
-					local targetLocation = orbitalEntity:GetOrbitPosition(player.Position)
-					orbitalEntity.OrbitDistance = Vector(30, 30)
-					orbitalEntity.Velocity = targetLocation - orbitalEntity.Position
+					local targetLocation = currentStammer:GetOrbitPosition(player.Position)
+					currentStammer.OrbitDistance = Vector(30, 30)
+					currentStammer.Velocity = targetLocation - currentStammer.Position
 				end
 			end
 		end
-	
-  elseif player:HasCollectible(itemList.stammer) == false then
+  else
     for i = 1, #entities do
       if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
 				entities[i]:Remove()
       end
     end
-		orbitalAmount = 0;
+		stammerAmount = 0;
 	end
 end
 
@@ -671,6 +741,39 @@ function animateJudo(player)
       activeUses.holdingJudo = false;
       judoAnimationFrames = 0;
       player:AnimateCollectible(itemList.judo, "HideItem", "Idle");
+    end
+  end
+end
+
+-- Activate Boardgame
+function NLSSMod:useBoardgame()
+  local player = Isaac.GetPlayer(0)
+  local entities = Isaac.GetRoomEntities()
+  nightmareAmount = 0;
+  
+  for i = 1, #entities do
+    local enemy = entities[i]
+    if enemy:IsVulnerableEnemy() then
+      nightmareAmount = nightmareAmount + 1;
+    end
+  end
+  
+  player:AnimateCollectible(itemList.boardgame, "LiftItem", "Idle")
+  activeUses.holdingBoardgame = true;
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useBoardgame, itemList.boardgame)
+
+-- Finish animation for Boardgame
+local boardgameAnimationFrames = 0;
+function animateBoardgame(player)
+  if activeUses.holdingBoardgame then
+    boardgameAnimationFrames = boardgameAnimationFrames + 1
+    if (boardgameAnimationFrames == 15) then
+      local player = Isaac.GetPlayer(0);
+      activeUses.holdingBoardgame = false;
+      boardgameAnimationFrames = 0;
+      player:AnimateCollectible(itemList.boardgame, "HideItem", "Idle");
     end
   end
 end
@@ -974,6 +1077,12 @@ NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familia
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.jelly4)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.teratomo)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.scumbo)
+
+-- Handles Nightmare AI
+function NLSSMod:nightmareUpdate(familiar)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.nightmareUpdate, familiarList.nightmare)
 
 -- Handles Stammer AI
 function NLSSMod:stammerUpdate(familiar)
@@ -1472,6 +1581,7 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.scumbo, 320, 150)
     SpawnItem(itemList.goldHat, 270, 150)
     SpawnItem(itemList.stammer, 220, 150)
+    SpawnItem(itemList.boardgame, 170, 150)
   end
   
   -- Workaround for the wonky firedelay stat
@@ -1509,6 +1619,9 @@ function NLSSMod:onUpdate()
   
   -- Stammer orbital maintaining
   stammerEffect(player);
+  
+  -- Nightmare orbital maintaining
+  nightmareEffect(player);
     
   -- Purple Lord effect
   if player:HasCollectible(itemList.purpleLord) then
@@ -1590,6 +1703,18 @@ function NLSSMod:onUpdate()
       usedStapler = false;
       player:EvaluateItems();
     end
+    
+    -- Monster Time Boardgame reset
+    if player:HasCollectible(itemList.boardgame) then
+      nightmares = {};
+      nightmareAmount = 0;
+      nightmareDistance = 5;
+      for i = 1, #entities do
+        if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.nightmare then
+          entities[i]:Remove()
+        end
+      end
+    end
   end
   
   -- Beretta effect
@@ -1615,6 +1740,11 @@ function NLSSMod:onUpdate()
   -- Stapler effect
   if activeUses.holdingStapler then
     animateStapler(player);
+  end
+  
+  -- Boardgame effect
+  if activeUses.holdingBoardgame then
+    animateBoardgame(player);
   end
   
   -- Marfle-Pop trinket effect

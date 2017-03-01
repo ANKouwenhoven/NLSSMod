@@ -3,7 +3,7 @@
     <name>NLSS Mod</name>
     <directory>nlss mod</directory>
     <id>848747396</id>
-    <description>Adds NLSS themed items to the game! So far this mod includes 28 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
+    <description>Adds NLSS themed items to the game! So far this mod includes 29 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
 
 If you want easy access to all new items, there's a variable called PREVIEW_ITEMS at the top of the main.lua file. Just turn that variable from false to true, and all items will spawn when you start a run!
 
@@ -35,6 +35,7 @@ FAMILIARS:
 - Ghost Bill : Throws ghost cheetos
 - Teratomo : Bounces around + chance to split when touching an enemy
 - Scumbo : Feeds off of bad damage, has multiple phases with different effects
+- Staggered Stammer : Orbits player, shooting outward with very high damage and shotspeed
 
 ACTIVES:
 
@@ -46,8 +47,12 @@ ACTIVES:
 
 TRINKETS:
 
-- Marfle-Pop! : Has a chance to obliterate an enemy upon entering a room</description>
-    <version>1.28</version>
+- Marfle-Pop! : Has a chance to obliterate an enemy upon entering a room
+
+Credits:
+- Custom Phase for code on tear spread (used in Eye for Aesthetic)
+- Sinsthar for code on spawning Entities randomly in combat (used in Twitchy Chatter and Mr Greenman)</description>
+    <version>1.29</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
