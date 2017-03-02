@@ -3,7 +3,7 @@
     <name>NLSS Mod</name>
     <directory>nlss mod</directory>
     <id>848747396</id>
-    <description>Adds NLSS themed items to the game! So far this mod includes 29 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
+    <description>Adds NLSS themed items to the game! So far this mod includes 30 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
 
 If you want easy access to all new items, there's a variable called PREVIEW_ITEMS at the top of the main.lua file. Just turn that variable from false to true, and all items will spawn when you start a run!
 
@@ -44,6 +44,7 @@ ACTIVES:
 - Murph : Places a black hole that sucks up enemies and attracts tears
 - The Stapler : Damage yourself in exchange for max tears for the rest of the room
 - Black Glove : Judo Chops enemies, which confuses them and cuts their health in half
+- Monster Time Boardgame : Summons Nightmares that fear and damage enemies
 
 TRINKETS:
 
@@ -52,7 +53,7 @@ TRINKETS:
 Credits:
 - Custom Phase for code on tear spread (used in Eye for Aesthetic)
 - Sinsthar for code on spawning Entities randomly in combat (used in Twitchy Chatter and Mr Greenman)</description>
-    <version>1.29</version>
+    <version>1.30</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>

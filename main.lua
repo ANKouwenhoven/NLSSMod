@@ -111,6 +111,7 @@ local itemList = {
   goldHat = Isaac.GetItemIdByName("Golden Hat");
   stammer = Isaac.GetItemIdByName("Staggered Stammer");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
+  rattler = Isaac.GetItemIdByName("Rattler");
 }
 
 local trinketList = {
@@ -939,6 +940,7 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.purpleLord, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.nugCrown, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
+  addFlatStat(itemList.rattler, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
   if goldHatBuff then
     addFlatStat(itemList.goldHat, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
@@ -952,12 +954,14 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.gungeonMaster, 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   addFlatStat(itemList.tennis, 0.25, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
+  addFlatStat(itemList.rattler, -0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   
   -- Speed Stats
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.nugCrown, 0.30, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.tennis, 0.15, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
+  addFlatStat(itemList.rattler, -0.15, CacheFlag.CACHE_SPEED, cacheFlag);
   
   -- Range Stats
   addFlatStat(itemList.tennis, 2, CacheFlag.CACHE_RANGE, cacheFlag);
@@ -1558,6 +1562,8 @@ function NLSSMod:onUpdate()
   
   -- Spawn all mod items on the very first frame
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
+    SpawnItem(itemList.rattler, 470, 350)
+    
     SpawnItem(itemList.crackedEgg, 470, 300)
     SpawnItem(itemList.theCoin, 420, 300)
     SpawnItem(itemList.petRock, 370, 300)

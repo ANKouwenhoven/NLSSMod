@@ -24,18 +24,21 @@
 		<Item Name="Ryuka Buddy" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Golden Hat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Staggered Stammer" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Monster Time Boardgame" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
 		<Item Name="LaCroix" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Tennis" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Madrinas Coffee" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Rattler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="devil">
 		<Item Name="The Coin" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="The Beretta" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Cobalt's Streak" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Monster Time Boardgame" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="angel">

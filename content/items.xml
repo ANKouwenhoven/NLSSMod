@@ -16,6 +16,7 @@
 	<passive name="Purple Lord" description="True ascension" gfx="collectible_purpleLord.png" cache="damage" />
 	<passive name="Ryuka Buddy" description="Open the door!" gfx="collectible_ryuka.png" cache="speed" />
 	<passive name="Golden Hat" description="He's here, baby!" gfx="collectible_goldHat.png" />
+	<passive name="Rattler" description="!!! DELTTAR M'I !!!" gfx="collectible_rattler.png" cache="shotspeed damage speed"/>
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
 	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />
