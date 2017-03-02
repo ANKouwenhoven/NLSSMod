@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = true;
+local PREVIEW_ITEMS = false;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -167,6 +167,7 @@ local costumeList = {
   cobalt = Isaac.GetCostumeIdByPath("gfx/characters/cobalt.anm2");
   madrinas = Isaac.GetCostumeIdByPath("gfx/characters/madrinas.anm2");
   redShirt = Isaac.GetCostumeIdByPath("gfx/characters/redShirt.anm2");
+  rattler = Isaac.GetCostumeIdByPath("gfx/characters/rattler.anm2");
 }
 
 -- List of all new effects
@@ -1786,6 +1787,7 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasGoldHat = false;
     NLSSMod.hasCobalt = false;
     NLSSMod.hasMadrinas = false;
+    NLSSMod.hasRattler = false;
   end
   
   -- Rainbow eyes
@@ -1876,6 +1878,12 @@ function NLSSMod:playerUpdate(player)
   if not NLSSMod.hasRedShirt and player:HasCollectible(itemList.redShirt) then
     player:AddNullCostume(costumeList.redShirt)
     NLSSMod.hasRedShirt = true
+  end
+  
+  -- Rattler
+  if not NLSSMod.hasRattler and player:HasCollectible(itemList.rattler) then
+    player:AddNullCostume(costumeList.rattler)
+    NLSSMod.hasRattler = true
   end
 end
 
