@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = false;
+local PREVIEW_ITEMS = true;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -79,6 +79,9 @@ local nightmareAmount = 0;
 local nightmares = {};
 local nightmareDistance = 5;
 
+-- Minus realm data
+local currentColor;
+
 -- List of all new items
 local itemList = {
   gungeonMaster = Isaac.GetItemIdByName("Gungeon Master");
@@ -112,6 +115,7 @@ local itemList = {
   stammer = Isaac.GetItemIdByName("Staggered Stammer");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
   rattler = Isaac.GetItemIdByName("Rattler");
+  minus = Isaac.GetItemIdByName("Minus Realm");
 }
 
 local trinketList = {
@@ -130,6 +134,7 @@ local activeUses = {
   holdingStapler = false;
   holdingJudo = false;
   holdingBoardgame = false;
+  holdingMinus = false;
 }
 
 -- List of all new familiars
@@ -746,6 +751,39 @@ function animateJudo(player)
       activeUses.holdingJudo = false;
       judoAnimationFrames = 0;
       player:AnimateCollectible(itemList.judo, "HideItem", "Idle");
+    end
+  end
+end
+
+-- Activate Minus Realm
+function NLSSMod:useMinus()
+  local player = Isaac.GetPlayer(0)
+  player:AnimateCollectible(itemList.minus, "LiftItem", "Idle")
+  activeUses.holdingMinus = true;
+  Game():GetRoom():TurnGold();
+  local entities = Isaac.GetRoomEntities();
+  for i = 1, #entities do
+    if entities[i]:IsVulnerableEnemy() then
+      entities[i]:AddFreeze(EntityRef(player), 500, false);
+      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
+    end
+  end
+  currentColor = player.Color;
+  player.Color = Color(0, 0, 0, 1, 0, 0, 0);
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useMinus, itemList.minus)
+
+-- Finish animation for Minus Realm
+local minusAnimationFrames = 0;
+function animateMinus(player)
+  if activeUses.holdingMinus then
+    minusAnimationFrames = minusAnimationFrames + 1
+    if (minusAnimationFrames == 15) then
+      local player = Isaac.GetPlayer(0);
+      activeUses.holdingMinus = false;
+      minusAnimationFrames = 0;
+      player:AnimateCollectible(itemList.minus, "HideItem", "Idle");
     end
   end
 end
@@ -1564,6 +1602,7 @@ function NLSSMod:onUpdate()
   -- Spawn all mod items on the very first frame
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
     SpawnItem(itemList.rattler, 470, 350)
+    SpawnItem(itemList.minus, 420, 350)
     
     SpawnItem(itemList.crackedEgg, 470, 300)
     SpawnItem(itemList.theCoin, 420, 300)
@@ -1729,6 +1768,9 @@ function NLSSMod:onUpdate()
         end
       end
     end
+    
+    -- Minus Realm reset
+    player.Color = currentColor;
   end
   
   -- Beretta effect
@@ -1739,6 +1781,11 @@ function NLSSMod:onUpdate()
   -- Judo Chop effect
   if activeUses.holdingJudo then
     animateJudo(player);
+  end
+  
+  -- Minus Realm effect
+  if activeUses.holdingMinus then
+    animateMinus(player);
   end
   
   -- Chicken nug effect

@@ -32,6 +32,7 @@
 	<active name="The Stapler" description="For nuts only" gfx="collectible_stapler.png" maxcharges="2" />
 	<active name="Black Glove" description="Can I interest you in a J U D O C H O P?" gfx="collectible_judo.png" maxcharges="3" />
 	<active name="Monster Time Boardgame" description="By RaccAttack Inc." gfx="collectible_boardGame.png" maxcharges="3" />
+	<active name="Minus Realm" description="Far below the grinders" gfx="collectible_minusRealm.png" maxcharges="3" />
 	
 	<trinket name="Marfle-Pop!" description="???" gfx="trinket_marflePop.png" />
 </items>
