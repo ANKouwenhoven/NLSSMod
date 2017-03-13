@@ -411,11 +411,9 @@ end
 function minusEffect(player)
   local entities = Isaac.GetRoomEntities();
   for i = 1, #entities do
-    if entities[i].Color ~= Color(0, 0, 0, 1, 0, 0, 0) then
-      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
-      if Game():GetFrameCount() % 10 == 0 then
-        entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
-      end
+    entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
+    if Game():GetFrameCount() % 10 == 0 then
+      entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
     end
   end
 end
