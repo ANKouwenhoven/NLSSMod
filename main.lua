@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = true;
+local PREVIEW_ITEMS = false;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -81,6 +81,7 @@ local nightmareDistance = 5;
 
 -- Minus realm data
 local currentColor;
+local minusRoom = false;
 
 -- List of all new items
 local itemList = {
@@ -402,6 +403,19 @@ function ryukaEffect(player)
     thisDoor = currentRoom:GetDoor(i);
     if thisDoor ~= nil and thisDoor:IsRoomType(RoomType.ROOM_DEFAULT) and not thisDoor:IsOpen() then
       thisDoor:Open();
+    end
+  end
+end
+
+-- Minus realm'ed room
+function minusEffect(player)
+  local entities = Isaac.GetRoomEntities();
+  for i = 1, #entities do
+    if entities[i].Color ~= Color(0, 0, 0, 1, 0, 0, 0) then
+      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
+      if Game():GetFrameCount() % 10 == 0 then
+        entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
+      end
     end
   end
 end
@@ -761,10 +775,17 @@ function NLSSMod:useMinus()
   player:AnimateCollectible(itemList.minus, "LiftItem", "Idle")
   activeUses.holdingMinus = true;
   Game():GetRoom():TurnGold();
+  minusRoom = true;
   local entities = Isaac.GetRoomEntities();
+  player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
+  player:AddCacheFlags(CacheFlag.CACHE_SPEED);
+  player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
+  player.CanFly = true;
+  player:EvaluateItems();
   for i = 1, #entities do
     if entities[i]:IsVulnerableEnemy() then
-      entities[i]:AddFreeze(EntityRef(player), 500, false);
+      entities[i]:AddFreeze(EntityRef(player), 250, false);
+      entities[i]:AddSlowing(EntityRef(player), 1000, 0.1, Color(0, 0, 0, 1, 0, 0, 0))
       entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
     end
   end
@@ -980,6 +1001,9 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.nugCrown, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.rattler, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
+  if minusRoom then
+    addFlatStat(itemList.minus, player.Damage * 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
+  end
   if goldHatBuff then
     addFlatStat(itemList.goldHat, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
@@ -994,6 +1018,9 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.tennis, 0.25, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   addFlatStat(itemList.rattler, -0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
+  if minusRoom then
+    addFlatStat(itemList.minus, player.ShotSpeed * 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
+  end
   
   -- Speed Stats
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SPEED, cacheFlag);
@@ -1001,6 +1028,9 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.tennis, 0.15, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.rattler, -0.15, CacheFlag.CACHE_SPEED, cacheFlag);
+  if minusRoom then
+    addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
+  end
   
   -- Range Stats
   addFlatStat(itemList.tennis, 2, CacheFlag.CACHE_RANGE, cacheFlag);
@@ -1138,7 +1168,7 @@ function NLSSMod:stammerUpdate(familiar)
     directionVector = directionVector:Normalized() * 50;
     tear = Isaac.GetPlayer(0):FireTear(familiar.Position, directionVector, false, false, false):ToTear();
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-      tear.CollisionDamage = 50;
+      tear.CollisionDamage = 100;
     else
       tear.CollisionDamage = 50;
     end
@@ -1655,67 +1685,6 @@ function NLSSMod:onUpdate()
     updateFireDelay = false
   end
   
-  -- Eye for Aesthetic effect
-  if player:HasCollectible(itemList.eyeForA) then
-    aesthetic(player);
-  end
-  
-  -- Gungeon Master effect
-  if player:HasCollectible(itemList.gungeonMaster) then
-    gungeonTears(player);
-  end
-  
-  -- Coin effect
-  if player:HasCollectible(itemList.theCoin) then
-    coinEffect(player);
-  end
-  
-  -- Stammer orbital maintaining
-  stammerEffect(player);
-  
-  -- Nightmare orbital maintaining
-  nightmareEffect(player);
-    
-  -- Purple Lord effect
-  if player:HasCollectible(itemList.purpleLord) then
-    purpleEffect(player);
-  end
-  
-  -- Mind Flood effect
-  if player:HasCollectible(itemList.mindFlood) then
-    floodEffect(player);
-  end
-  
-  -- Cobalt's Streak effect
-  if player:HasCollectible(itemList.cobalt) then
-    cobaltEffect(player);
-  end
-  
-  -- Matricide effect
-  if player:HasCollectible(itemList.matricide) then
-    matricideEffect(player);
-  end
-  
-  -- Gold hat effect
-  if player:HasCollectible(itemList.goldHat) then
-    goldHatEffect(player);
-  end
-  
-  -- Ryuka effect
-  if player:HasCollectible(itemList.ryuka) then
-    ryukaEffect(player);
-  end
-  
-  -- Twitchy Chatter update
-  if player:HasCollectible(itemList.chatter) then
-    chatterUpdate();
-  end
-  
-  -- Mr Greenman update
-  if player:HasCollectible(itemList.greenman) then
-    greenmanUpdate();
-  end
-  
   -- Things at the start of a room
   if Game():GetRoom():GetFrameCount() == 1 then
     
@@ -1770,7 +1739,86 @@ function NLSSMod:onUpdate()
     end
     
     -- Minus Realm reset
-    player.Color = currentColor;
+    if currentColor ~= nil then
+      player.Color = currentColor;
+      currentColor = nil;
+    end
+    
+    minusRoom = false;
+    
+    if player:HasCollectible(itemList.minus) then
+      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
+      player:AddCacheFlags(CacheFlag.CACHE_SPEED);
+      player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
+      player.CanFly = false;
+      player:EvaluateItems();
+    end
+  end
+  
+  -- Eye for Aesthetic effect
+  if player:HasCollectible(itemList.eyeForA) then
+    aesthetic(player);
+  end
+  
+  -- Gungeon Master effect
+  if player:HasCollectible(itemList.gungeonMaster) then
+    gungeonTears(player);
+  end
+  
+  -- Coin effect
+  if player:HasCollectible(itemList.theCoin) then
+    coinEffect(player);
+  end
+  
+  -- Stammer orbital maintaining
+  stammerEffect(player);
+  
+  -- Nightmare orbital maintaining
+  nightmareEffect(player);
+  
+  -- Minus room handling
+  if minusRoom then
+    minusEffect(player);
+  end
+  
+  -- Purple Lord effect
+  if player:HasCollectible(itemList.purpleLord) then
+    purpleEffect(player);
+  end
+  
+  -- Mind Flood effect
+  if player:HasCollectible(itemList.mindFlood) then
+    floodEffect(player);
+  end
+  
+  -- Cobalt's Streak effect
+  if player:HasCollectible(itemList.cobalt) then
+    cobaltEffect(player);
+  end
+  
+  -- Matricide effect
+  if player:HasCollectible(itemList.matricide) then
+    matricideEffect(player);
+  end
+  
+  -- Gold hat effect
+  if player:HasCollectible(itemList.goldHat) then
+    goldHatEffect(player);
+  end
+  
+  -- Ryuka effect
+  if player:HasCollectible(itemList.ryuka) then
+    ryukaEffect(player);
+  end
+  
+  -- Twitchy Chatter update
+  if player:HasCollectible(itemList.chatter) then
+    chatterUpdate();
+  end
+  
+  -- Mr Greenman update
+  if player:HasCollectible(itemList.greenman) then
+    greenmanUpdate();
   end
   
   -- Beretta effect

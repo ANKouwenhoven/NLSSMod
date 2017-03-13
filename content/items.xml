@@ -17,6 +17,7 @@
 	<passive name="Ryuka Buddy" description="Open the door!" gfx="collectible_ryuka.png" cache="speed" />
 	<passive name="Golden Hat" description="He's here, baby!" gfx="collectible_goldHat.png" />
 	<passive name="Rattler" description="!!! DELTTAR M'I !!!" gfx="collectible_rattler.png" cache="shotspeed damage speed"/>
+	<passive name="Loot Hoard" description="Mind if I roll need?" gfx="collectible_lootHoard.png"/>
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
 	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />
@@ -32,7 +33,7 @@
 	<active name="The Stapler" description="For nuts only" gfx="collectible_stapler.png" maxcharges="2" />
 	<active name="Black Glove" description="Can I interest you in a J U D O C H O P?" gfx="collectible_judo.png" maxcharges="3" />
 	<active name="Monster Time Boardgame" description="By RaccAttack Inc." gfx="collectible_boardGame.png" maxcharges="3" />
-	<active name="Minus Realm" description="Far below the grinders" gfx="collectible_minusRealm.png" maxcharges="3" />
+	<active name="Minus Realm" description="Far below the grinders" gfx="collectible_minusRealm.png" maxcharges="6" />
 	
 	<trinket name="Marfle-Pop!" description="???" gfx="trinket_marflePop.png" />
 </items>
