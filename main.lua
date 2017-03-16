@@ -135,12 +135,6 @@ local usables = {
 -- Lists whether active items are being used
 local activeUses = {
   holdingBeretta = false;
-  holdingNug = false;
-  holdingMurph = false;
-  holdingStapler = false;
-  holdingJudo = false;
-  holdingBoardgame = false;
-  holdingMinus = false;
 }
 
 -- List of all new familiars
@@ -771,8 +765,6 @@ end
 -- Activate Judo Chop
 function NLSSMod:useJudo()
   local player = Isaac.GetPlayer(0)
-  player:AnimateCollectible(itemList.judo, "LiftItem", "Idle")
-  activeUses.holdingJudo = true;
   
   local entities = Isaac.GetRoomEntities();
   for i = 1, #entities do
@@ -781,29 +773,15 @@ function NLSSMod:useJudo()
       entities[i]:AddConfusion(EntityRef(player), 180, false);
     end
   end
+  
+  return true;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useJudo, itemList.judo)
 
--- Finish animation for Judo Chop
-local judoAnimationFrames = 0;
-function animateJudo(player)
-  if activeUses.holdingJudo then
-    judoAnimationFrames = judoAnimationFrames + 1
-    if (judoAnimationFrames == 15) then
-      local player = Isaac.GetPlayer(0);
-      activeUses.holdingJudo = false;
-      judoAnimationFrames = 0;
-      player:AnimateCollectible(itemList.judo, "HideItem", "Idle");
-    end
-  end
-end
-
 -- Activate Minus Realm
 function NLSSMod:useMinus()
   local player = Isaac.GetPlayer(0)
-  player:AnimateCollectible(itemList.minus, "LiftItem", "Idle")
-  activeUses.holdingMinus = true;
   Game():GetRoom():TurnGold();
   minusRoom = true;
   local entities = Isaac.GetRoomEntities();
@@ -821,23 +799,11 @@ function NLSSMod:useMinus()
   end
   currentColor = player.Color;
   player.Color = Color(0, 0, 0, 1, 0, 0, 0);
+  
+  return true;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useMinus, itemList.minus)
-
--- Finish animation for Minus Realm
-local minusAnimationFrames = 0;
-function animateMinus(player)
-  if activeUses.holdingMinus then
-    minusAnimationFrames = minusAnimationFrames + 1
-    if (minusAnimationFrames == 15) then
-      local player = Isaac.GetPlayer(0);
-      activeUses.holdingMinus = false;
-      minusAnimationFrames = 0;
-      player:AnimateCollectible(itemList.minus, "HideItem", "Idle");
-    end
-  end
-end
 
 -- Activate Boardgame
 function NLSSMod:useBoardgame()
@@ -852,58 +818,27 @@ function NLSSMod:useBoardgame()
     end
   end
   
-  player:AnimateCollectible(itemList.boardgame, "LiftItem", "Idle")
-  activeUses.holdingBoardgame = true;
+  return true;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useBoardgame, itemList.boardgame)
 
--- Finish animation for Boardgame
-local boardgameAnimationFrames = 0;
-function animateBoardgame(player)
-  if activeUses.holdingBoardgame then
-    boardgameAnimationFrames = boardgameAnimationFrames + 1
-    if (boardgameAnimationFrames == 15) then
-      local player = Isaac.GetPlayer(0);
-      activeUses.holdingBoardgame = false;
-      boardgameAnimationFrames = 0;
-      player:AnimateCollectible(itemList.boardgame, "HideItem", "Idle");
-    end
-  end
-end
-
 -- Activate Stapler
 function NLSSMod:useStapler()
   local player = Isaac.GetPlayer(0)
-  player:AnimateCollectible(itemList.stapler, "LiftItem", "Idle")
-  activeUses.holdingStapler = true;
   removedTearDelay = player.MaxFireDelay - 1;
   usedStapler = true;
   player:TakeDamage(1, 0, EntityRef(player), 0);
   player.MaxFireDelay = 1;
+  
+  return true;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useStapler, itemList.stapler)
 
--- Finish animation for stapler
-local staplerAnimationFrames = 0;
-function animateStapler(player)
-  if activeUses.holdingStapler then
-    staplerAnimationFrames = staplerAnimationFrames + 1
-    if (staplerAnimationFrames == 15) then
-      local player = Isaac.GetPlayer(0);
-      activeUses.holdingStapler = false;
-      staplerAnimationFrames = 0;
-      player:AnimateCollectible(itemList.stapler, "HideItem", "Idle");
-    end
-  end
-end
-
 -- Chicken Nug's effect
 function NLSSMod:useNug()
   local player = Isaac.GetPlayer(0)
-  player:AnimateCollectible(itemList.nug, "LiftItem", "Idle")
-  activeUses.holdingNug = true
   nugCount = nugCount + 1;
   
   if player.MoveSpeed > 0.11 then
@@ -928,50 +863,23 @@ function NLSSMod:useNug()
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, itemList.nugCrown, Vector(spawnX, spawnY), Vector(0, 0), nil)
     player:RemoveCollectible(itemList.nug);
   end
+  
+  return true;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useNug, itemList.nug)
 
--- Finish animation for Chicken Nug
-local nugAnimationFrames = 0
-function animateNug()
-  if activeUses.holdingNug then
-    nugAnimationFrames = nugAnimationFrames + 1
-    if (nugAnimationFrames == 15) then
-      local player = Isaac.GetPlayer(0);
-      activeUses.holdingNug = false;
-      nugAnimationFrames = 0;
-      player:AnimateCollectible(itemList.nug, "HideItem", "Idle");
-    end
-  end
-end
-
 -- Murph's effect
 function NLSSMod:useMurph()
   local player = Isaac.GetPlayer(0)
-  player:AnimateCollectible(itemList.murph, "LiftItem", "Idle")
-  activeUses.holdingMurph = true;
   murphTimer = 0;
   
   player:CheckFamiliar(familiarList.murph, player:GetCollectibleNum(itemList.murph), RNG())
+  
+  return true;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useMurph, itemList.murph)
-
--- Finish animation for Murph
-local murphAnimationFrames = 0
-function animateMurph()
-  if activeUses.holdingMurph then
-    murphAnimationFrames = murphAnimationFrames + 1
-    if (murphAnimationFrames == 15) then
-      local player = Isaac.GetPlayer(0);
-      activeUses.holdingMurph = false;
-      murphAnimationFrames = 0;
-      player:AnimateCollectible(itemList.murph, "HideItem", "Idle");
-    end
-  end
-end
-
 
 -- RURURU pill
 function NLSSMod:takeRUPill(pillRURURU)
@@ -1861,36 +1769,6 @@ function NLSSMod:onUpdate()
   -- Beretta effect
   if activeUses.holdingBeretta then
     updateBeretta(player);
-  end
-  
-  -- Judo Chop effect
-  if activeUses.holdingJudo then
-    animateJudo(player);
-  end
-  
-  -- Minus Realm effect
-  if activeUses.holdingMinus then
-    animateMinus(player);
-  end
-  
-  -- Chicken nug effect
-  if activeUses.holdingNug then
-    animateNug(player);
-  end
-  
-  -- Murph effect
-  if activeUses.holdingMurph then
-    animateMurph(player);
-  end
-  
-  -- Stapler effect
-  if activeUses.holdingStapler then
-    animateStapler(player);
-  end
-  
-  -- Boardgame effect
-  if activeUses.holdingBoardgame then
-    animateBoardgame(player);
   end
   
   -- Marfle-Pop trinket effect
