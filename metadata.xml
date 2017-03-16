@@ -55,7 +55,7 @@ TRINKETS:
 Credits:
 - Custom Phase for code on tear spread (used in Eye for Aesthetic)
 - Sinsthar for code on spawning Entities randomly in combat (used in Twitchy Chatter and Mr Greenman)</description>
-    <version>1.32</version>
+    <version>1.33</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>

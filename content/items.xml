@@ -18,6 +18,7 @@
 	<passive name="Golden Hat" description="He's here, baby!" gfx="collectible_goldHat.png" />
 	<passive name="Rattler" description="!!! DELTTAR M'I !!!" gfx="collectible_rattler.png" cache="shotspeed damage speed"/>
 	<passive name="Loot Hoard" description="Mind if I roll need?" gfx="collectible_lootHoard.png"/>
+	<passive name="Poison Mushroom" description="Toxic Shots" gfx="collectible_mushroom.png"/>
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
 	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />

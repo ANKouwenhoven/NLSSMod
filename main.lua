@@ -2,7 +2,7 @@
 local NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = false;
+local PREVIEW_ITEMS = true;
 
 -- Minimum allowed tear delay
 local MIN_TEAR_DELAY = 5;
@@ -83,6 +83,9 @@ local nightmareDistance = 5;
 local currentColor;
 local minusRoom = false;
 
+-- Loot Hoard data
+local hasLooted = false;
+
 -- List of all new items
 local itemList = {
   gungeonMaster = Isaac.GetItemIdByName("Gungeon Master");
@@ -117,6 +120,8 @@ local itemList = {
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
   rattler = Isaac.GetItemIdByName("Rattler");
   minus = Isaac.GetItemIdByName("Minus Realm");
+  lootHoard = Isaac.GetItemIdByName("Loot Hoard");
+  mushroom = Isaac.GetItemIdByName("Poison Mushroom");
 }
 
 local trinketList = {
@@ -212,6 +217,7 @@ function NLSSMod:reset()
 			entities[i]:Remove()
     end
   end
+  hasLooted = false;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, NLSSMod.reset)
@@ -403,6 +409,32 @@ function ryukaEffect(player)
     thisDoor = currentRoom:GetDoor(i);
     if thisDoor ~= nil and thisDoor:IsRoomType(RoomType.ROOM_DEFAULT) and not thisDoor:IsOpen() then
       thisDoor:Open();
+    end
+  end
+end
+
+-- Loot Hoard effect
+function lootEffect(player)
+  currentRoom = Game():GetRoom();
+  if currentRoom:GetType() == RoomType.ROOM_BOSS then
+    if currentRoom:IsClear() then
+      if not hasLooted then
+        number = math.random(3);
+        if number == 1 then
+          SpawnItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
+        elseif number == 2 then
+          for i = 1, math.random(3) + 5 do
+            coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+          end
+        else
+          for i = 1, 2 do
+            key = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+          end
+        end
+        hasLooted = true;
+      end
+    else
+      hasLooted = false;
     end
   end
 end
@@ -1631,6 +1663,8 @@ function NLSSMod:onUpdate()
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
     SpawnItem(itemList.rattler, 470, 350)
     SpawnItem(itemList.minus, 420, 350)
+    SpawnItem(itemList.lootHoard, 370, 350)
+    SpawnItem(itemList.mushroom, 320, 350)
     
     SpawnItem(itemList.crackedEgg, 470, 300)
     SpawnItem(itemList.theCoin, 420, 300)
@@ -1807,6 +1841,11 @@ function NLSSMod:onUpdate()
   -- Ryuka effect
   if player:HasCollectible(itemList.ryuka) then
     ryukaEffect(player);
+  end
+  
+  -- Loot Hoard effect
+  if player:HasCollectible(itemList.lootHoard) then
+    lootEffect(player);
   end
   
   -- Twitchy Chatter update
