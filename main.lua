@@ -70,13 +70,8 @@ local scumboStage = 1;
 -- Golden hat damage buff
 local goldHatBuff = false;
 
--- Stammer variables
-local stammerAmount = 1;
-local stammers = {};
-
 -- Nightmare variables
 local nightmareAmount = 0;
-local nightmares = {};
 local nightmareDistance = 5;
 
 -- Minus realm data
@@ -196,16 +191,9 @@ function NLSSMod:reset()
   damageFrames = 0;
   scumboStage = 1;
   counterDelay = 0;
-  stammerAmount = 1;
-  stammers = {};
   nightmareAmount = 0;
   nightmares = {};
   local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
-			entities[i]:Remove()
-    end
-  end
   for i = 1, #entities do
     if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.nightmare then
 			entities[i]:Remove()
@@ -504,44 +492,6 @@ function nightmareEffect(player)
   end
 end
 
--- Staggered Stammer orbit maintaining
-function stammerEffect(player)  
-  local entities = Isaac.GetRoomEntities()
-  
-	if player:HasCollectible(itemList.stammer) then
-		local stammerAmount = 1
-	
-		for i = 1, stammerAmount, 1 do
-			currentStammer = stammers[i]
-			
-			if currentStammer == nil then
-				currentStammer = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.stammer, 0, player.Position, Vector(0, 0), player):ToFamiliar()
-				currentStammer.OrbitLayer = 2
-				currentStammer:RecalculateOrbitOffset(currentStammer.OrbitLayer, true)
-				stammers[i] = currentStammer
-			end
-			
-			if currentStammer ~= nil then
-				if not currentStammer:Exists() or currentStammer:IsDead() then
-					currentStammer:Remove()
-					stammers[i] = nil
-				else
-					local targetLocation = currentStammer:GetOrbitPosition(player.Position)
-					currentStammer.OrbitDistance = Vector(30, 30)
-					currentStammer.Velocity = targetLocation - currentStammer.Position
-				end
-			end
-		end
-  else
-    for i = 1, #entities do
-      if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.stammer then
-				entities[i]:Remove()
-      end
-    end
-		stammerAmount = 0;
-	end
-end
-
 -- The Coin's effect
 function coinEffect(player)
   local entities = Isaac.GetRoomEntities();
@@ -818,6 +768,9 @@ function NLSSMod:useBoardgame()
     end
   end
   
+  player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS);
+  player:EvaluateItems();
+  
   return true;
 end
 
@@ -1019,6 +972,8 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
     player:CheckFamiliar(familiarList.oceanMan, player:GetCollectibleNum(itemList.oceanMan), RNG())
     player:CheckFamiliar(familiarList.teratomo, player:GetCollectibleNum(itemList.teratomo), RNG())
     player:CheckFamiliar(familiarList.scumbo, player:GetCollectibleNum(itemList.scumbo), RNG())
+    player:CheckFamiliar(familiarList.stammer, player:GetCollectibleNum(itemList.stammer), RNG())
+    player:CheckFamiliar(familiarList.nightmare, nightmareAmount, RNG())
     
     for i = 1, 2 do
       if jellyAmount < player:GetCollectibleNum(itemList.jellies) * 2 then
@@ -1092,16 +1047,73 @@ NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familia
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.teratomo)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.scumbo)
 
+function NLSSMod:initOrbital(familiar)
+  familiar:RecalculateOrbitOffset(familiar.OrbitLayer, true)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initOrbital, familiarList.stammer)
+NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initOrbital, familiarList.nightmare)
+
 -- Handles Nightmare AI
 function NLSSMod:nightmareUpdate(familiar)
+  local player = Isaac.GetPlayer(0);
+  --familiar.OrbitDistance = Vector(60, 60)
+  familiar.OrbitSpeed = 0.01;
+  familiar.OrbitLayer = 1002;
+  familiar.Velocity = familiar:GetOrbitPosition(player.Position + player.Velocity) - familiar.Position;
+  
+  local targetLocation;
+  local entities = Isaac.GetRoomEntities();
+  for i = 1, #entities do
+    entity = entities[i]
+    if entity:IsVulnerableEnemy() then
+      if familiar.Position:Distance(entity.Position, familiar.Position) < 100 then
+        targetLocation = entity.Position;
+        directionVector = entity.Position - familiar.Position;
+        directionVector = directionVector:Normalized() * 5;
+        familiar.Velocity = directionVector
+      end
+    end
+  end
+  
+  if targetLocation == nil then
+    if familiar.Position:Distance(player.Position, familiar.Position) > 75 then
+      targetLocation = player.Position;
+      directionVector = player.Position - familiar.Position;
+      directionVector = directionVector:Normalized() * 5;
+      familiar.Velocity = directionVector
+    else
+      targetLocation = familiar:GetOrbitPosition(player.Position)
+      familiar.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
+      if nightmareDistance < 35 then
+        nightmareDistance = nightmareDistance + 1;
+      else
+        nightmareDistance = 50 + 15 * math.sin((math.pi / 180) * (Game():GetFrameCount() * 6))       
+      end
+      familiar.Velocity = targetLocation - familiar.Position
+    end
+  end
+  for i = 1, #entities do
+    entity = entities[i]
+    if entity:IsVulnerableEnemy() then
+      if familiar.Position:Distance(entity.Position, familiar.Position) < 50 then
+        entity:AddFear(EntityRef(familiar), 150)
+      end
+    end
+  end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.nightmareUpdate, familiarList.nightmare)
 
 -- Handles Stammer AI
 function NLSSMod:stammerUpdate(familiar)
+  local player = Isaac.GetPlayer(0);
+  familiar.OrbitDistance = Vector(35, 35)
+  familiar.OrbitSpeed = 0.01;
+  familiar.OrbitLayer = 1001;
+  familiar.Velocity = familiar:GetOrbitPosition(player.Position + player.Velocity) - familiar.Position;
+  
   if familiar.FrameCount % 30 == 0 then
-    local player = Isaac.GetPlayer(0);
     directionVector = familiar.Position - player.Position;
     directionVector = directionVector:Normalized() * 50;
     tear = Isaac.GetPlayer(0):FireTear(familiar.Position, directionVector, false, false, false):ToTear();
@@ -1710,11 +1722,8 @@ function NLSSMod:onUpdate()
     coinEffect(player);
   end
   
-  -- Stammer orbital maintaining
-  stammerEffect(player);
-  
   -- Nightmare orbital maintaining
-  nightmareEffect(player);
+  --nightmareEffect(player);
   
   -- Minus room handling
   if minusRoom then
