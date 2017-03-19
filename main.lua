@@ -191,14 +191,6 @@ function NLSSMod:reset()
   damageFrames = 0;
   scumboStage = 1;
   counterDelay = 0;
-  nightmareAmount = 0;
-  nightmares = {};
-  local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.nightmare then
-			entities[i]:Remove()
-    end
-  end
   hasLooted = false;
 end
 
@@ -428,66 +420,6 @@ function minusEffect(player)
     entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
     if Game():GetFrameCount() % 10 == 0 then
       entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
-    end
-  end
-end
-
--- Nightmare AI
-function nightmareEffect(player)  	
-  for i = 1, nightmareAmount, 1 do
-    currentNightmare = nightmares[i]
-			
-    if currentNightmare == nil then
-      currentNightmare = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.nightmare, 0, player.Position, Vector(0, 0), player):ToFamiliar()
-      currentNightmare.OrbitLayer = 3
-      currentNightmare:RecalculateOrbitOffset(currentNightmare.OrbitLayer, true)
-      nightmares[i] = currentNightmare
-    end
-			
-    if currentNightmare ~= nil then
-      if not currentNightmare:Exists() or currentNightmare:IsDead() then
-        currentNightmare:Remove()
-        nightmares[i] = nil
-      else
-        local targetLocation;
-        local entities = Isaac.GetRoomEntities();
-        for i = 1, #entities do
-          entity = entities[i]
-          if entity:IsVulnerableEnemy() then
-            if currentNightmare.Position:Distance(entity.Position, currentNightmare.Position) < 100 then
-              targetLocation = entity.Position;
-              directionVector = entity.Position - currentNightmare.Position;
-              directionVector = directionVector:Normalized() * 5;
-              currentNightmare.Velocity = directionVector
-            end
-          end
-        end
-        if targetLocation == nil then
-          if currentNightmare.Position:Distance(player.Position, currentNightmare.Position) > 75 then
-            targetLocation = player.Position;
-            directionVector = player.Position - currentNightmare.Position;
-            directionVector = directionVector:Normalized() * 5;
-            currentNightmare.Velocity = directionVector
-          else
-            targetLocation = currentNightmare:GetOrbitPosition(player.Position)
-            currentNightmare.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
-            if nightmareDistance < 35 then
-              nightmareDistance = nightmareDistance + 1;
-            else
-              nightmareDistance = 50 + 15 * math.sin((math.pi / 180) * (Game():GetFrameCount() * 6))       
-            end
-            currentNightmare.Velocity = targetLocation - currentNightmare.Position
-          end
-        end
-        for i = 1, #entities do
-          entity = entities[i]
-          if entity:IsVulnerableEnemy() then
-            if currentNightmare.Position:Distance(entity.Position, currentNightmare.Position) < 50 then
-              entity:AddFear(EntityRef(currentNightmare), 150)
-            end
-          end
-        end
-      end
     end
   end
 end
@@ -1696,14 +1628,10 @@ function NLSSMod:onUpdate()
     
     -- Monster Time Boardgame reset
     if player:HasCollectible(itemList.boardgame) then
-      nightmares = {};
       nightmareAmount = 0;
       nightmareDistance = 5;
-      for i = 1, #entities do
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and entities[i].Variant == familiarList.nightmare then
-          entities[i]:Remove()
-        end
-      end
+      player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS);
+      player:EvaluateItems();
     end
     
     -- Minus Realm reset
@@ -1737,9 +1665,6 @@ function NLSSMod:onUpdate()
   if player:HasCollectible(itemList.theCoin) then
     coinEffect(player);
   end
-  
-  -- Nightmare orbital maintaining
-  --nightmareEffect(player);
   
   -- Minus room handling
   if minusRoom then
