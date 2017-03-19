@@ -1047,23 +1047,32 @@ NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familia
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.teratomo)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.scumbo)
 
-function NLSSMod:initOrbital(familiar)
+-- Initializes Nightmare familiars by placing them into the correct orbit layer
+function NLSSMod:initNightmare(familiar)
+  familiar.OrbitLayer = 11;
   familiar:RecalculateOrbitOffset(familiar.OrbitLayer, true)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initOrbital, familiarList.stammer)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initOrbital, familiarList.nightmare)
+NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initNightmare, familiarList.nightmare)
+
+-- Initializes Stammer by placing it into the correct orbit layer
+function NLSSMod:initStammer(familiar)
+  familiar.OrbitLayer = 10;
+  familiar:RecalculateOrbitOffset(familiar.OrbitLayer, true)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initStammer, familiarList.stammer)
 
 -- Handles Nightmare AI
 function NLSSMod:nightmareUpdate(familiar)
   local player = Isaac.GetPlayer(0);
-  --familiar.OrbitDistance = Vector(60, 60)
   familiar.OrbitSpeed = 0.01;
-  familiar.OrbitLayer = 1002;
   familiar.Velocity = familiar:GetOrbitPosition(player.Position + player.Velocity) - familiar.Position;
   
   local targetLocation;
   local entities = Isaac.GetRoomEntities();
+  
+  -- Look for an enemy close enough to chase
   for i = 1, #entities do
     entity = entities[i]
     if entity:IsVulnerableEnemy() then
@@ -1076,13 +1085,18 @@ function NLSSMod:nightmareUpdate(familiar)
     end
   end
   
+  -- No enemies to chase
   if targetLocation == nil then
     if familiar.Position:Distance(player.Position, familiar.Position) > 75 then
+      
+      -- Chase the player if we are too far away from it
       targetLocation = player.Position;
       directionVector = player.Position - familiar.Position;
       directionVector = directionVector:Normalized() * 5;
       familiar.Velocity = directionVector
     else
+      
+      -- Orbit the player
       targetLocation = familiar:GetOrbitPosition(player.Position)
       familiar.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
       if nightmareDistance < 35 then
@@ -1093,6 +1107,8 @@ function NLSSMod:nightmareUpdate(familiar)
       familiar.Velocity = targetLocation - familiar.Position
     end
   end
+  
+  -- Induce fear in enemies that are close enough
   for i = 1, #entities do
     entity = entities[i]
     if entity:IsVulnerableEnemy() then
@@ -1110,9 +1126,9 @@ function NLSSMod:stammerUpdate(familiar)
   local player = Isaac.GetPlayer(0);
   familiar.OrbitDistance = Vector(35, 35)
   familiar.OrbitSpeed = 0.01;
-  familiar.OrbitLayer = 1001;
   familiar.Velocity = familiar:GetOrbitPosition(player.Position + player.Velocity) - familiar.Position;
   
+  -- Shoot every 30 frames
   if familiar.FrameCount % 30 == 0 then
     directionVector = familiar.Position - player.Position;
     directionVector = directionVector:Normalized() * 50;
