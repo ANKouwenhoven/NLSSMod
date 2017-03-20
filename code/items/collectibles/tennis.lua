@@ -24,7 +24,7 @@ end
 function tennis:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
 		tennis.hasItem = false
-    SpawnItem(tennis.itemID, 320, 250)
+    SpawnPreviewItem(tennis.itemID, 320, 250)
 	end
   
 	if player:HasCollectible(tennis.itemID) then

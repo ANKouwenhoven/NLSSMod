@@ -13,13 +13,6 @@ local updateFireDelay = false;
 -- Amount to change FireDelay with
 local fireDelayChange = 0;
 
--- Flag for changing tear color
-local tearFlag = false;
-local laserColor = Color(1, 1, 1, 1, 0, 0, 0);
-
--- Keeps track of current enemies in the room
-local currentEnemies = 0;
-
 -- Keeps track of the amount of nugs eaten
 local nugCount = 0;
 local hasEatenNugs = false;
@@ -84,9 +77,6 @@ local hasLooted = false;
 -- List of all new items
 local itemList = {
   petRock = Isaac.GetItemIdByName("Pet Rock");
-  eyeForA = Isaac.GetItemIdByName("Eye for Aesthetic");
-  theCoin = Isaac.GetItemIdByName("The Coin");
-  crackedEgg = Isaac.GetItemIdByName("Cracked Eggshell");
   theBeretta = Isaac.GetItemIdByName("The Beretta");
   nug = Isaac.GetItemIdByName("Chicken Nugget");
   jellies = Isaac.GetItemIdByName("Jar of Jellies");
@@ -146,9 +136,6 @@ local familiarList = {
 
 -- List of all new costumes
 local costumeList = {
-  eyeForA = Isaac.GetCostumeIdByPath("gfx/characters/eyeForAesthetic.anm2");
-  theCoin = Isaac.GetCostumeIdByPath("gfx/characters/theCoin.anm2");
-  crackedEgg = Isaac.GetCostumeIdByPath("gfx/characters/crackedEgg.anm2");
   mindFlood = Isaac.GetCostumeIdByPath("gfx/characters/mindFlood.anm2");
   matricide = Isaac.GetCostumeIdByPath("gfx/characters/matricide.anm2");
   purpleLord = Isaac.GetCostumeIdByPath("gfx/characters/purpleLord.anm2");
@@ -192,69 +179,6 @@ end
 -- Randomly returns 1 or -1
 function RandomSign()
   if math.random() < 0.5 then return -1 else return 1 end
-end
-
--- Eye for Aesthetic effect + synergies
-local function aesthetic(player)
-  local entities = Isaac.GetRoomEntities()
-  for i = 1, #entities do
-
-    -- Normal tears
-    if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].FrameCount == 0 and entities[i].SpawnerType == EntityType.ENTITY_PLAYER then
-      entities[i].Color = Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign());
-      entities[i].Velocity = entities[i].Velocity:Rotated(RandomFloatBetween(-12, 12))
-      entities[i].Velocity = entities[i].Velocity * RandomFloatBetween(0.6, 1.4);
-    end
-    
-    -- Brimstone / Technology synergy
-    if player:HasWeaponType(WeaponType.WEAPON_BRIMSTONE) or player:HasWeaponType(WeaponType.WEAPON_LASER) then
-      if entities[i]:ToLaser() ~= nil and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and RandomFloatBetween(1, 2) > 1.5 then
-        entities[i]:ToLaser().Angle = entities[i]:ToLaser().Angle + RandomFloatBetween(1.5, 3) * RandomSign()
-        entities[i].Color = laserColor;
-        if Game():GetFrameCount() % 15 == 0 then
-          laserColor = Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign());
-        end
-        for i = 1, 2 do
-          entities[i]:ToLaser().Angle = entities[i]:ToLaser().Angle + RandomFloatBetween(1, 2) * RandomSign()
-        end
-      end
-      
-      -- Brimstone + Ludovico Technique synergy
-      if entities[i]:ToLaser() ~= nil and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and entities[i]:ToLaser():IsCircleLaser() then
-        entities[i]:AddVelocity(RandomVector() * RandomFloatBetween(0.5, 1.4))
-        entities[i].Color = laserColor;
-      end
-    end
-    
-    -- Mom's Knife synergy
-    if player:HasWeaponType(WeaponType.WEAPON_KNIFE) then
-      if entities[i]:ToKnife() ~= nil and lastKnifeFlying == false and entities[i]:ToKnife():IsFlying() == true then
-        entities[i]:ToKnife().Rotation = entities[i]:ToKnife().Rotation + RandomFloatBetween(-14, 14)
-      end
-      if entities[i]:ToKnife() ~= nil then
-        lastKnifeFlying = entities[i]:ToKnife():IsFlying()
-      end
-    end
-    
-    -- Ludovico Technique synergy
-    if player:HasWeaponType(WeaponType.WEAPON_LUDOVICO_TECHNIQUE) then
-      if entities[i].Type == EntityType.ENTITY_TEAR then
-        entities[i]:AddVelocity(RandomVector() * RandomFloatBetween(0.3, 1.2))
-        if Game():GetFrameCount() % 30 == 0 then
-          entities[i].Color = Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign());
-        end
-      end
-    end
-    
-    -- Dr Fetus synergy
-    if player:HasWeaponType(WeaponType.WEAPON_BOMBS) then
-      if entities[i].Type == EntityType.ENTITY_BOMBDROP then 
-        if entities[i]:ToBomb().IsFetus == true and entities[i].FrameCount == 0 then
-          entities[i].Velocity = entities[i].Velocity:Rotated(RandomFloatBetween(-12, 12))
-        end
-      end
-    end
-	end
 end
 
 -- Checks sprites for being already custom
@@ -396,22 +320,6 @@ function minusEffect(player)
   end
 end
 
--- The Coin's effect
-function coinEffect(player)
-  local entities = Isaac.GetRoomEntities();
-  currentEnemies = 0;
-  
-  for i = 1, #entities do
-    entity = entities[i]
-    if entity:IsVulnerableEnemy() then
-			currentEnemies = currentEnemies + 1;
-		end
-	end
-  
-  player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-  player:EvaluateItems();
-end
-
 -- Purple Lord effect
 function purpleEffect(player)
   local entities = Isaac.GetRoomEntities()
@@ -473,29 +381,6 @@ function cobaltEffect(player)
   end
 end
 
--- Cracked Eggshell's effect
-function eggEffect()
-  local player = Isaac.GetPlayer(0);
-  local oldTearColor = player.TearColor;
-  local oldDamage = player.Damage;
-  player.TearColor = Color(1, 1, 1, 1, 255, 255, 255);
-  
-  for tears = 1, 25 do
-    local directionVector = Vector(RandomSign() * math.random(1, 10), RandomSign() * math.random(1, 10));
-    tear1 = player:FireTear(player.Position, directionVector, false, false, false);
-  end
-    
-  player.TearColor = Color(1, 1, 1, 1, 255, 255, 0);
-  player.Damage = player.Damage + 5;
-  for tears = 1, 5 do
-    local directionVector = Vector(RandomSign() * math.random(1, 3), RandomSign() * math.random(1, 5));
-    tear2 = player:FireTear(player.Position, directionVector, false, false, false);
-  end
-    
-  player.Damage = oldDamage;
-  player.TearColor = oldTearColor;
-end
-
 -- Scumbo's AI on damage
 function scumboEffect()
   local takenDamage = true;
@@ -525,10 +410,6 @@ end
 -- Events on damage
 function NLSSMod:onDamage(player_x, damage_amount, damage_flag, damage_source, invincibility_frames)
   local player = Isaac.GetPlayer(0);
-  
-  if player:HasCollectible(itemList.crackedEgg) then
-    eggEffect();
-  end
   
   if player:HasCollectible(itemList.cobalt) then
     cobaltBuff = 0;
@@ -784,10 +665,8 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   
   -- Firedelay Stats
   fireDelayChange = 0;
-  addFlatStat(itemList.eyeForA, 4, CacheFlag.CACHE_FIREDELAY, cacheFlag);
   
   -- Damage Stats
-  addFlatStat(itemList.theCoin, 0.25 * currentEnemies, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.cobalt, 0.25 * cobaltBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.purpleLord, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
@@ -1473,8 +1352,10 @@ function greenmanUpdate()
 end
 
 -- Quality of life item spawn function
-function SpawnItem(Item, X, Y)
-  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, Item, Vector(X, Y), Vector(0, 0), nil)
+function SpawnPreviewItem(Item, X, Y)
+  if PREVIEW_ITEMS then
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, Item, Vector(X, Y), Vector(0, 0), nil)
+  end
 end
 
 -- Code that has to run every frame
@@ -1486,11 +1367,8 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.minus, 420, 350)
     SpawnItem(itemList.lootHoard, 370, 350)
     SpawnItem(itemList.mushroom, 320, 350)
-    
-    SpawnItem(itemList.crackedEgg, 470, 300)
-    SpawnItem(itemList.theCoin, 420, 300)
+  
     SpawnItem(itemList.petRock, 370, 300)
-    SpawnItem(itemList.eyeForA, 220, 300)
     SpawnItem(itemList.theBeretta, 170, 300)
     
     SpawnItem(itemList.nug, 470, 250)
@@ -1600,16 +1478,6 @@ function NLSSMod:onUpdate()
     end
   end
   
-  -- Eye for Aesthetic effect
-  if player:HasCollectible(itemList.eyeForA) then
-    aesthetic(player);
-  end
-  
-  -- Coin effect
-  if player:HasCollectible(itemList.theCoin) then
-    coinEffect(player);
-  end
-  
   -- Minus room handling
   if minusRoom then
     minusEffect(player);
@@ -1676,9 +1544,6 @@ NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 -- Costume regulation
 function NLSSMod:playerUpdate(player)
   if Game():GetFrameCount() == 1 then
-    NLSSMod.hasEyeForA = false
-    NLSSMod.hasTheCoin = false
-    NLSSMod.hasCrackedEgg = false;
     NLSSMod.hasRedShirt = false;
     NLSSMod.hasMindFlood = false;
     NLSSMod.hasMatricide = false;
@@ -1686,24 +1551,6 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasRyuka = false;
     NLSSMod.hasGoldHat = false;
     NLSSMod.hasCobalt = false;
-  end
-  
-  -- Rainbow eyes
-  if not NLSSMod.hasEyeForA and player:HasCollectible(itemList.eyeForA) then
-    player:AddNullCostume(costumeList.eyeForA)
-    NLSSMod.hasEyeForA = true
-  end
-  
-  -- Chicken mohawk + beak
-  if not NLSSMod.hasTheCoin and player:HasCollectible(itemList.theCoin) then
-    player:AddNullCostume(costumeList.theCoin)
-    NLSSMod.hasTheCoin = true
-  end
-  
-  -- Cracked head
-  if not NLSSMod.hasCrackedEgg and player:HasCollectible(itemList.crackedEgg) then
-    player:AddNullCostume(costumeList.crackedEgg)
-    NLSSMod.hasCrackedEgg = true
   end
   
   -- Flood droplet
@@ -1758,5 +1605,8 @@ require("code/items/collectibles/laCroix");
 require("code/items/collectibles/madrinas");
 require("code/items/collectibles/nugCrown");
 require("code/items/collectibles/gungeonMaster");
+require("code/items/collectibles/eyeForAesthetic");
+require("code/items/collectibles/theCoin");
+require("code/items/collectibles/crackedEgg");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")

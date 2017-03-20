@@ -22,7 +22,7 @@ end
 function gungeonMaster:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
 		gungeonMaster.hasItem = false
-    SpawnItem(gungeonMaster.itemID, 320, 300)
+    SpawnPreviewItem(gungeonMaster.itemID, 320, 300)
 	end
   
 	if player:HasCollectible(gungeonMaster.itemID) then

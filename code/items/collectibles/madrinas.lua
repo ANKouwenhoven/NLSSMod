@@ -22,7 +22,7 @@ end
 function madrinas:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
 		madrinas.hasItem = false
-    SpawnItem(madrinas.itemID, 320, 200)
+    SpawnPreviewItem(madrinas.itemID, 320, 200)
 	end
   
 	if player:HasCollectible(madrinas.itemID) then

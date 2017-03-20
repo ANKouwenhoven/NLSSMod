@@ -22,7 +22,7 @@ end
 function rattler:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
 		rattler.hasItem = false
-    SpawnItem(rattler.itemID, 470, 350)
+    SpawnPreviewItem(rattler.itemID, 470, 350)
 	end
   
 	if player:HasCollectible(rattler.itemID) then

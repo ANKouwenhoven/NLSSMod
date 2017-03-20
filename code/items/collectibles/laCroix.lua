@@ -19,7 +19,7 @@ end
 function laCroix:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
 		laCroix.hasItem = false
-    SpawnItem(laCroix.itemID, 270, 300)
+    SpawnPreviewItem(laCroix.itemID, 270, 300)
 	end
   
 	if player:HasCollectible(laCroix.itemID) then

@@ -1,0 +1,98 @@
+----------------------------------------
+-- Eye for Aesthetic
+-- Zany Tears
+----------------------------------------
+-- 4 tears up
+-- Fired tears have a small spread
+-- Fired tears have a random shotspeed
+-- Fired tears have a random color
+----------------------------------------
+
+local eyeForA = {
+  itemID = Isaac.GetItemIdByName("Eye for Aesthetic");
+  costumeID = Isaac.GetCostumeIdByPath("gfx/characters/eyeForAesthetic.anm2");
+  hasItem = nil;
+  laserColor = Color(1, 1, 1, 1, 0, 0, 0);
+}
+
+function eyeForA:cacheUpdate(player, cacheFlag)
+  addFlatStat(eyeForA.itemID, 4, CacheFlag.CACHE_FIREDELAY, cacheFlag);
+end
+
+function aestheticEffect(player)
+  local entities = Isaac.GetRoomEntities();
+  for i = 1, #entities do
+
+    -- Normal tears
+    if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].FrameCount == 0 and entities[i].SpawnerType == EntityType.ENTITY_PLAYER then
+      entities[i].Color = Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign());
+      entities[i].Velocity = entities[i].Velocity:Rotated(RandomFloatBetween(-12, 12))
+      entities[i].Velocity = entities[i].Velocity * RandomFloatBetween(0.6, 1.4);
+    end
+    
+    -- Brimstone / Technology synergy
+    if player:HasWeaponType(WeaponType.WEAPON_BRIMSTONE) or player:HasWeaponType(WeaponType.WEAPON_LASER) then
+      if entities[i]:ToLaser() ~= nil and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and RandomFloatBetween(1, 2) > 1.5 then
+        entities[i]:ToLaser().Angle = entities[i]:ToLaser().Angle + RandomFloatBetween(1.5, 3) * RandomSign()
+        entities[i].Color = eyeForA.laserColor;
+        if Game():GetFrameCount() % 15 == 0 then
+          eyeForA.laserColor = Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign());
+        end
+      end
+      
+      -- Brimstone + Ludovico Technique synergy
+      if entities[i]:ToLaser() ~= nil and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and entities[i]:ToLaser():IsCircleLaser() then
+        entities[i]:AddVelocity(RandomVector() * RandomFloatBetween(0.5, 1.4))
+        entities[i].Color = eyeForA.laserColor;
+      end
+    end
+    
+    -- Mom's Knife synergy
+    if player:HasWeaponType(WeaponType.WEAPON_KNIFE) then
+      if entities[i]:ToKnife() ~= nil and lastKnifeFlying == false and entities[i]:ToKnife():IsFlying() == true then
+        entities[i]:ToKnife().Rotation = entities[i]:ToKnife().Rotation + RandomFloatBetween(-14, 14)
+      end
+      if entities[i]:ToKnife() ~= nil then
+        lastKnifeFlying = entities[i]:ToKnife():IsFlying()
+      end
+    end
+    
+    -- Ludovico Technique synergy
+    if player:HasWeaponType(WeaponType.WEAPON_LUDOVICO_TECHNIQUE) then
+      if entities[i].Type == EntityType.ENTITY_TEAR then
+        entities[i]:AddVelocity(RandomVector() * RandomFloatBetween(0.3, 1.2))
+        if Game():GetFrameCount() % 30 == 0 then
+          entities[i].Color = Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign());
+        end
+      end
+    end
+    
+    -- Dr Fetus synergy
+    if player:HasWeaponType(WeaponType.WEAPON_BOMBS) then
+      if entities[i].Type == EntityType.ENTITY_BOMBDROP then 
+        if entities[i]:ToBomb().IsFetus == true and entities[i].FrameCount == 0 then
+          entities[i].Velocity = entities[i].Velocity:Rotated(RandomFloatBetween(-12, 12))
+        end
+      end
+    end
+	end
+end
+
+function eyeForA:onPlayerUpdate(player)
+	if Game():GetFrameCount() == 1 then
+		eyeForA.hasItem = false
+    SpawnPreviewItem(eyeForA.itemID, 220, 300)
+	end
+  
+	if player:HasCollectible(eyeForA.itemID) then
+		if eyeForA.hasItem == false then
+			player:AddNullCostume(eyeForA.costumeID)
+			eyeForA.hasItem = true
+		end
+    
+    aestheticEffect(player);
+	end
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, eyeForA.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, eyeForA.cacheUpdate)
