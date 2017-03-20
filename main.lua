@@ -1,5 +1,5 @@
 -- Registers this mod
-local NLSSMod = RegisterMod("NLSSMod", 1);
+NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
 local PREVIEW_ITEMS = true;
@@ -85,7 +85,6 @@ local hasLooted = false;
 local itemList = {
   gungeonMaster = Isaac.GetItemIdByName("Gungeon Master");
   petRock = Isaac.GetItemIdByName("Pet Rock");
-  laCroix = Isaac.GetItemIdByName("LaCroix");
   eyeForA = Isaac.GetItemIdByName("Eye for Aesthetic");
   theCoin = Isaac.GetItemIdByName("The Coin");
   crackedEgg = Isaac.GetItemIdByName("Cracked Eggshell");
@@ -94,7 +93,6 @@ local itemList = {
   nugCrown = Isaac.GetItemIdByName("Nug King's Crown");
   jellies = Isaac.GetItemIdByName("Jar of Jellies");
   oceanMan = Isaac.GetItemIdByName("Ocean Man");
-  tennis = Isaac.GetItemIdByName("Tennis");
   murph = Isaac.GetItemIdByName("Murph");
   redShirt = Isaac.GetItemIdByName("Red Shirt");
   stapler = Isaac.GetItemIdByName("The Stapler");
@@ -113,7 +111,6 @@ local itemList = {
   goldHat = Isaac.GetItemIdByName("Golden Hat");
   stammer = Isaac.GetItemIdByName("Staggered Stammer");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
-  rattler = Isaac.GetItemIdByName("Rattler");
   minus = Isaac.GetItemIdByName("Minus Realm");
   lootHoard = Isaac.GetItemIdByName("Loot Hoard");
   mushroom = Isaac.GetItemIdByName("Poison Mushroom");
@@ -153,12 +150,10 @@ local familiarList = {
 -- List of all new costumes
 local costumeList = {
   eyeForA = Isaac.GetCostumeIdByPath("gfx/characters/eyeForAesthetic.anm2");
-  laCroix = Isaac.GetCostumeIdByPath("gfx/characters/laCroix.anm2");
   theCoin = Isaac.GetCostumeIdByPath("gfx/characters/theCoin.anm2");
   gungeonMaster = Isaac.GetCostumeIdByPath("gfx/characters/gungeonMaster.anm2");
   crackedEgg = Isaac.GetCostumeIdByPath("gfx/characters/crackedEgg.anm2");
   nugCrown = Isaac.GetCostumeIdByPath("gfx/characters/nugCrown.anm2");
-  tennis = Isaac.GetCostumeIdByPath("gfx/characters/tennis.anm2");
   mindFlood = Isaac.GetCostumeIdByPath("gfx/characters/mindFlood.anm2");
   matricide = Isaac.GetCostumeIdByPath("gfx/characters/matricide.anm2");
   purpleLord = Isaac.GetCostumeIdByPath("gfx/characters/purpleLord.anm2");
@@ -167,7 +162,6 @@ local costumeList = {
   cobalt = Isaac.GetCostumeIdByPath("gfx/characters/cobalt.anm2");
   madrinas = Isaac.GetCostumeIdByPath("gfx/characters/madrinas.anm2");
   redShirt = Isaac.GetCostumeIdByPath("gfx/characters/redShirt.anm2");
-  rattler = Isaac.GetCostumeIdByPath("gfx/characters/rattler.anm2");
 }
 
 -- List of all new effects
@@ -812,18 +806,15 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   
   -- Firedelay Stats
   fireDelayChange = 0;
-  addFlatStat(itemList.laCroix, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);
   addFlatStat(itemList.eyeForA, 4, CacheFlag.CACHE_FIREDELAY, cacheFlag);
   
   -- Damage Stats
   addFlatStat(itemList.gungeonMaster, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  addFlatStat(itemList.tennis, 0.5, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.theCoin, 0.25 * currentEnemies, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.cobalt, 0.25 * cobaltBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.purpleLord, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.nugCrown, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  addFlatStat(itemList.rattler, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, player.Damage * 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
@@ -838,9 +829,7 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   
   -- Shotspeed Stats
   addFlatStat(itemList.gungeonMaster, 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
-  addFlatStat(itemList.tennis, 0.25, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
-  addFlatStat(itemList.rattler, -0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, player.ShotSpeed * 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   end
@@ -848,15 +837,10 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   -- Speed Stats
   addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.nugCrown, 0.30, CacheFlag.CACHE_SPEED, cacheFlag);
-  addFlatStat(itemList.tennis, 0.15, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
-  addFlatStat(itemList.rattler, -0.15, CacheFlag.CACHE_SPEED, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
   end
-  
-  -- Range Stats
-  addFlatStat(itemList.tennis, 2, CacheFlag.CACHE_RANGE, cacheFlag);
   
   -- Mind Flood Stats
   if mindFlooding then
@@ -1350,8 +1334,8 @@ function NLSSMod:oceanManUpdate(familiar)
     oceanAura = Isaac.Spawn(effectList.oceanWhirl, 1010, 0, familiar.Position, Vector(0, 0), player);
   else
     oceanAura.Position = familiar.Position;
-    oceanAura.RenderZOffset = -13999;
-    oceanAura.Velocity = Vector(0, 0);
+    oceanAura.RenderZOffset = -999;
+    oceanAura.Velocity = familiar.Velocity;
   end
   
   player:AddCacheFlags(CacheFlag.CACHE_RANGE);
@@ -1529,7 +1513,6 @@ function NLSSMod:onUpdate()
   
   -- Spawn all mod items on the very first frame
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
-    SpawnItem(itemList.rattler, 470, 350)
     SpawnItem(itemList.minus, 420, 350)
     SpawnItem(itemList.lootHoard, 370, 350)
     SpawnItem(itemList.mushroom, 320, 350)
@@ -1538,14 +1521,12 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.theCoin, 420, 300)
     SpawnItem(itemList.petRock, 370, 300)
     SpawnItem(itemList.gungeonMaster, 320, 300)
-    SpawnItem(itemList.laCroix, 270, 300)
     SpawnItem(itemList.eyeForA, 220, 300)
     SpawnItem(itemList.theBeretta, 170, 300)
     
     SpawnItem(itemList.nug, 470, 250)
     SpawnItem(itemList.jellies, 420, 250)
     SpawnItem(itemList.oceanMan, 370, 250)
-    SpawnItem(itemList.tennis, 320, 250)
     SpawnItem(itemList.murph, 270, 250)
     SpawnItem(itemList.redShirt, 220, 250)
     SpawnItem(itemList.stapler, 170, 250)
@@ -1733,12 +1714,10 @@ NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 function NLSSMod:playerUpdate(player)
   if Game():GetFrameCount() == 1 then
     NLSSMod.hasEyeForA = false
-    NLSSMod.hasLaCroix = false
     NLSSMod.hasTheCoin = false
     NLSSMod.hasGungeonMaster = false;
     NLSSMod.hasCrackedEgg = false;
     NLSSMod.hasNugCrown = false;
-    NLSSMod.hasTennis = false;
     NLSSMod.hasRedShirt = false;
     NLSSMod.hasMindFlood = false;
     NLSSMod.hasMatricide = false;
@@ -1747,7 +1726,6 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasGoldHat = false;
     NLSSMod.hasCobalt = false;
     NLSSMod.hasMadrinas = false;
-    NLSSMod.hasRattler = false;
   end
   
   -- Rainbow eyes
@@ -1760,12 +1738,6 @@ function NLSSMod:playerUpdate(player)
   if not NLSSMod.hasTheCoin and player:HasCollectible(itemList.theCoin) then
     player:AddNullCostume(costumeList.theCoin)
     NLSSMod.hasTheCoin = true
-  end
-  
-  -- Watery mouth + can mark
-  if not NLSSMod.hasLaCroix and player:HasCollectible(itemList.laCroix) then
-    player:AddNullCostume(costumeList.laCroix)
-    NLSSMod.hasLaCroix = true
   end
   
   -- Bullethead
@@ -1784,12 +1756,6 @@ function NLSSMod:playerUpdate(player)
   if not NLSSMod.hasCrackedEgg and player:HasCollectible(itemList.crackedEgg) then
     player:AddNullCostume(costumeList.crackedEgg)
     NLSSMod.hasCrackedEgg = true
-  end
-  
-  -- Corn leaves
-  if not NLSSMod.hasTennis and player:HasCollectible(itemList.tennis) then
-    player:AddNullCostume(costumeList.tennis)
-    NLSSMod.hasTennis = true
   end
   
   -- Flood droplet
@@ -1839,14 +1805,13 @@ function NLSSMod:playerUpdate(player)
     player:AddNullCostume(costumeList.redShirt)
     NLSSMod.hasRedShirt = true
   end
-  
-  -- Rattler
-  if not NLSSMod.hasRattler and player:HasCollectible(itemList.rattler) then
-    player:AddNullCostume(costumeList.rattler)
-    NLSSMod.hasRattler = true
-  end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, NLSSMod.playerUpdate)
+
+-- Passive items
+require("code/items/collectibles/tennis");
+require("code/items/collectibles/rattler");
+require("code/items/collectibles/laCroix");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
