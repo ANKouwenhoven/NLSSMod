@@ -2,7 +2,8 @@
 -- Cracked Eggshell
 -- Badly Damaged
 ----------------------------------------
--- When you take damage, explode into tears.
+-- When you take damage, explode into
+-- tears.
 ----------------------------------------
 
 local crackedEgg = {

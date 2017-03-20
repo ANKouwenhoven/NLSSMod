@@ -24,9 +24,6 @@ local murphTimer = 0;
 local usedStapler = false;
 local removedTearDelay = 0;
 
--- Keeps track of whether your mind is being flooded
-local mindFlooding = false;
-
 -- Ocean man's Aura
 local oceanAura;
 
@@ -82,7 +79,6 @@ local itemList = {
   jellies = Isaac.GetItemIdByName("Jar of Jellies");
   oceanMan = Isaac.GetItemIdByName("Ocean Man");
   murph = Isaac.GetItemIdByName("Murph");
-  redShirt = Isaac.GetItemIdByName("Red Shirt");
   stapler = Isaac.GetItemIdByName("The Stapler");
   mindFlood = Isaac.GetItemIdByName("Mind Flood");
   chatter = Isaac.GetItemIdByName("Twitchy Chatter");
@@ -142,7 +138,6 @@ local costumeList = {
   ryuka = Isaac.GetCostumeIdByPath("gfx/characters/ryuka.anm2");
   goldHat = Isaac.GetCostumeIdByPath("gfx/characters/goldHat.anm2");
   cobalt = Isaac.GetCostumeIdByPath("gfx/characters/cobalt.anm2");
-  redShirt = Isaac.GetCostumeIdByPath("gfx/characters/redShirt.anm2");
 }
 
 -- List of all new effects
@@ -179,6 +174,11 @@ end
 -- Randomly returns 1 or -1
 function RandomSign()
   if math.random() < 0.5 then return -1 else return 1 end
+end
+
+function round(number, decimals)
+  local multiplier = 10^(decimals or 0)
+  return math.floor(number * multiplier + 0.5) / multiplier
 end
 
 -- Checks sprites for being already custom
@@ -335,31 +335,6 @@ function purpleEffect(player)
       end
 		end
 	end
-end
-
--- Mind Flood's effect
-function floodEffect(player)
-  local entities = Isaac.GetRoomEntities();
-  
-  for i = 1, #entities do
-    local enemy = entities[i]
-    if enemy:IsVulnerableEnemy() then
-      if player.Position:Distance(enemy.Position, player.Position) < 100 then
-        if math.random(1, 4) == 4 then
-          creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_BLACK, 0, player.Position, Vector(0, 0), player);
-          creep:SetColor(Color(0, 0, 1, 1, 100, 150, 250), 0, 0, false, false)
-        end
-        mindFlooding = true;
-        break;
-      else
-        mindFlooding = false;
-      end
-    end
-  end
-  player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-  player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
-  player:AddCacheFlags(CacheFlag.CACHE_SPEED);
-  player:EvaluateItems();
 end
 
 -- Cobalt's Streak effect
@@ -689,13 +664,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
-  end
-  
-  -- Mind Flood Stats
-  if mindFlooding then
-    addFlatStat(itemList.mindFlood, 1, CacheFlag.CACHE_DAMAGE, cacheFlag);
-    addFlatStat(itemList.mindFlood, 0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
-    addFlatStat(itemList.mindFlood, 0.10, CacheFlag.CACHE_SPEED, cacheFlag);
   end
   
   -- Familiar Stats
@@ -1375,10 +1343,8 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.jellies, 420, 250)
     SpawnItem(itemList.oceanMan, 370, 250)
     SpawnItem(itemList.murph, 270, 250)
-    SpawnItem(itemList.redShirt, 220, 250)
     SpawnItem(itemList.stapler, 170, 250)
     
-    SpawnItem(itemList.mindFlood, 470, 200)
     SpawnItem(itemList.chatter, 420, 200)
     SpawnItem(itemList.greenman, 370, 200)
     SpawnItem(itemList.cobalt, 270, 200)
@@ -1416,16 +1382,6 @@ function NLSSMod:onUpdate()
   if Game():GetRoom():GetFrameCount() == 1 then
     
     local entities = Isaac.GetRoomEntities();
-    
-    -- Red Shirt effect
-    if player:HasCollectible(itemList.redShirt) then
-      for i = 1, #entities do
-        local enemy = entities[i]
-        if enemy:IsVulnerableEnemy() and math.random(1, 4) == 3 then
-          enemy:AddCharmed(120);
-        end
-      end
-    end
     
     -- Teratomo reset
     if player:HasCollectible(itemList.teratomo) then
@@ -1488,11 +1444,6 @@ function NLSSMod:onUpdate()
     purpleEffect(player);
   end
   
-  -- Mind Flood effect
-  if player:HasCollectible(itemList.mindFlood) then
-    floodEffect(player);
-  end
-  
   -- Cobalt's Streak effect
   if player:HasCollectible(itemList.cobalt) then
     cobaltEffect(player);
@@ -1544,7 +1495,6 @@ NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 -- Costume regulation
 function NLSSMod:playerUpdate(player)
   if Game():GetFrameCount() == 1 then
-    NLSSMod.hasRedShirt = false;
     NLSSMod.hasMindFlood = false;
     NLSSMod.hasMatricide = false;
     NLSSMod.hasPurpleLord = false;
@@ -1588,12 +1538,6 @@ function NLSSMod:playerUpdate(player)
     player:AddNullCostume(costumeList.cobalt)
     NLSSMod.hasCobalt = true
   end
-  
-  -- Red Shirt
-  if not NLSSMod.hasRedShirt and player:HasCollectible(itemList.redShirt) then
-    player:AddNullCostume(costumeList.redShirt)
-    NLSSMod.hasRedShirt = true
-  end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, NLSSMod.playerUpdate)
@@ -1608,5 +1552,7 @@ require("code/items/collectibles/gungeonMaster");
 require("code/items/collectibles/eyeForAesthetic");
 require("code/items/collectibles/theCoin");
 require("code/items/collectibles/crackedEgg");
+require("code/items/collectibles/redShirt");
+require("code/items/collectibles/mindFlood");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
