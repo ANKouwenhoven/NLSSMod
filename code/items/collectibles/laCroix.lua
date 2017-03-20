@@ -8,11 +8,9 @@
 
 local laCroix = {
   itemID = Isaac.GetItemIdByName("LaCroix");
-  costumeID = nil;
+  costumeID = Isaac.GetCostumeIdByPath("gfx/characters/laCroix.anm2");
   hasItem = nil;
 }
-
-laCroix.costumeID = Isaac.GetCostumeIdByPath("gfx/characters/laCroix.anm2");
 
 function laCroix:cacheUpdate(player, cacheFlag)
   addFlatStat(laCroix.itemID, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);

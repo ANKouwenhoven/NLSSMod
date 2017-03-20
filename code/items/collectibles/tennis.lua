@@ -10,11 +10,9 @@
 
 local tennis = {
   itemID = Isaac.GetItemIdByName("Tennis");
-  costumeID = nil;
+  costumeID = Isaac.GetCostumeIdByPath("gfx/characters/tennis.anm2");
   hasItem = nil;
 }
-
-tennis.costumeID = Isaac.GetCostumeIdByPath("gfx/characters/tennis.anm2");
 
 function tennis:cacheUpdate(player, cacheFlag)
   addFlatStat(tennis.itemID, 0.5, CacheFlag.CACHE_DAMAGE, cacheFlag);

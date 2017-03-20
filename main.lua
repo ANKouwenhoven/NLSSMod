@@ -83,14 +83,12 @@ local hasLooted = false;
 
 -- List of all new items
 local itemList = {
-  gungeonMaster = Isaac.GetItemIdByName("Gungeon Master");
   petRock = Isaac.GetItemIdByName("Pet Rock");
   eyeForA = Isaac.GetItemIdByName("Eye for Aesthetic");
   theCoin = Isaac.GetItemIdByName("The Coin");
   crackedEgg = Isaac.GetItemIdByName("Cracked Eggshell");
   theBeretta = Isaac.GetItemIdByName("The Beretta");
   nug = Isaac.GetItemIdByName("Chicken Nugget");
-  nugCrown = Isaac.GetItemIdByName("Nug King's Crown");
   jellies = Isaac.GetItemIdByName("Jar of Jellies");
   oceanMan = Isaac.GetItemIdByName("Ocean Man");
   murph = Isaac.GetItemIdByName("Murph");
@@ -100,7 +98,6 @@ local itemList = {
   chatter = Isaac.GetItemIdByName("Twitchy Chatter");
   greenman = Isaac.GetItemIdByName("Mr Greenman");
   matricide = Isaac.GetItemIdByName("Matricide");
-  madrinas = Isaac.GetItemIdByName("Madrinas Coffee");
   cobalt = Isaac.GetItemIdByName("Cobalt's Streak");
   ghostBill = Isaac.GetItemIdByName("Ghost Bill");
   purpleLord = Isaac.GetItemIdByName("Purple Lord");
@@ -151,16 +148,13 @@ local familiarList = {
 local costumeList = {
   eyeForA = Isaac.GetCostumeIdByPath("gfx/characters/eyeForAesthetic.anm2");
   theCoin = Isaac.GetCostumeIdByPath("gfx/characters/theCoin.anm2");
-  gungeonMaster = Isaac.GetCostumeIdByPath("gfx/characters/gungeonMaster.anm2");
   crackedEgg = Isaac.GetCostumeIdByPath("gfx/characters/crackedEgg.anm2");
-  nugCrown = Isaac.GetCostumeIdByPath("gfx/characters/nugCrown.anm2");
   mindFlood = Isaac.GetCostumeIdByPath("gfx/characters/mindFlood.anm2");
   matricide = Isaac.GetCostumeIdByPath("gfx/characters/matricide.anm2");
   purpleLord = Isaac.GetCostumeIdByPath("gfx/characters/purpleLord.anm2");
   ryuka = Isaac.GetCostumeIdByPath("gfx/characters/ryuka.anm2");
   goldHat = Isaac.GetCostumeIdByPath("gfx/characters/goldHat.anm2");
   cobalt = Isaac.GetCostumeIdByPath("gfx/characters/cobalt.anm2");
-  madrinas = Isaac.GetCostumeIdByPath("gfx/characters/madrinas.anm2");
   redShirt = Isaac.GetCostumeIdByPath("gfx/characters/redShirt.anm2");
 }
 
@@ -282,22 +276,6 @@ function isCustomSprite(sprite)
   end
     
   return false;
-end
-
--- Turns tears to bullet sprites
-function gungeonTears(player)
-  local entities = Isaac.GetRoomEntities()
-  for i = 1, #entities do
-		local singleEntity = entities[i]
-		if singleEntity.Type == EntityType.ENTITY_TEAR then			
-			local currentSprite = singleEntity:GetSprite():GetFilename() 
-			if isCustomSprite(currentSprite) == false then
-				local newTearSprite = singleEntity:GetSprite() 
-				newTearSprite:Load("gfx/Effects/gungeonBullet.anm2", true)	
-				newTearSprite:Play("Idle", true)
-			end		
-		end
-	end
 end
 
 -- Matricide effect
@@ -809,12 +787,10 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   addFlatStat(itemList.eyeForA, 4, CacheFlag.CACHE_FIREDELAY, cacheFlag);
   
   -- Damage Stats
-  addFlatStat(itemList.gungeonMaster, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.theCoin, 0.25 * currentEnemies, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.cobalt, 0.25 * cobaltBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.purpleLord, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  addFlatStat(itemList.nugCrown, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, player.Damage * 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
@@ -824,19 +800,13 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   
   -- Luck Stats
   addFlatStat(itemList.petRock, 1, CacheFlag.CACHE_LUCK, cacheFlag);
-  addFlatStat(itemList.nugCrown, 2, CacheFlag.CACHE_LUCK, cacheFlag);
-  addFlatStat(itemList.madrinas, 1, CacheFlag.CACHE_LUCK, cacheFlag);
   
   -- Shotspeed Stats
-  addFlatStat(itemList.gungeonMaster, 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
-  addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, player.ShotSpeed * 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
   end
   
   -- Speed Stats
-  addFlatStat(itemList.madrinas, 0.20, CacheFlag.CACHE_SPEED, cacheFlag);
-  addFlatStat(itemList.nugCrown, 0.30, CacheFlag.CACHE_SPEED, cacheFlag);
   addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
@@ -1520,7 +1490,6 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.crackedEgg, 470, 300)
     SpawnItem(itemList.theCoin, 420, 300)
     SpawnItem(itemList.petRock, 370, 300)
-    SpawnItem(itemList.gungeonMaster, 320, 300)
     SpawnItem(itemList.eyeForA, 220, 300)
     SpawnItem(itemList.theBeretta, 170, 300)
     
@@ -1534,7 +1503,6 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.mindFlood, 470, 200)
     SpawnItem(itemList.chatter, 420, 200)
     SpawnItem(itemList.greenman, 370, 200)
-    SpawnItem(itemList.madrinas, 320, 200)
     SpawnItem(itemList.cobalt, 270, 200)
     SpawnItem(itemList.ghostBill, 220, 200)
     SpawnItem(itemList.purpleLord, 170, 200)
@@ -1637,11 +1605,6 @@ function NLSSMod:onUpdate()
     aesthetic(player);
   end
   
-  -- Gungeon Master effect
-  if player:HasCollectible(itemList.gungeonMaster) then
-    gungeonTears(player);
-  end
-  
   -- Coin effect
   if player:HasCollectible(itemList.theCoin) then
     coinEffect(player);
@@ -1715,9 +1678,7 @@ function NLSSMod:playerUpdate(player)
   if Game():GetFrameCount() == 1 then
     NLSSMod.hasEyeForA = false
     NLSSMod.hasTheCoin = false
-    NLSSMod.hasGungeonMaster = false;
     NLSSMod.hasCrackedEgg = false;
-    NLSSMod.hasNugCrown = false;
     NLSSMod.hasRedShirt = false;
     NLSSMod.hasMindFlood = false;
     NLSSMod.hasMatricide = false;
@@ -1725,7 +1686,6 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasRyuka = false;
     NLSSMod.hasGoldHat = false;
     NLSSMod.hasCobalt = false;
-    NLSSMod.hasMadrinas = false;
   end
   
   -- Rainbow eyes
@@ -1738,18 +1698,6 @@ function NLSSMod:playerUpdate(player)
   if not NLSSMod.hasTheCoin and player:HasCollectible(itemList.theCoin) then
     player:AddNullCostume(costumeList.theCoin)
     NLSSMod.hasTheCoin = true
-  end
-  
-  -- Bullethead
-  if not NLSSMod.hasGungeonMaster and player:HasCollectible(itemList.gungeonMaster) then
-    player:AddNullCostume(costumeList.gungeonMaster)
-    NLSSMod.hasGungeonMaster = true
-  end
-  
-  -- Nug Crown
-  if not NLSSMod.hasNugCrown and player:HasCollectible(itemList.nugCrown) then
-    player:AddNullCostume(costumeList.nugCrown)
-    NLSSMod.hasNugCrown = true
   end
   
   -- Cracked head
@@ -1788,12 +1736,6 @@ function NLSSMod:playerUpdate(player)
     NLSSMod.hasGoldHat = true
   end
   
-  -- Madrinas Coffee
-  if not NLSSMod.hasMadrinas and player:HasCollectible(itemList.madrinas) then
-    player:AddNullCostume(costumeList.madrinas)
-    NLSSMod.hasMadrinas = true
-  end
-  
   -- Inner Cobalt
   if not NLSSMod.hasCobalt and player:HasCollectible(itemList.cobalt) then
     player:AddNullCostume(costumeList.cobalt)
@@ -1813,5 +1755,8 @@ NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, NLSSMod.playerUpdate)
 require("code/items/collectibles/tennis");
 require("code/items/collectibles/rattler");
 require("code/items/collectibles/laCroix");
+require("code/items/collectibles/madrinas");
+require("code/items/collectibles/nugCrown");
+require("code/items/collectibles/gungeonMaster");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")

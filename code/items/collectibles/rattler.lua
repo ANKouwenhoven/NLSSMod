@@ -9,11 +9,9 @@
 
 local rattler = {
   itemID = Isaac.GetItemIdByName("Rattler");
-  costumeID = nil;
+  costumeID = Isaac.GetCostumeIdByPath("gfx/characters/rattler.anm2");
   hasItem = nil;
 }
-
-rattler.costumeID = Isaac.GetCostumeIdByPath("gfx/characters/rattler.anm2");
 
 function rattler:cacheUpdate(player, cacheFlag)
   addFlatStat(rattler.itemID, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
