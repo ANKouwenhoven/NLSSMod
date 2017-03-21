@@ -30,10 +30,6 @@ local oceanAura;
 -- Matricide
 local matricide = false;
 
--- Cobalt's Streak
-local cobaltBuff = 0;
-local roomCleared = true;
-
 -- The Twitchy chatter
 local chatspawn;
 local spawnDelay = 20;
@@ -56,9 +52,6 @@ local damageFrames = 0;
 local counterDelay = 0;
 local scumboFlag = false;
 local scumboStage = 1;
-
--- Golden hat damage buff
-local goldHatBuff = false;
 
 -- Nightmare variables
 local nightmareAmount = 0;
@@ -83,15 +76,10 @@ local itemList = {
   mindFlood = Isaac.GetItemIdByName("Mind Flood");
   chatter = Isaac.GetItemIdByName("Twitchy Chatter");
   greenman = Isaac.GetItemIdByName("Mr Greenman");
-  matricide = Isaac.GetItemIdByName("Matricide");
-  cobalt = Isaac.GetItemIdByName("Cobalt's Streak");
   ghostBill = Isaac.GetItemIdByName("Ghost Bill");
-  purpleLord = Isaac.GetItemIdByName("Purple Lord");
   judo = Isaac.GetItemIdByName("Black Glove");
-  ryuka = Isaac.GetItemIdByName("Ryuka Buddy");
   teratomo = Isaac.GetItemIdByName("Teratomo");
   scumbo = Isaac.GetItemIdByName("Scumbo");
-  goldHat = Isaac.GetItemIdByName("Golden Hat");
   stammer = Isaac.GetItemIdByName("Staggered Stammer");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
   minus = Isaac.GetItemIdByName("Minus Realm");
@@ -133,11 +121,6 @@ local familiarList = {
 -- List of all new costumes
 local costumeList = {
   mindFlood = Isaac.GetCostumeIdByPath("gfx/characters/mindFlood.anm2");
-  matricide = Isaac.GetCostumeIdByPath("gfx/characters/matricide.anm2");
-  purpleLord = Isaac.GetCostumeIdByPath("gfx/characters/purpleLord.anm2");
-  ryuka = Isaac.GetCostumeIdByPath("gfx/characters/ryuka.anm2");
-  goldHat = Isaac.GetCostumeIdByPath("gfx/characters/goldHat.anm2");
-  cobalt = Isaac.GetCostumeIdByPath("gfx/characters/cobalt.anm2");
 }
 
 -- List of all new effects
@@ -154,7 +137,6 @@ function NLSSMod:reset()
   chatterBuffs = 0;
   oceanAura = nil;
   matricide = false;
-  cobaltBuff = 0;
   jellyAmount = 0;
   scumboCounter = 0;
   badDamage = nil;
@@ -202,87 +184,6 @@ function isCustomSprite(sprite)
   return false;
 end
 
--- Matricide effect
-function matricideEffect(player)
-  local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    local entity = entities[i]:ToPickup();
-    if entities[i].Type == EntityType.ENTITY_PICKUP and entities[i].Variant == PickupVariant.PICKUP_HEART and entities[i].SubType == HeartSubType.HEART_FULL then
-      if entity:IsShopItem() == false then
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_TROLL, false);
-			else
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, true);
-			end
-    end
-    
-    if entities[i].Type == EntityType.ENTITY_PICKUP and entities[i].Variant == PickupVariant.PICKUP_HEART and entities[i].SubType == HeartSubType.HEART_DOUBLEPACK then
-      if entity:IsShopItem() == false then
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_SUPERTROLL, false);
-			else
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, true);
-			end
-    end
-    
-    if entities[i].Type == EntityType.ENTITY_PICKUP and entities[i].Variant == PickupVariant.PICKUP_HEART and entities[i].SubType == HeartSubType.HEART_HALF then
-      if entity:IsShopItem() == false then
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_TROLL, false);
-			else
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, true);
-			end
-    end
-    
-    if entities[i].Type == EntityType.ENTITY_PICKUP and entities[i].Variant == PickupVariant.PICKUP_HEART and entities[i].SubType == HeartSubType.HEART_BLENDED then
-      if entity:IsShopItem() == false then
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_TROLL, false);
-			else
-				entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, true);
-			end
-    end
-  end
-end
-
--- Gold Hat effect
-function goldHatEffect(player)
-  local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    local entity = entities[i]:ToPickup();    
-    if entities[i].Type == EntityType.ENTITY_PICKUP and entities[i].Variant == PickupVariant.PICKUP_COIN and entities[i].SubType == CoinSubType.COIN_PENNY then
-      if entities[i].FrameCount == 1 and math.random(1, 4) == 1 then
-        if entity:IsShopItem() == false then
-          entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_NICKEL, false);
-        else
-          entity:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_NICKEL, true);
-        end
-      end
-    end
-  end
-  
-  if player:GetNumCoins() == 99 then
-    if goldHatBuff == false then
-      goldHatBuff = true;
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-      player:EvaluateItems();
-    end
-  else
-    if goldHatBuff == true then
-      goldHatBuff = false;
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-      player:EvaluateItems();
-    end
-  end
-end
-
--- Ryuka's effect
-function ryukaEffect(player)
-  currentRoom = Game():GetRoom();
-  for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
-    thisDoor = currentRoom:GetDoor(i);
-    if thisDoor ~= nil and thisDoor:IsRoomType(RoomType.ROOM_DEFAULT) and not thisDoor:IsOpen() then
-      thisDoor:Open();
-    end
-  end
-end
-
 -- Loot Hoard effect
 function lootEffect(player)
   currentRoom = Game():GetRoom();
@@ -320,42 +221,6 @@ function minusEffect(player)
   end
 end
 
--- Purple Lord effect
-function purpleEffect(player)
-  local entities = Isaac.GetRoomEntities()
-  for i = 1, #entities do
-		local singleEntity = entities[i]
-		if singleEntity.Type == EntityType.ENTITY_TEAR then			
-      if singleEntity.FrameCount < 2 then
-        singleEntity.Color = Color(1, 1, 1, 1, 50, -100, 250);
-        singleEntity:ToTear().TearFlags = 1<<1;
-      elseif math.random(1, 3) == 3 then
-        creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, singleEntity.Position, Vector(0, 0), player);
-        creep:SetColor(Color(1, 1, 1, 1, 0, -150, 200), 0, 0, false, false)
-      end
-		end
-	end
-end
-
--- Cobalt's Streak effect
-function cobaltEffect(player)
-  local room = Game():GetRoom();
-  
-  if not room:IsClear() then
-    roomCleared = false;
-  end
-  
-  if roomCleared == false and room:IsClear() then
-    if cobaltBuff < 16 then
-      cobaltBuff = cobaltBuff + 1;
-    end
-    
-    roomCleared = true;
-    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-    player:EvaluateItems();
-  end
-end
-
 -- Scumbo's AI on damage
 function scumboEffect()
   local takenDamage = true;
@@ -385,12 +250,6 @@ end
 -- Events on damage
 function NLSSMod:onDamage(player_x, damage_amount, damage_flag, damage_source, invincibility_frames)
   local player = Isaac.GetPlayer(0);
-  
-  if player:HasCollectible(itemList.cobalt) then
-    cobaltBuff = 0;
-    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-    player:EvaluateItems();
-  end
   
   if player:HasCollectible(itemList.scumbo) then
     return scumboEffect();
@@ -642,14 +501,8 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   fireDelayChange = 0;
   
   -- Damage Stats
-  addFlatStat(itemList.cobalt, 0.25 * cobaltBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  addFlatStat(itemList.purpleLord, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  addFlatStat(itemList.matricide, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, player.Damage * 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  end
-  if goldHatBuff then
-    addFlatStat(itemList.goldHat, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
   
   -- Luck Stats
@@ -661,7 +514,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   end
   
   -- Speed Stats
-  addFlatStat(itemList.ryuka, 0.25, CacheFlag.CACHE_SPEED, cacheFlag);
   if minusRoom then
     addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
   end
@@ -1347,15 +1199,11 @@ function NLSSMod:onUpdate()
     
     SpawnItem(itemList.chatter, 420, 200)
     SpawnItem(itemList.greenman, 370, 200)
-    SpawnItem(itemList.cobalt, 270, 200)
     SpawnItem(itemList.ghostBill, 220, 200)
-    SpawnItem(itemList.purpleLord, 170, 200)
     
     SpawnItem(itemList.judo, 470, 150)
-    SpawnItem(itemList.ryuka, 420, 150)
     SpawnItem(itemList.teratomo, 370, 150)
     SpawnItem(itemList.scumbo, 320, 150)
-    SpawnItem(itemList.goldHat, 270, 150)
     SpawnItem(itemList.stammer, 220, 150)
     SpawnItem(itemList.boardgame, 170, 150)
   end
@@ -1439,31 +1287,6 @@ function NLSSMod:onUpdate()
     minusEffect(player);
   end
   
-  -- Purple Lord effect
-  if player:HasCollectible(itemList.purpleLord) then
-    purpleEffect(player);
-  end
-  
-  -- Cobalt's Streak effect
-  if player:HasCollectible(itemList.cobalt) then
-    cobaltEffect(player);
-  end
-  
-  -- Matricide effect
-  if player:HasCollectible(itemList.matricide) then
-    matricideEffect(player);
-  end
-  
-  -- Gold hat effect
-  if player:HasCollectible(itemList.goldHat) then
-    goldHatEffect(player);
-  end
-  
-  -- Ryuka effect
-  if player:HasCollectible(itemList.ryuka) then
-    ryukaEffect(player);
-  end
-  
   -- Loot Hoard effect
   if player:HasCollectible(itemList.lootHoard) then
     lootEffect(player);
@@ -1496,47 +1319,12 @@ NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 function NLSSMod:playerUpdate(player)
   if Game():GetFrameCount() == 1 then
     NLSSMod.hasMindFlood = false;
-    NLSSMod.hasMatricide = false;
-    NLSSMod.hasPurpleLord = false;
-    NLSSMod.hasRyuka = false;
-    NLSSMod.hasGoldHat = false;
-    NLSSMod.hasCobalt = false;
   end
   
   -- Flood droplet
   if not NLSSMod.hasMindFlood and player:HasCollectible(itemList.mindFlood) then
     player:AddNullCostume(costumeList.mindFlood)
     NLSSMod.hasMindFlood = true
-  end
-  
-  -- Matricide Eyes
-  if not NLSSMod.hasMatricide and player:HasCollectible(itemList.matricide) then
-    player:AddNullCostume(costumeList.matricide)
-    NLSSMod.hasMatricide = true
-  end
-  
-  -- Purple Head
-  if not NLSSMod.hasPurpleLord and player:HasCollectible(itemList.purpleLord) then
-    player:AddNullCostume(costumeList.purpleLord)
-    NLSSMod.hasPurpleLord = true
-  end
-  
-  -- Whiskers, nose and ears
-  if not NLSSMod.hasRyuka and player:HasCollectible(itemList.ryuka) then
-    player:AddNullCostume(costumeList.ryuka)
-    NLSSMod.hasRyuka = true
-  end
-  
-  -- Gold hat
-  if not NLSSMod.hasGoldHat and player:HasCollectible(itemList.goldHat) then
-    player:AddNullCostume(costumeList.goldHat)
-    NLSSMod.hasGoldHat = true
-  end
-  
-  -- Inner Cobalt
-  if not NLSSMod.hasCobalt and player:HasCollectible(itemList.cobalt) then
-    player:AddNullCostume(costumeList.cobalt)
-    NLSSMod.hasCobalt = true
   end
 end
 
@@ -1554,5 +1342,10 @@ require("code/items/collectibles/theCoin");
 require("code/items/collectibles/crackedEgg");
 require("code/items/collectibles/redShirt");
 require("code/items/collectibles/mindFlood");
+require("code/items/collectibles/matricide");
+require("code/items/collectibles/cobaltsStreak");
+require("code/items/collectibles/purpleLord");
+require("code/items/collectibles/ryukaBuddy");
+require("code/items/collectibles/goldHat");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")

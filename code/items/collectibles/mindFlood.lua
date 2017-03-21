@@ -15,8 +15,10 @@ local mindFlood = {
 }
 
 function mindFlood:cacheUpdate(player, cacheFlag)
-  addFlatStat(mindFlood.itemID, 3 * floodBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  addFlatStat(mindFlood.itemID, 0.6 * floodBuff, CacheFlag.CACHE_SPEED, cacheFlag);
+  if floodBuff ~= nil then
+    addFlatStat(mindFlood.itemID, 3 * floodBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
+    addFlatStat(mindFlood.itemID, 0.6 * floodBuff, CacheFlag.CACHE_SPEED, cacheFlag);
+  end
 end
 
 function mindFlood:onPlayerUpdate(player)

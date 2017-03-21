@@ -2,7 +2,8 @@
 -- The Coin
 -- It's mine!
 ----------------------------------------
--- 0.25 Damage up for every enemy in the room.
+-- 0.25 Damage up for every enemy in
+-- the room.
 ----------------------------------------
 
 local theCoin = {
