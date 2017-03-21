@@ -24,9 +24,6 @@ local murphTimer = 0;
 local usedStapler = false;
 local removedTearDelay = 0;
 
--- Ocean man's Aura
-local oceanAura;
-
 -- Matricide
 local matricide = false;
 
@@ -41,9 +38,6 @@ local chatterBuffs = 0;
 local greenman;
 local greenDelay = 10;
 local greenRoom;
-
--- Current amount of Jellies
-local jellyAmount = 0;
 
 -- Scumbo variables
 local scumboCounter = 0;
@@ -63,23 +57,16 @@ local minusRoom = false;
 
 -- List of all new items
 local itemList = {
-  petRock = Isaac.GetItemIdByName("Pet Rock");
   theBeretta = Isaac.GetItemIdByName("The Beretta");
   nug = Isaac.GetItemIdByName("Chicken Nugget");
-  jellies = Isaac.GetItemIdByName("Jar of Jellies");
-  oceanMan = Isaac.GetItemIdByName("Ocean Man");
   murph = Isaac.GetItemIdByName("Murph");
   stapler = Isaac.GetItemIdByName("The Stapler");
   chatter = Isaac.GetItemIdByName("Twitchy Chatter");
   greenman = Isaac.GetItemIdByName("Mr Greenman");
-  ghostBill = Isaac.GetItemIdByName("Ghost Bill");
   judo = Isaac.GetItemIdByName("Black Glove");
-  teratomo = Isaac.GetItemIdByName("Teratomo");
   scumbo = Isaac.GetItemIdByName("Scumbo");
-  stammer = Isaac.GetItemIdByName("Staggered Stammer");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
   minus = Isaac.GetItemIdByName("Minus Realm");
-  mushroom = Isaac.GetItemIdByName("Poison Mushroom");
 }
 
 local trinketList = {
@@ -97,25 +84,15 @@ local activeUses = {
 
 -- List of all new familiars
 local familiarList = {
-  petRock = Isaac.GetEntityVariantByName("petRock");
-  jelly1 = Isaac.GetEntityVariantByName("jelly1");
-  jelly2 = Isaac.GetEntityVariantByName("jelly2");
-  jelly3 = Isaac.GetEntityVariantByName("jelly3");
-  jelly4 = Isaac.GetEntityVariantByName("jelly4");
-  oceanMan = Isaac.GetEntityVariantByName("oceanMan");
   murph = Isaac.GetEntityVariantByName("murph");
   chatter = Isaac.GetEntityVariantByName("chatter");
   greenman = Isaac.GetEntityVariantByName("greenman");
-  ghostBill = Isaac.GetEntityVariantByName("ghostBill");
-  teratomo = Isaac.GetEntityVariantByName("teratomo");
   scumbo = Isaac.GetEntityVariantByName("scumbo");
-  stammer = Isaac.GetEntityVariantByName("stammer");
   nightmare = Isaac.GetEntityVariantByName("nightmare");
 }
 
 -- List of all new effects
 local effectList = {
-  oceanWhirl = Isaac.GetEntityTypeByName("oceanWhirl");
   badDamage = Isaac.GetEntityTypeByName("badDamage");
 }
 
@@ -125,9 +102,7 @@ function NLSSMod:reset()
   nugCount = 0;
   usedStapler = false;
   chatterBuffs = 0;
-  oceanAura = nil;
   matricide = false;
-  jellyAmount = 0;
   scumboCounter = 0;
   badDamage = nil;
   damageFrames = 0;
@@ -468,9 +443,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
     addFlatStat(itemList.minus, player.Damage * 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
   end
   
-  -- Luck Stats
-  addFlatStat(itemList.petRock, 1, CacheFlag.CACHE_LUCK, cacheFlag);
-  
   -- Shotspeed Stats
   if minusRoom then
     addFlatStat(itemList.minus, player.ShotSpeed * 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
@@ -484,18 +456,8 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   -- Familiar Stats
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
     addFlatStat(itemList.chatter, 0.75 * chatterBuffs, CacheFlag.CACHE_DAMAGE, cacheFlag);
-    if oceanManCheck then
-      addFlatStat(itemList.oceanMan, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
-      addFlatStat(itemList.oceanMan, 5, CacheFlag.CACHE_RANGE, cacheFlag);
-      addFlatStat(itemList.oceanMan, 0.2, CacheFlag.CACHE_SPEED, cacheFlag);
-    end
   else
     addFlatStat(itemList.chatter, 0.5 * chatterBuffs, CacheFlag.CACHE_DAMAGE, cacheFlag);
-    if oceanManCheck then
-      addFlatStat(itemList.oceanMan, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
-      addFlatStat(itemList.oceanMan, 3, CacheFlag.CACHE_RANGE, cacheFlag);
-      addFlatStat(itemList.oceanMan, 0.1, CacheFlag.CACHE_SPEED, cacheFlag);
-    end
   end
   
   -- Nug Stats
@@ -515,39 +477,12 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   
   -- All familiar changes
   if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-    player:CheckFamiliar(familiarList.petRock, player:GetCollectibleNum(itemList.petRock), RNG())
-    player:CheckFamiliar(familiarList.ghostBill, player:GetCollectibleNum(itemList.ghostBill), RNG())
-    player:CheckFamiliar(familiarList.oceanMan, player:GetCollectibleNum(itemList.oceanMan), RNG())
-    player:CheckFamiliar(familiarList.teratomo, player:GetCollectibleNum(itemList.teratomo), RNG())
     player:CheckFamiliar(familiarList.scumbo, player:GetCollectibleNum(itemList.scumbo), RNG())
-    player:CheckFamiliar(familiarList.stammer, player:GetCollectibleNum(itemList.stammer), RNG())
     player:CheckFamiliar(familiarList.nightmare, nightmareAmount, RNG())
-    
-    for i = 1, 2 do
-      if jellyAmount < player:GetCollectibleNum(itemList.jellies) * 2 then
-        player:CheckFamiliar(randomJelly(), player:GetCollectibleNum(itemList.jellies), RNG())
-        jellyAmount = jellyAmount + 1;
-      end
-    end
   end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, NLSSMod.cacheUpdate)
-
--- Returns a random Jelly to spawn
-function randomJelly()
-  jellyNum = math.random(1, 4)
-  
-  if jellyNum == 1 then
-    return familiarList.jelly1;
-  elseif jellyNum == 2 then
-    return familiarList.jelly2;
-  elseif jellyNum == 3 then
-    return familiarList.jelly3;
-  elseif jellyNum == 4 then
-    return familiarList.jelly4;
-  end
-end
 
 -- Makes familiars face the way they are moving
 function setOrientation(familiar, flipped)
@@ -585,14 +520,6 @@ function NLSSMod:initFamiliar(familiar)
   familiar.IsFollower = true;
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.petRock)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.ghostBill)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.oceanMan)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.jelly1)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.jelly2)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.jelly3)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.jelly4)
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.teratomo)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.scumbo)
 
 -- Initializes Nightmare familiars by placing them into the correct orbit layer
@@ -602,14 +529,6 @@ function NLSSMod:initNightmare(familiar)
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initNightmare, familiarList.nightmare)
-
--- Initializes Stammer by placing it into the correct orbit layer
-function NLSSMod:initStammer(familiar)
-  familiar.OrbitLayer = 10;
-  familiar:RecalculateOrbitOffset(familiar.OrbitLayer, true)
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initStammer, familiarList.stammer)
 
 -- Handles Nightmare AI
 function NLSSMod:nightmareUpdate(familiar)
@@ -668,56 +587,6 @@ function NLSSMod:nightmareUpdate(familiar)
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.nightmareUpdate, familiarList.nightmare)
-
--- Handles Stammer AI
-function NLSSMod:stammerUpdate(familiar)
-  local player = Isaac.GetPlayer(0);
-  familiar.OrbitDistance = Vector(35, 35)
-  familiar.OrbitSpeed = 0.01;
-  familiar.Velocity = familiar:GetOrbitPosition(player.Position + player.Velocity) - familiar.Position;
-  
-  -- Shoot every 30 frames
-  if familiar.FrameCount % 30 == 0 then
-    directionVector = familiar.Position - player.Position;
-    directionVector = directionVector:Normalized() * 50;
-    tear = Isaac.GetPlayer(0):FireTear(familiar.Position, directionVector, false, false, false):ToTear();
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-      tear.CollisionDamage = 100;
-    else
-      tear.CollisionDamage = 50;
-    end
-    tear.Color = Color(0, 0, 0, 1, 0, 0, 0);
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.stammerUpdate, familiarList.stammer)
-
--- Handles Pet Rock AI
-function NLSSMod:petRockUpdate(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-   
-  familiar:FollowParent()
-    
-  -- Midas freezes all enemies that "collide" with pet rock
-  for i = 1, #entities do
-    local enemy = entities[i]
-    if enemy:IsVulnerableEnemy() then
-      if familiar.Position:Distance(enemy.Position, familiar.Position) < 15 then
-        if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-          enemy:AddMidasFreeze(EntityRef(player), 120);
-        else
-          enemy:AddMidasFreeze(EntityRef(player), 60);
-        end
-        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.GOLD_PARTICLE, 0, enemy.Position, Vector(0, 0), enemy);
-      end
-    end
-  end
-  
-  setOrientation(familiar, false);
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.petRockUpdate, familiarList.petRock)
 
 -- Handles Scumbo AI
 function NLSSMod:scumboUpdate(familiar)
@@ -802,200 +671,6 @@ function NLSSMod:murphUpdate(familiar)
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.murphUpdate, familiarList.murph)
-
--- Handles Ghost Bill AI
-function NLSSMod:ghostBillUpdate(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-  local direction = player:GetFireDirection()
-  local shootingDirection;
-   
-  familiar:FollowParent()
-  
-  if direction == 0 then      -- Left
-    shootingDirection = Vector(-1, 0)
-  elseif direction == 1 then  -- Up
-    shootingDirection = Vector(0, -1)
-  elseif direction == 2 then  -- Right
-    shootingDirection = Vector(1, 0)
-  elseif direction == 3 then  -- Down
-    shootingDirection = Vector(0, 1)
-  end
-  
-  if shootingDirection ~= nil and Game():GetFrameCount() % 30 == 0 then
-    local shots = math.random(1, 3);
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-      shots = math.random(2, 4);
-    end
-    for i = 1, shots do
-      local thisTear = player:FireTear(familiar.Position, shootingDirection * 8 + Vector(math.random(-2, 2), math.random(-2, 2)), false, false, false);
-      local currentSprite = thisTear:GetSprite():GetFilename() 
-      if currentSprite ~= "gfx/Effects/ghostTear.anm2" then
-        local newTearSprite = thisTear:GetSprite() 
-        newTearSprite:Load("gfx/Effects/ghostTear.anm2", true)	
-        newTearSprite:Play("Idle", true)
-      end
-    end
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.ghostBillUpdate, familiarList.ghostBill)
-
--- Handles Jelly 1 AI
-function NLSSMod:jelly1Update(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-   
-  familiar:FollowParent()
-  
-  setOrientation(familiar, true);
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.jelly1Update, familiarList.jelly1)
-
--- Handles Jelly 2 AI
-function NLSSMod:jelly2Update(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-  
-  familiar:FollowParent()
-  
-  -- Leaves red creep
-  if math.random(10) == 1 then
-    creep1 = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, familiar.Position, Vector(0, 0), player) 
-    creep1:SetColor(Color(1, 0, 0, 1, 250, 100, 50), 0, 0, false, false)
-  end
-  
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and math.random(10) == 1 then
-    creep2 = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, familiar.Position, Vector(0, 0), player) 
-    creep2:SetColor(Color(1, 0, 0, 1, 250, 50, 25), 0, 0, false, false)
-  end
-  
-  setOrientation(familiar, true);
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.jelly2Update, familiarList.jelly2)
-
--- Handles Jelly 3 AI
-function NLSSMod:jelly3Update(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-   
-  familiar:FollowParent()
-  
-  for i = 1, #entities do
-    local enemy = entities[i]
-    if enemy:IsVulnerableEnemy() then
-      if familiar.Position:Distance(enemy.Position, familiar.Position) < 150 and Game():GetFrameCount() % 30 == 0 then
-        local shots = 2;
-        if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-          shots = 4;
-        end
-        for i = 1, shots do
-          local thisTear = player:FireTear(familiar.Position, Vector(math.random(-5, 5), math.random(-5, 5)), false, false, false);
-          local currentSprite = thisTear:GetSprite():GetFilename() 
-          if currentSprite ~= "gfx/Effects/jellyTear3.anm2" then
-            local newTearSprite = thisTear:GetSprite() 
-            newTearSprite:Load("gfx/Effects/jellyTear3.anm2", true)	
-            newTearSprite:Play("Idle", true)
-          end
-        end
-      end
-    end
-  end
-  
-  setOrientation(familiar, true);
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.jelly3Update, familiarList.jelly3)
-
--- Handles Jelly 4 AI
-function NLSSMod:jelly4Update(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-   
-  familiar:FollowParent()
-  
-  -- Leaves a floating tear in place
-  if Game():GetFrameCount() % 30 == 0 then
-    local oldRange = player.TearHeight;
-    local oldDamage = player.Damage;
-    player.TearHeight = player.TearHeight - 20;
-    player.Damage = player.Damage + 5;
-    
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-      player.Damage = player.Damage + 10;
-    end
-    
-    local thisTear = player:FireTear(familiar.Position, Vector(0, 0), false, false, false);
-    local currentSprite = thisTear:GetSprite():GetFilename() ;
-    
-    if currentSprite ~= "gfx/Effects/jellyTear4.anm2" then
-      local newTearSprite = thisTear:GetSprite() 
-      newTearSprite:Load("gfx/Effects/jellyTear4.anm2", true)	
-      newTearSprite:Play("Idle", true)
-    end
-    
-    player.TearHeight = oldRange;
-    player.Damage = oldDamage;
-  end
-  
-  setOrientation(familiar, true);
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.jelly4Update, familiarList.jelly4)
-
--- Handles Ocean Man AI
-function NLSSMod:oceanManUpdate(familiar)
-  familiar:MoveDiagonally(1);
-  
-  local player = Isaac.GetPlayer(0)
-  local area = 120;
-  
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-    range = 150;
-  end
-  
-  if familiar.Position:Distance(player.Position, familiar.Position) < 120 then
-    oceanManCheck = true;
-  else
-    oceanManCheck = false;
-  end
-  
-  if oceanAura == nil then
-    oceanAura = Isaac.Spawn(effectList.oceanWhirl, 1010, 0, familiar.Position, Vector(0, 0), player);
-  else
-    oceanAura.Position = familiar.Position;
-    oceanAura.RenderZOffset = -999;
-    oceanAura.Velocity = familiar.Velocity;
-  end
-  
-  player:AddCacheFlags(CacheFlag.CACHE_RANGE);
-  player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-  player:AddCacheFlags(CacheFlag.CACHE_SPEED);
-  player:EvaluateItems();
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.oceanManUpdate, familiarList.oceanMan)
-
--- Handles Teratomo AI
-function NLSSMod:teratomoUpdate(familiar)
-  familiar:MoveDiagonally(1);
-  
-  -- Midas freezes all enemies that "collide" with teratomo
-  local entities = Isaac.GetRoomEntities();
-  
-  for i = 1, #entities do
-    local enemy = entities[i]
-    if enemy:IsVulnerableEnemy() then
-      if familiar.Position:Distance(enemy.Position, familiar.Position) < 25 and math.random(1, 4) == 1 then
-        newTomo = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.teratomo, 0, familiar.Position, Vector(0, 0), player)
-      end
-    end
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.teratomoUpdate, familiarList.teratomo)
 
 -- Returns whether there are enemies in the current room
 function CheckForEnemies()
@@ -1148,25 +823,18 @@ function NLSSMod:onUpdate()
   -- Spawn all mod items on the very first frame
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
     SpawnItem(itemList.minus, 420, 350)
-    SpawnItem(itemList.mushroom, 320, 350)
   
-    SpawnItem(itemList.petRock, 370, 300)
     SpawnItem(itemList.theBeretta, 170, 300)
     
     SpawnItem(itemList.nug, 470, 250)
-    SpawnItem(itemList.jellies, 420, 250)
-    SpawnItem(itemList.oceanMan, 370, 250)
     SpawnItem(itemList.murph, 270, 250)
     SpawnItem(itemList.stapler, 170, 250)
     
     SpawnItem(itemList.chatter, 420, 200)
     SpawnItem(itemList.greenman, 370, 200)
-    SpawnItem(itemList.ghostBill, 220, 200)
     
     SpawnItem(itemList.judo, 470, 150)
-    SpawnItem(itemList.teratomo, 370, 150)
     SpawnItem(itemList.scumbo, 320, 150)
-    SpawnItem(itemList.stammer, 220, 150)
     SpawnItem(itemList.boardgame, 170, 150)
   end
   
@@ -1192,18 +860,6 @@ function NLSSMod:onUpdate()
   if Game():GetRoom():GetFrameCount() == 1 then
     
     local entities = Isaac.GetRoomEntities();
-    
-    -- Teratomo reset
-    if player:HasCollectible(itemList.teratomo) then
-      for i = 1, #entities do
-        local entity = entities[i]
-        if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == familiarList.teratomo then
-          entity:Remove();
-        end
-      end
-      
-      newTomo = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.teratomo, 0, player.Position, Vector(0, 0), player)
-    end
     
     -- Twitchy chatter reset
     if player:HasCollectible(itemList.chatter) then
@@ -1273,22 +929,30 @@ end
 NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 
 -- Passive items
-require("code/items/collectibles/tennis");
-require("code/items/collectibles/rattler");
-require("code/items/collectibles/laCroix");
-require("code/items/collectibles/madrinas");
-require("code/items/collectibles/nugCrown");
-require("code/items/collectibles/gungeonMaster");
-require("code/items/collectibles/eyeForAesthetic");
-require("code/items/collectibles/theCoin");
-require("code/items/collectibles/crackedEgg");
-require("code/items/collectibles/redShirt");
-require("code/items/collectibles/mindFlood");
-require("code/items/collectibles/matricide");
-require("code/items/collectibles/cobaltsStreak");
-require("code/items/collectibles/purpleLord");
-require("code/items/collectibles/ryukaBuddy");
-require("code/items/collectibles/goldHat");
-require("code/items/collectibles/lootHoard");
+require("code/items/collectibles/passive/tennis");
+require("code/items/collectibles/passive/rattler");
+require("code/items/collectibles/passive/laCroix");
+require("code/items/collectibles/passive/madrinas");
+require("code/items/collectibles/passive/nugCrown");
+require("code/items/collectibles/passive/gungeonMaster");
+require("code/items/collectibles/passive/eyeForAesthetic");
+require("code/items/collectibles/passive/theCoin");
+require("code/items/collectibles/passive/crackedEgg");
+require("code/items/collectibles/passive/redShirt");
+require("code/items/collectibles/passive/mindFlood");
+require("code/items/collectibles/passive/matricide");
+require("code/items/collectibles/passive/cobaltsStreak");
+require("code/items/collectibles/passive/purpleLord");
+require("code/items/collectibles/passive/ryukaBuddy");
+require("code/items/collectibles/passive/goldHat");
+require("code/items/collectibles/passive/lootHoard");
+require("code/items/collectibles/passive/poisonMushroom");
+
+-- Familiars
+require("code/familiars/petRock");
+require("code/familiars/jellies");
+require("code/familiars/oceanMan");
+require("code/familiars/ghostBill");
+require("code/familiars/stammer");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
