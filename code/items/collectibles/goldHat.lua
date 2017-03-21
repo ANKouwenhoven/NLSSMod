@@ -31,7 +31,7 @@ function goldHat:onPlayerUpdate(player)
 		end
 	end
   
-  if player:HasCollectible(goldHat.itemID)
+  if player:HasCollectible(goldHat.itemID) then
     local entities = Isaac.GetRoomEntities();
     for i = 1, #entities do
       local entity = entities[i]:ToPickup();    

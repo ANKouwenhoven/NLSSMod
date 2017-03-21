@@ -1,6 +1,6 @@
 ----------------------------------------
 -- Mind Flood
--- Can't think straight!
+-- Hands for hair
 ----------------------------------------
 -- Damage and Speed up and
 -- leave a creep whenever an enemy gets
@@ -39,13 +39,13 @@ function mindFlood:onPlayerUpdate(player)
     
     for i = 1, #entities do
       local enemy = entities[i]
-      if enemy:IsVulnerableEnemy() then
-        if player.Position:Distance(enemy.Position, player.Position) < 100 then
+      if enemy:IsVulnerableEnemy() and enemy:IsActiveEnemy(false) then
+        if player.Position:Distance(enemy.Position, player.Position) < 150 then
           if math.random(1, 4) == 4 then
             creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_BLACK, 0, player.Position, Vector(0, 0), player);
             creep:SetColor(Color(0, 0, 1, 1, 100, 150, 250), 0, 0, false, false)
           end
-          floodBuff = round((100 - player.Position:Distance(enemy.Position, player.Position)) / 100, 1);
+          floodBuff = round((150 - player.Position:Distance(enemy.Position, player.Position)) / 150, 1);
           break;
         else
           floodBuff = 0;

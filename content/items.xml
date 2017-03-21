@@ -7,7 +7,7 @@
 	<passive name="Nug King's Crown" description="Eternal Glory" gfx="collectible_nugCrown.png" cache="damage speed luck" maxhearts="2" hearts="2" />
 	<passive name="Tennis" description="King of Context" cache="speed damage range shotspeed" gfx="collectible_tennis.png" />
 	<passive name="Red Shirt" description="Social Engineering" gfx="collectible_redShirt.png" />
-	<passive name="Mind Flood" description="Can't think straight!" gfx="collectible_mindFlood.png" />
+	<passive name="Mind Flood" description="Hands for hair" gfx="collectible_mindFlood.png" />
 	<passive name="Twitchy Chatter" description="Strength in numbers" gfx="collectible_chatter.png" />
 	<passive name="Mr Greenman" description="Gli&amp-8182budd%p91##" gfx="collectible_greenman.png" />
 	<passive name="Matricide" description="Heartless" gfx="collectible_matricide.png" cache="damage" />

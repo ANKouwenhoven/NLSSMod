@@ -61,9 +61,6 @@ local nightmareDistance = 5;
 local currentColor;
 local minusRoom = false;
 
--- Loot Hoard data
-local hasLooted = false;
-
 -- List of all new items
 local itemList = {
   petRock = Isaac.GetItemIdByName("Pet Rock");
@@ -73,7 +70,6 @@ local itemList = {
   oceanMan = Isaac.GetItemIdByName("Ocean Man");
   murph = Isaac.GetItemIdByName("Murph");
   stapler = Isaac.GetItemIdByName("The Stapler");
-  mindFlood = Isaac.GetItemIdByName("Mind Flood");
   chatter = Isaac.GetItemIdByName("Twitchy Chatter");
   greenman = Isaac.GetItemIdByName("Mr Greenman");
   ghostBill = Isaac.GetItemIdByName("Ghost Bill");
@@ -83,7 +79,6 @@ local itemList = {
   stammer = Isaac.GetItemIdByName("Staggered Stammer");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
   minus = Isaac.GetItemIdByName("Minus Realm");
-  lootHoard = Isaac.GetItemIdByName("Loot Hoard");
   mushroom = Isaac.GetItemIdByName("Poison Mushroom");
 }
 
@@ -118,11 +113,6 @@ local familiarList = {
   nightmare = Isaac.GetEntityVariantByName("nightmare");
 }
 
--- List of all new costumes
-local costumeList = {
-  mindFlood = Isaac.GetCostumeIdByPath("gfx/characters/mindFlood.anm2");
-}
-
 -- List of all new effects
 local effectList = {
   oceanWhirl = Isaac.GetEntityTypeByName("oceanWhirl");
@@ -143,7 +133,6 @@ function NLSSMod:reset()
   damageFrames = 0;
   scumboStage = 1;
   counterDelay = 0;
-  hasLooted = false;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, NLSSMod.reset)
@@ -182,32 +171,6 @@ function isCustomSprite(sprite)
   end
     
   return false;
-end
-
--- Loot Hoard effect
-function lootEffect(player)
-  currentRoom = Game():GetRoom();
-  if currentRoom:GetType() == RoomType.ROOM_BOSS then
-    if currentRoom:IsClear() then
-      if not hasLooted then
-        number = math.random(3);
-        if number == 1 then
-          SpawnItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
-        elseif number == 2 then
-          for i = 1, math.random(3) + 5 do
-            coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
-          end
-        else
-          for i = 1, 2 do
-            key = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
-          end
-        end
-        hasLooted = true;
-      end
-    else
-      hasLooted = false;
-    end
-  end
 end
 
 -- Minus realm'ed room
@@ -1185,7 +1148,6 @@ function NLSSMod:onUpdate()
   -- Spawn all mod items on the very first frame
   if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
     SpawnItem(itemList.minus, 420, 350)
-    SpawnItem(itemList.lootHoard, 370, 350)
     SpawnItem(itemList.mushroom, 320, 350)
   
     SpawnItem(itemList.petRock, 370, 300)
@@ -1287,11 +1249,6 @@ function NLSSMod:onUpdate()
     minusEffect(player);
   end
   
-  -- Loot Hoard effect
-  if player:HasCollectible(itemList.lootHoard) then
-    lootEffect(player);
-  end
-  
   -- Twitchy Chatter update
   if player:HasCollectible(itemList.chatter) then
     chatterUpdate();
@@ -1315,21 +1272,6 @@ end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 
--- Costume regulation
-function NLSSMod:playerUpdate(player)
-  if Game():GetFrameCount() == 1 then
-    NLSSMod.hasMindFlood = false;
-  end
-  
-  -- Flood droplet
-  if not NLSSMod.hasMindFlood and player:HasCollectible(itemList.mindFlood) then
-    player:AddNullCostume(costumeList.mindFlood)
-    NLSSMod.hasMindFlood = true
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, NLSSMod.playerUpdate)
-
 -- Passive items
 require("code/items/collectibles/tennis");
 require("code/items/collectibles/rattler");
@@ -1347,5 +1289,6 @@ require("code/items/collectibles/cobaltsStreak");
 require("code/items/collectibles/purpleLord");
 require("code/items/collectibles/ryukaBuddy");
 require("code/items/collectibles/goldHat");
+require("code/items/collectibles/lootHoard");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
