@@ -12,7 +12,7 @@ local ghostBill = {
 
 function ghostBill:cacheUpdate(player, cacheFlag)  
   if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-	player:CheckFamiliar(ghostBill.variantID, player:GetCollectibleNum(ghostBill.itemID), RNG())
+    player:CheckFamiliar(ghostBill.variantID, player:GetCollectibleNum(ghostBill.itemID), RNG())
   end
 end
 

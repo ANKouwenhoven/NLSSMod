@@ -17,7 +17,7 @@ function petRock:cacheUpdate(player, cacheFlag)
   addFlatStat(petRock.itemID, 1, CacheFlag.CACHE_LUCK, cacheFlag);
   
   if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-	player:CheckFamiliar(petRock.variantID, player:GetCollectibleNum(petRock.itemID), RNG())
+    player:CheckFamiliar(petRock.variantID, player:GetCollectibleNum(petRock.itemID), RNG())
   end
 end
 

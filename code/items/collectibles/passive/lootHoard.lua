@@ -29,25 +29,27 @@ function lootHoard:onPlayerUpdate(player)
   
   local currentRoom = Game():GetRoom();
   
-  if currentRoom:GetType() == RoomType.ROOM_BOSS then
-    if currentRoom:IsClear() then
-      if not lootHoard.hasLooted then
-        local number = math.random(3);
-        if number == 1 then
-          local item = SpawnPreviewItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
-        elseif number == 2 then
-          for i = 1, math.random(3) + 5 do
-            local coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+  if player:HasCollectible(lootHoard.itemID) then
+    if currentRoom:GetType() == RoomType.ROOM_BOSS then
+      if currentRoom:IsClear() then
+        if not lootHoard.hasLooted then
+          local number = math.random(3);
+          if number == 1 then
+            local item = SpawnPreviewItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
+          elseif number == 2 then
+            for i = 1, math.random(3) + 5 do
+              local coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+            end
+          else
+            for i = 1, 2 do
+              local key = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+            end
           end
-        else
-          for i = 1, 2 do
-            local key = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
-          end
+          lootHoard.hasLooted = true;
         end
-        lootHoard.hasLooted = true;
+      else
+        lootHoard.hasLooted = false;
       end
-    else
-      lootHoard.hasLooted = false;
     end
   end
 end

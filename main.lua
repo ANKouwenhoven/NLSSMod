@@ -27,26 +27,6 @@ local removedTearDelay = 0;
 -- Matricide
 local matricide = false;
 
--- The Twitchy chatter
-local chatspawn;
-local spawnDelay = 20;
-local chatRoom;
-local animationMode = 0;
-local chatterBuffs = 0;
-
--- Mr Greenman
-local greenman;
-local greenDelay = 10;
-local greenRoom;
-
--- Scumbo variables
-local scumboCounter = 0;
-local badDamage;
-local damageFrames = 0;
-local counterDelay = 0;
-local scumboFlag = false;
-local scumboStage = 1;
-
 -- Nightmare variables
 local nightmareAmount = 0;
 local nightmareDistance = 5;
@@ -61,10 +41,7 @@ local itemList = {
   nug = Isaac.GetItemIdByName("Chicken Nugget");
   murph = Isaac.GetItemIdByName("Murph");
   stapler = Isaac.GetItemIdByName("The Stapler");
-  chatter = Isaac.GetItemIdByName("Twitchy Chatter");
-  greenman = Isaac.GetItemIdByName("Mr Greenman");
   judo = Isaac.GetItemIdByName("Black Glove");
-  scumbo = Isaac.GetItemIdByName("Scumbo");
   boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
   minus = Isaac.GetItemIdByName("Minus Realm");
 }
@@ -85,9 +62,6 @@ local activeUses = {
 -- List of all new familiars
 local familiarList = {
   murph = Isaac.GetEntityVariantByName("murph");
-  chatter = Isaac.GetEntityVariantByName("chatter");
-  greenman = Isaac.GetEntityVariantByName("greenman");
-  scumbo = Isaac.GetEntityVariantByName("scumbo");
   nightmare = Isaac.GetEntityVariantByName("nightmare");
 }
 
@@ -101,13 +75,7 @@ function NLSSMod:reset()
   hasEatenNugs = false;
   nugCount = 0;
   usedStapler = false;
-  chatterBuffs = 0;
   matricide = false;
-  scumboCounter = 0;
-  badDamage = nil;
-  damageFrames = 0;
-  scumboStage = 1;
-  counterDelay = 0;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, NLSSMod.reset)
@@ -159,39 +127,9 @@ function minusEffect(player)
   end
 end
 
--- Scumbo's AI on damage
-function scumboEffect()
-  local takenDamage = true;
-  scumboCounter = scumboCounter + 1;
-  
-  if scumboCounter > 10 then
-    scumboStage = 3;
-  elseif scumboCounter > 3 then
-    scumboStage = 2;
-  end
-  
-  scumboFlag = true;
-
-  if scumboStage == 3 then
-    local entities = Isaac.GetRoomEntities();
-    local player = Isaac.GetPlayer(0);
-    
-    if math.random(1, 4) == 1 then
-      coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_LUCKYPENNY, player.Position, Vector(0, 0), enemy);
-      takenDamage = false;
-    end
-  end
-  
-  return takenDamage;
-end
-
 -- Events on damage
 function NLSSMod:onDamage(player_x, damage_amount, damage_flag, damage_source, invincibility_frames)
   local player = Isaac.GetPlayer(0);
-  
-  if player:HasCollectible(itemList.scumbo) then
-    return scumboEffect();
-  end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, NLSSMod.onDamage, EntityType.ENTITY_PLAYER)
@@ -453,13 +391,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
     addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
   end
   
-  -- Familiar Stats
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-    addFlatStat(itemList.chatter, 0.75 * chatterBuffs, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  else
-    addFlatStat(itemList.chatter, 0.5 * chatterBuffs, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  end
-  
   -- Nug Stats
   if hasEatenNugs then
     if cacheFlag == CacheFlag.CACHE_DAMAGE then
@@ -477,7 +408,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   
   -- All familiar changes
   if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-    player:CheckFamiliar(familiarList.scumbo, player:GetCollectibleNum(itemList.scumbo), RNG())
     player:CheckFamiliar(familiarList.nightmare, nightmareAmount, RNG())
   end
 end
@@ -513,14 +443,6 @@ function toDirection(vector)
 
 	return Direction.NO_DIRECTION
 end
-
-
--- Standard Familiar Initialization
-function NLSSMod:initFamiliar(familiar)
-  familiar.IsFollower = true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initFamiliar, familiarList.scumbo)
 
 -- Initializes Nightmare familiars by placing them into the correct orbit layer
 function NLSSMod:initNightmare(familiar)
@@ -588,62 +510,6 @@ end
 
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.nightmareUpdate, familiarList.nightmare)
 
--- Handles Scumbo AI
-function NLSSMod:scumboUpdate(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-   
-  familiar:FollowParent()
-  
-  if scumboStage == 2 then
-    sprite = familiar:GetSprite();
-    sprite:SetAnimation("Stage2")
-    sprite:Play("Stage2", true)
-  end
-  
-  if scumboStage == 3 then
-    sprite = familiar:GetSprite();
-    sprite:SetAnimation("Stage3")
-    sprite:Play("Stage3", true)
-  end
-  
-  if scumboStage == 2 then
-    if scumboFlag == true then
-      if badDamage == nil then
-        badDamage = Isaac.Spawn(effectList.badDamage, 1015, 0, familiar.Position, Vector(0, 0), player);
-        scumboFlag = false;
-      end
-    end
-    if badDamage ~= nil then
-      badDamage.Position = badDamage.Position + Vector(0, -2);
-      badDamage.Velocity = Vector(0, 0);
-      badDamage.RenderZOffset = 13999;
-      counterDelay = counterDelay + 1;
-      local entities = Isaac.GetRoomEntities();
-      for i = 1, #entities do
-        local enemy = entities[i]
-        if enemy:IsVulnerableEnemy() then
-          if familiar.Position:Distance(enemy.Position, familiar.Position) < 100 then
-            enemy:AddConfusion(EntityRef(familiar), 200);
-          end
-        end
-      end
-      if counterDelay > 45 then
-        badDamage:Remove();
-        badDamage = nil;
-        counterDelay = 0;
-      end
-    end
-  else
-    if badDamage ~= nil then
-      badDamage:Remove();
-      badDamage = nil;
-    end
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.scumboUpdate, familiarList.scumbo)
-
 -- Handles Murph AI
 function NLSSMod:murphUpdate(familiar)
   local player = Isaac.GetPlayer(0)
@@ -683,132 +549,6 @@ function CheckForEnemies()
     return false
 end
 
--- Twitchy Chatter's effect
-function chatterUpdate()
-	local player = Isaac.GetPlayer(0);
-  local room = Game():GetRoom();
-	local pos;
-	local sprite;
-
-  if (chatspawn == nil) then
-		if (CheckForEnemies()) then
-			spawnDelay = spawnDelay - 1;
-
-			if (spawnDelay <= 0) then
-				pos = room:GetGridPosition(room:GetGridIndex(Isaac:GetRandomPosition())) 
-				pos = room:FindFreeTilePosition(pos, 100) 
-				chatspawn = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.chatter, 0, pos, Vector(0, 0), player)
-        animationMode = 0;
-				chatRoom = Game():GetLevel():GetCurrentRoomIndex()
-			end
-      
-		else
-			spawnDelay = 10
-		end
-	end
-  
-	if chatspawn ~= nil then
-    spawnDelay = spawnDelay - 1
-
-    if animationMode == 0 then
-      sprite = chatspawn:GetSprite()
-      if (sprite:GetFrame() >= 5) then
-        animationMode = 1
-        sprite:SetAnimation("Idle")
-        sprite:Play("Idle", true)
-        spawnDelay = 200;
-      end
-    end
-  
-    if animationMode == 1 then
-      if (chatspawn.Position:Distance(player.Position, chatspawn.Position) < 25) or (spawnDelay <= 0) or (CheckForEnemies() == false) then
-        if chatspawn.Position:Distance(player.Position, chatspawn.Position) < 25 then
-          chatterBuffs = chatterBuffs + 1;
-          player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-          player:EvaluateItems()
-        end
-        sprite = chatspawn:GetSprite()
-        sprite:SetAnimation("Hide")
-        sprite:Play("Hide", true)
-        animationMode = 3;
-      end
-    end
-    
-    if (Game():GetLevel():GetCurrentRoomIndex() ~= chatRoom)
-    or (animationMode == 3 and chatspawn:GetSprite():IsFinished("Hide")) then
-      chatspawn:Remove()
-      chatspawn = nil
-      spawnDelay = 10;
-    end
-	end
-end
-
--- Mr Greenman's Effect
-function greenmanUpdate()
-	local player = Isaac.GetPlayer(0);
-  local room = Game():GetRoom();
-	local pos;
-	local sprite;
-
-  if (greenman == nil) then
-		if (CheckForEnemies()) then
-			greenDelay = greenDelay - 1;
-
-			if (greenDelay <= 0) then
-				pos = room:GetGridPosition(room:GetGridIndex(Isaac:GetRandomPosition())) 
-				pos = room:FindFreeTilePosition(pos, 100) 
-				greenman = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, familiarList.greenman, 0, pos, Vector(0, 0), player)
-				greenRoom = Game():GetLevel():GetCurrentRoomIndex()
-			end
-		else
-			greenDelay = 10;
-		end
-	end
-  
-	if greenman ~= nil then
-    
-    greenDelay = greenDelay - 1;
-    
-    sprite = greenman:GetSprite()
-    
-    if greenDelay <= 0 then
-      pos = room:GetGridPosition(room:GetGridIndex(Isaac:GetRandomPosition())) 
-      pos = room:FindFreeTilePosition(pos, 100)
-      greenman.Position = pos;
-      greenDelay = 50;
-      sprite:SetAnimation("Idle")
-      sprite:Play("Idle", true)
-      
-      local entities = Isaac.GetRoomEntities();
-      for i = 1, #entities do
-        local enemy = entities[i]
-        if enemy:IsVulnerableEnemy() then
-          if greenman.Position:Distance(enemy.Position, greenman.Position) < 50 then
-            local dice = math.random(1, 3);
-            if dice == 1 then
-              enemy:AddFreeze(EntityRef(player), 100)
-            elseif dice == 2 then
-              enemy:AddConfusion(EntityRef(player), 100, true)
-            elseif dice == 3 then
-              enemy:AddMidasFreeze(EntityRef(player), 100)
-            end
-          end
-        end
-      end
-    else
-      if (sprite:GetFrame() >= 5) then
-        sprite:SetAnimation("Disapparate")
-        sprite:Play("Disapparate", true)
-      end
-    end
-    
-    if CheckForEnemies() == false then
-      greenman:Remove()
-      greenman = nil
-    end
-	end
-end
-
 -- Quality of life item spawn function
 function SpawnPreviewItem(Item, X, Y)
   if PREVIEW_ITEMS then
@@ -830,11 +570,7 @@ function NLSSMod:onUpdate()
     SpawnItem(itemList.murph, 270, 250)
     SpawnItem(itemList.stapler, 170, 250)
     
-    SpawnItem(itemList.chatter, 420, 200)
-    SpawnItem(itemList.greenman, 370, 200)
-    
     SpawnItem(itemList.judo, 470, 150)
-    SpawnItem(itemList.scumbo, 320, 150)
     SpawnItem(itemList.boardgame, 170, 150)
   end
   
@@ -860,13 +596,6 @@ function NLSSMod:onUpdate()
   if Game():GetRoom():GetFrameCount() == 1 then
     
     local entities = Isaac.GetRoomEntities();
-    
-    -- Twitchy chatter reset
-    if player:HasCollectible(itemList.chatter) then
-      chatterBuffs = 0;
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-      player:EvaluateItems();
-    end
     
     -- Stapler reset
     if usedStapler == true then
@@ -905,16 +634,6 @@ function NLSSMod:onUpdate()
     minusEffect(player);
   end
   
-  -- Twitchy Chatter update
-  if player:HasCollectible(itemList.chatter) then
-    chatterUpdate();
-  end
-  
-  -- Mr Greenman update
-  if player:HasCollectible(itemList.greenman) then
-    greenmanUpdate();
-  end
-  
   -- Beretta effect
   if activeUses.holdingBeretta then
     updateBeretta(player);
@@ -929,30 +648,33 @@ end
 NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 
 -- Passive items
-require("code/items/collectibles/passive/tennis");
-require("code/items/collectibles/passive/rattler");
-require("code/items/collectibles/passive/laCroix");
-require("code/items/collectibles/passive/madrinas");
-require("code/items/collectibles/passive/nugCrown");
-require("code/items/collectibles/passive/gungeonMaster");
-require("code/items/collectibles/passive/eyeForAesthetic");
+require("code/items/collectibles/passive/cobaltsStreak");
 require("code/items/collectibles/passive/theCoin");
 require("code/items/collectibles/passive/crackedEgg");
-require("code/items/collectibles/passive/redShirt");
-require("code/items/collectibles/passive/mindFlood");
-require("code/items/collectibles/passive/matricide");
-require("code/items/collectibles/passive/cobaltsStreak");
-require("code/items/collectibles/passive/purpleLord");
-require("code/items/collectibles/passive/ryukaBuddy");
+require("code/items/collectibles/passive/eyeForAesthetic");
 require("code/items/collectibles/passive/goldHat");
+require("code/items/collectibles/passive/gungeonMaster");
+require("code/items/collectibles/passive/laCroix");
 require("code/items/collectibles/passive/lootHoard");
+require("code/items/collectibles/passive/madrinas");
+require("code/items/collectibles/passive/matricide");
+require("code/items/collectibles/passive/mindFlood");
+require("code/items/collectibles/passive/mrGreenman");
+require("code/items/collectibles/passive/nugCrown");
 require("code/items/collectibles/passive/poisonMushroom");
+require("code/items/collectibles/passive/purpleLord");
+require("code/items/collectibles/passive/rattler");
+require("code/items/collectibles/passive/redShirt");
+require("code/items/collectibles/passive/ryukaBuddy");
+require("code/items/collectibles/passive/tennis");
+require("code/items/collectibles/passive/twitchyChatter");
 
 -- Familiars
-require("code/familiars/petRock");
+require("code/familiars/ghostBill");
 require("code/familiars/jellies");
 require("code/familiars/oceanMan");
-require("code/familiars/ghostBill");
+require("code/familiars/petRock");
+require("code/familiars/scumbo");
 require("code/familiars/stammer");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")

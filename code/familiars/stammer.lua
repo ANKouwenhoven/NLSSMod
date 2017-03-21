@@ -13,7 +13,7 @@ local stammer = {
 
 function stammer:cacheUpdate(player, cacheFlag)  
   if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-	player:CheckFamiliar(stammer.variantID, player:GetCollectibleNum(stammer.itemID), RNG())
+    player:CheckFamiliar(stammer.variantID, player:GetCollectibleNum(stammer.itemID), RNG())
   end
 end
 

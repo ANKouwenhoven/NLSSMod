@@ -10,7 +10,7 @@
 local oceanMan = {
   itemID = Isaac.GetItemIdByName("Ocean Man");
   variantID = Isaac.GetEntityVariantByName("oceanMan");
-  auraID = Isaac.GetEntityVariantByName("oceanWhirl");
+  auraID = Isaac.GetEntityTypeByName("oceanWhirl");
   
   aura = nil;
   inAura = false;
@@ -21,14 +21,12 @@ function oceanMan:cacheUpdate(player, cacheFlag)
 	player:CheckFamiliar(oceanMan.variantID, player:GetCollectibleNum(oceanMan.itemID), RNG())
   end
   
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-    if oceanManCheck then
+  if oceanMan.inAura then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
       addFlatStat(oceanMan.itemID, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
       addFlatStat(oceanMan.itemID, 5, CacheFlag.CACHE_RANGE, cacheFlag);
       addFlatStat(oceanMan.itemID, 0.4, CacheFlag.CACHE_SPEED, cacheFlag);
-    end
-  else
-    if oceanManCheck then
+    else
       addFlatStat(oceanMan.itemID, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
       addFlatStat(oceanMan.itemID, 3, CacheFlag.CACHE_RANGE, cacheFlag);
       addFlatStat(oceanMan.itemID, 0.2, CacheFlag.CACHE_SPEED, cacheFlag);
@@ -44,20 +42,20 @@ function oceanMan:familiarUpdate(familiar)
   familiar:MoveDiagonally(1);
   
   local player = Isaac.GetPlayer(0)
-  local area = 120;
+  local range = 120;
   
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
     range = 150;
   end
   
-  if familiar.Position:Distance(player.Position, familiar.Position) < 120 then
-    inAura = true;
+  if familiar.Position:Distance(player.Position, familiar.Position) < range then
+    oceanMan.inAura = true;
   else
-    inAura = false;
+    oceanMan.inAura = false;
   end
   
   if oceanMan.aura == nil then
-    oceanMan.aura = Isaac.Spawn(EntityType.ENTITY_EFFECT, oceanMan.auraID, 0, familiar.Position, Vector(0, 0), player);
+    oceanMan.aura = Isaac.Spawn(oceanMan.auraID, 1010, 0, familiar.Position, Vector(0, 0), player);
   else
     oceanMan.aura.Position = familiar.Position;
     oceanMan.aura.RenderZOffset = -999;
