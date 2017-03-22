@@ -13,6 +13,11 @@ local nugCrown = {
   hasItem = nil;
 }
 
+-- Used by Chicken Nugget to fetch this item
+function getCrown()
+  return nugCrown.itemID;
+end
+
 function nugCrown:cacheUpdate(player, cacheFlag)
   addFlatStat(nugCrown.itemID, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
   addFlatStat(nugCrown.itemID, 0.3, CacheFlag.CACHE_SPEED, cacheFlag);

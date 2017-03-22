@@ -13,10 +13,6 @@ local updateFireDelay = false;
 -- Amount to change FireDelay with
 local fireDelayChange = 0;
 
--- Keeps track of the amount of nugs eaten
-local nugCount = 0;
-local hasEatenNugs = false;
-
 -- Keeps track of the time Murph exists
 local murphTimer = 0;
 
@@ -38,7 +34,6 @@ local minusRoom = false;
 -- List of all new items
 local itemList = {
   theBeretta = Isaac.GetItemIdByName("The Beretta");
-  nug = Isaac.GetItemIdByName("Chicken Nugget");
   murph = Isaac.GetItemIdByName("Murph");
   stapler = Isaac.GetItemIdByName("The Stapler");
   judo = Isaac.GetItemIdByName("Black Glove");
@@ -72,8 +67,6 @@ local effectList = {
 
 -- Resets everything after restarting
 function NLSSMod:reset()
-  hasEatenNugs = false;
-  nugCount = 0;
   usedStapler = false;
   matricide = false;
 end
@@ -126,13 +119,6 @@ function minusEffect(player)
     end
   end
 end
-
--- Events on damage
-function NLSSMod:onDamage(player_x, damage_amount, damage_flag, damage_source, invincibility_frames)
-  local player = Isaac.GetPlayer(0);
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, NLSSMod.onDamage, EntityType.ENTITY_PLAYER)
 
 -- Effect of the Marfle-Pop trinket
 function marflePopEffect(player)
@@ -284,39 +270,6 @@ end
 
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useStapler, itemList.stapler)
 
--- Chicken Nug's effect
-function NLSSMod:useNug()
-  local player = Isaac.GetPlayer(0)
-  nugCount = nugCount + 1;
-  
-  if player.MoveSpeed > 0.11 then
-    if not hasEatenNugs then
-      hasEatenNugs = true;
-    end
-    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-    player:AddCacheFlags(CacheFlag.CACHE_RANGE);
-    player:AddCacheFlags(CacheFlag.CACHE_SPEED);
-    player:EvaluateItems();
-  end
-  
-  if nugCount > 9 then
-    local spawnX = player.Position.X + 30;
-    local spawnY = player.Position.Y + 30;
-    if player.Position.X > 400 then
-      spawnX = player.Position.X - 30;
-    end
-    if player.Position.Y > 400 then
-      spawnY = player.Position.Y - 30;
-    end
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, itemList.nugCrown, Vector(spawnX, spawnY), Vector(0, 0), nil)
-    player:RemoveCollectible(itemList.nug);
-  end
-  
-  return true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useNug, itemList.nug)
-
 -- Murph's effect
 function NLSSMod:useMurph()
   local player = Isaac.GetPlayer(0)
@@ -389,21 +342,6 @@ function NLSSMod:cacheUpdate(player, cacheFlag)
   -- Speed Stats
   if minusRoom then
     addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
-  end
-  
-  -- Nug Stats
-  if hasEatenNugs then
-    if cacheFlag == CacheFlag.CACHE_DAMAGE then
-      player.Damage = player.Damage + 0.75 * nugCount;
-    end
-    
-    if cacheFlag == CacheFlag.CACHE_SPEED then
-      player.MoveSpeed = player.MoveSpeed - 0.10 * nugCount;
-    end
-    
-    if cacheFlag == CacheFlag.CACHE_RANGE then
-      player.TearHeight = player.TearHeight - 1 * nugCount;
-    end
   end
   
   -- All familiar changes
@@ -566,7 +504,6 @@ function NLSSMod:onUpdate()
   
     SpawnItem(itemList.theBeretta, 170, 300)
     
-    SpawnItem(itemList.nug, 470, 250)
     SpawnItem(itemList.murph, 270, 250)
     SpawnItem(itemList.stapler, 170, 250)
     
@@ -676,5 +613,8 @@ require("code/familiars/oceanMan");
 require("code/familiars/petRock");
 require("code/familiars/scumbo");
 require("code/familiars/stammer");
+
+-- Actives
+require("code/items/collectibles/active/chickenNugget");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")

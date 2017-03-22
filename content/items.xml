@@ -28,7 +28,7 @@
 	<familiar name="Scumbo" cache="familiars" description="Scumbo want bad damage!" gfx="collectible_scumbo.png" />
 	<familiar name="Staggered Stammer" cache="familiars" description="Raining down on me" gfx="collectible_stammer.png" />
 	
-	<active name="The Beretta" description="Do it" gfx="collectible_theBeretta.png" maxcharges="1" />
+	<active name="The Beretta" description="Fun for the whole family" gfx="collectible_theBeretta.png" maxcharges="1" />
 	<active name="Chicken Nugget" description="How many can you handle?" gfx="collectible_nug.png" maxcharges="1" />
 	<active name="Murph" description="Don't let me leave!" gfx="collectible_murph.png" maxcharges="4" />
 	<active name="The Stapler" description="For nuts only" gfx="collectible_stapler.png" maxcharges="2" />
