@@ -33,10 +33,16 @@ function stapler:onPlayerUpdate(player)
     stapler.isActive = false;
 	end
   
+  if stapler.isActive then
+    player.MaxFireDelay = 1;
+  end
+  
   if Game():GetRoom():GetFrameCount() == 1 then
     if stapler.isActive == true then
       player.MaxFireDelay = player.MaxFireDelay + stapler.removedDelay;
       stapler.isActive = false;
+      player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+      player:EvaluateItems();
     end
   end
 end

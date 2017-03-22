@@ -1,33 +1,22 @@
+--------------------------------------------------------
+-- NLSS Itempack Mod!
+-- This main file holds all utility functions.
+-- All item files are loaded at the bottom of this file.
+--------------------------------------------------------
+
 -- Registers this mod
 NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
 local PREVIEW_ITEMS = true;
 
--- Minimum allowed tear delay
-local MIN_TEAR_DELAY = 5;
-
--- Flag whether FireDelay is to be updated
-local updateFireDelay = false;
-
--- Amount to change FireDelay with
-local fireDelayChange = 0;
-
-local trinketList = {
-  marflePop = Isaac.GetTrinketIdByName("Marfle-Pop!");
-}
-
-local usables = {
-  pillRURURU = Isaac.GetPillEffectByName("RURURURURURURURURU")
-}
-
 -- Returns a random Float between numbers min and max
-function RandomFloatBetween(min, max) 
+function clampedRandom(min, max) 
   return math.random() * (max - min) + min
 end
 
 -- Randomly returns 1 or -1
-function RandomSign()
+function randomSign()
   if math.random() < 0.5 then return -1 else return 1 end
 end
 
@@ -35,69 +24,6 @@ function round(number, decimals)
   local multiplier = 10^(decimals or 0)
   return math.floor(number * multiplier + 0.5) / multiplier
 end
-
--- Checks sprites for being already custom
-function isCustomSprite(sprite)
-  if sprite == "gfx/Effects/gungeonBullet.anm2" then
-    return true;
-  end
-    
-  if sprite == "gfx/Effects/jellyTear3.anm2" then
-    return true;
-  end
-    
-  if sprite == "gfx/Effects/jellyTear4.anm2" then
-    return true;
-  end
-    
-  if sprite == "gfx/Effects/ghostTear.anm2" then
-    return true;
-  end
-    
-  return false;
-end
-
--- Effect of the Marfle-Pop trinket
-function marflePopEffect(player)
-  if Game():GetRoom():GetFrameCount() == 1 and math.random(1, 4) == 1 then
-    local entities = Isaac.GetRoomEntities()
-    local validentity
-    for i = 1, #entities do
-      local enemy = entities[i]
-      if enemy:IsVulnerableEnemy() then
-        validentity = enemy
-      end
-    end
-    
-    local attack = math.random(1, 3);
-    if attack == 1 then
-      sky = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, 0, validentity.Position, Vector(0, 0), enemy);
-      sky:SetColor(Color(1, 1, 1, 1, math.random(255) * RandomSign(), math.random(255) * RandomSign(), math.random(255) * RandomSign()), 0, 0, false, false);
-    elseif attack == 2 then
-      Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MONSTROS_TOOTH, 0, validentity.Position, Vector(0, 0), enemy);
-    elseif attack == 3 then
-      Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MOM_FOOT_STOMP, 0, validentity.Position, Vector(0, 0), enemy);
-    end
-  end
-end
-
--- RURURU pill
-function NLSSMod:takeRUPill(pillRURURU)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities();
-  
-  for i = 1, #entities do
-    local enemy = entities[i]
-    if enemy:IsVulnerableEnemy() then
-      if player.Position:Distance(enemy.Position, player.Position) < 200 then
-        enemy:AddConfusion(EntityRef(player), 120)
-        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.GOLD_PARTICLE, 0, enemy.Position, Vector(0, 0), enemy);
-      end
-    end
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_PILL, NLSSMod.takeRUPill, usables.pillRURURU)
 
 -- Adds a stat bonus if the player has the right item
 function addFlatStat(item, bonus, bonustype, cacheFlag)
@@ -115,25 +41,16 @@ function addFlatStat(item, bonus, bonustype, cacheFlag)
       elseif bonustype == CacheFlag.CACHE_LUCK then
         player.Luck = player.Luck + bonus;
       elseif bonustype == CacheFlag.CACHE_FIREDELAY then
-        fireDelayChange = fireDelayChange + bonus;
-        updateFireDelay = true;
+        player.MaxFireDelay = player.MaxFireDelay - bonus;
       end
     end
   end
 end
 
--- Updates stat changes - called whenever the stat cache is updated
-function NLSSMod:cacheUpdate(player, cacheFlag)
-  -- Firedelay Stats
-  fireDelayChange = 0;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, NLSSMod.cacheUpdate)
-
 -- Makes familiars face the way they are moving
 function setOrientation(familiar, flipped)
   local sprite = familiar:GetSprite();
-  local dir = toDirection(familiar.Velocity);
+  local dir = ToDirection(familiar.Velocity);
   if flipped then
     if dir == Direction.LEFT then
       sprite.FlipX = true;
@@ -150,7 +67,7 @@ function setOrientation(familiar, flipped)
 end
 
 -- Returns a facing direction based off its movement vector
-function toDirection(vector)
+function ToDirection(vector)
 	if vector.X > 0 then
     return Direction.RIGHT;
 	elseif vector.X < 0 then
@@ -177,36 +94,6 @@ function SpawnPreviewItem(Item, X, Y)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, Item, Vector(X, Y), Vector(0, 0), nil)
   end
 end
-
--- Code that has to run every frame
-function NLSSMod:onUpdate()
-  local player = Isaac.GetPlayer(0);
-  
-  -- Workaround for the wonky firedelay stat
-  if updateFireDelay then
-    if not staplerActive() then
-      if (player.MaxFireDelay - fireDelayChange > MIN_TEAR_DELAY) then
-        player.MaxFireDelay = player.MaxFireDelay - fireDelayChange;
-      elseif (player.MaxFireDelay - fireDelayChange > 4) then
-        player.MaxFireDelay = MIN_TEAR_DELAY;
-      elseif (player.MaxFireDelay - fireDelayChange > 2) then
-        player.MaxFireDelay = 4;
-      else
-        player.MaxFireDelay = 3;
-      end
-    else
-      player.MaxFireDelay = 1;
-    end
-    updateFireDelay = false
-  end
-  
-  -- Marfle-Pop trinket effect
-  if player:HasTrinket(trinketList.marflePop) then
-    marflePopEffect(player)
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_POST_UPDATE, NLSSMod.onUpdate)
 
 -- Passive items
 require("code/items/collectibles/passive/cobaltsStreak");
@@ -239,7 +126,7 @@ require("code/familiars/scumbo");
 require("code/familiars/stammer");
 require("code/familiars/teratomo");
 
--- Actives
+-- Active items
 require("code/items/collectibles/active/chickenNugget");
 require("code/items/collectibles/active/murph");
 require("code/items/collectibles/active/beretta");
@@ -247,5 +134,11 @@ require("code/items/collectibles/active/stapler");
 require("code/items/collectibles/active/blackGlove");
 require("code/items/collectibles/active/monsterTimeBoardgame");
 require("code/items/collectibles/active/minusRealm");
+
+-- Trinkets
+require("code/items/trinkets/marflePop");
+
+-- Consumables
+require("code/items/consumables/RURURU");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
