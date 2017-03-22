@@ -13,6 +13,10 @@ local matricide = {
   hasItem = nil;
 }
 
+function getMatricide()
+  return matricide.itemID;
+end
+
 function matricide:cacheUpdate(player, cacheFlag)
   addFlatStat(matricide.itemID, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
 end

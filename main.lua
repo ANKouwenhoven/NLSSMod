@@ -13,34 +13,6 @@ local updateFireDelay = false;
 -- Amount to change FireDelay with
 local fireDelayChange = 0;
 
--- Keeps track of the time Murph exists
-local murphTimer = 0;
-
--- Keeps track of whether you've used the stapler this room
-local usedStapler = false;
-local removedTearDelay = 0;
-
--- Matricide
-local matricide = false;
-
--- Nightmare variables
-local nightmareAmount = 0;
-local nightmareDistance = 5;
-
--- Minus realm data
-local currentColor;
-local minusRoom = false;
-
--- List of all new items
-local itemList = {
-  theBeretta = Isaac.GetItemIdByName("The Beretta");
-  murph = Isaac.GetItemIdByName("Murph");
-  stapler = Isaac.GetItemIdByName("The Stapler");
-  judo = Isaac.GetItemIdByName("Black Glove");
-  boardgame = Isaac.GetItemIdByName("Monster Time Boardgame");
-  minus = Isaac.GetItemIdByName("Minus Realm");
-}
-
 local trinketList = {
   marflePop = Isaac.GetTrinketIdByName("Marfle-Pop!");
 }
@@ -48,30 +20,6 @@ local trinketList = {
 local usables = {
   pillRURURU = Isaac.GetPillEffectByName("RURURURURURURURURU")
 }
-
--- Lists whether active items are being used
-local activeUses = {
-  holdingBeretta = false;
-}
-
--- List of all new familiars
-local familiarList = {
-  murph = Isaac.GetEntityVariantByName("murph");
-  nightmare = Isaac.GetEntityVariantByName("nightmare");
-}
-
--- List of all new effects
-local effectList = {
-  badDamage = Isaac.GetEntityTypeByName("badDamage");
-}
-
--- Resets everything after restarting
-function NLSSMod:reset()
-  usedStapler = false;
-  matricide = false;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, NLSSMod.reset)
 
 -- Returns a random Float between numbers min and max
 function RandomFloatBetween(min, max) 
@@ -109,17 +57,6 @@ function isCustomSprite(sprite)
   return false;
 end
 
--- Minus realm'ed room
-function minusEffect(player)
-  local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
-    if Game():GetFrameCount() % 10 == 0 then
-      entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
-    end
-  end
-end
-
 -- Effect of the Marfle-Pop trinket
 function marflePopEffect(player)
   if Game():GetRoom():GetFrameCount() == 1 and math.random(1, 4) == 1 then
@@ -143,144 +80,6 @@ function marflePopEffect(player)
     end
   end
 end
-
--- Activate Beretta
-function NLSSMod:useBeretta()
-  local player = Isaac.GetPlayer(0)
-  player:AnimateCollectible(itemList.theBeretta, "LiftItem", "Idle")
-  activeUses.holdingBeretta = true
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useBeretta, itemList.theBeretta)
-
--- Beretta's effect
-function updateBeretta(player)
-  if activeUses.holdingBeretta then
-    local direction = player:GetFireDirection()
-    local shootingDirection
-    
-    -- Get shooting direction
-    if direction == 0 then      -- Left
-      shootingDirection = Vector(-1, 0)
-    elseif direction == 1 then  -- Up
-      shootingDirection = Vector(0, -1)
-    elseif direction == 2 then  -- Right
-      shootingDirection = Vector(1, 0)
-    elseif direction == 3 then  -- Down
-      shootingDirection = Vector(0, 1)
-    end
-
-    if shootingDirection ~= nil then            
-      tear = player:FireTear(player.Position, shootingDirection, false, false, false)
-      tear.Velocity = tear.Velocity * 50;
-      tear.CollisionDamage = player.Damage + 30;
-      tear.Color = Color(0, 0, 0, 1, 0, 0, 0);
-      tear.TearFlags = 1<<1;
-      
-      local entities = Isaac.GetRoomEntities();
-      for i = 1, #entities do
-        local entity = entities[i];
-        if entity.Type == EntityType.ENTITY_MOM and matricide == false then
-          matricide = true;
-          entity:Kill();
-          Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, itemList.matricide, Vector(320, 350), Vector(0, 0), nil)
-        end
-      end
-      
-      player:AnimateCollectible(itemList.theBeretta, "HideItem", "Idle")
-      activeUses.holdingBeretta = false
-    end
-  end
-end
-
--- Activate Judo Chop
-function NLSSMod:useJudo()
-  local player = Isaac.GetPlayer(0)
-  
-  local entities = Isaac.GetRoomEntities();
-  for i = 1, #entities do
-    if entities[i]:IsVulnerableEnemy() then
-      entities[i].HitPoints = entities[i].HitPoints / 2;
-      entities[i]:AddConfusion(EntityRef(player), 180, false);
-    end
-  end
-  
-  return true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useJudo, itemList.judo)
-
--- Activate Minus Realm
-function NLSSMod:useMinus()
-  local player = Isaac.GetPlayer(0)
-  Game():GetRoom():TurnGold();
-  minusRoom = true;
-  local entities = Isaac.GetRoomEntities();
-  player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-  player:AddCacheFlags(CacheFlag.CACHE_SPEED);
-  player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
-  player.CanFly = true;
-  player:EvaluateItems();
-  for i = 1, #entities do
-    if entities[i]:IsVulnerableEnemy() then
-      entities[i]:AddFreeze(EntityRef(player), 250, false);
-      entities[i]:AddSlowing(EntityRef(player), 1000, 0.1, Color(0, 0, 0, 1, 0, 0, 0))
-      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
-    end
-  end
-  currentColor = player.Color;
-  player.Color = Color(0, 0, 0, 1, 0, 0, 0);
-  
-  return true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useMinus, itemList.minus)
-
--- Activate Boardgame
-function NLSSMod:useBoardgame()
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-  nightmareAmount = 0;
-  
-  for i = 1, #entities do
-    local enemy = entities[i]
-    if enemy:IsVulnerableEnemy() then
-      nightmareAmount = nightmareAmount + 1;
-    end
-  end
-  
-  player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS);
-  player:EvaluateItems();
-  
-  return true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useBoardgame, itemList.boardgame)
-
--- Activate Stapler
-function NLSSMod:useStapler()
-  local player = Isaac.GetPlayer(0)
-  removedTearDelay = player.MaxFireDelay - 1;
-  usedStapler = true;
-  player:TakeDamage(1, 0, EntityRef(player), 0);
-  player.MaxFireDelay = 1;
-  
-  return true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useStapler, itemList.stapler)
-
--- Murph's effect
-function NLSSMod:useMurph()
-  local player = Isaac.GetPlayer(0)
-  murphTimer = 0;
-  
-  player:CheckFamiliar(familiarList.murph, player:GetCollectibleNum(itemList.murph), RNG())
-  
-  return true;
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, NLSSMod.useMurph, itemList.murph)
 
 -- RURURU pill
 function NLSSMod:takeRUPill(pillRURURU)
@@ -325,29 +124,8 @@ end
 
 -- Updates stat changes - called whenever the stat cache is updated
 function NLSSMod:cacheUpdate(player, cacheFlag)
-  
   -- Firedelay Stats
   fireDelayChange = 0;
-  
-  -- Damage Stats
-  if minusRoom then
-    addFlatStat(itemList.minus, player.Damage * 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
-  end
-  
-  -- Shotspeed Stats
-  if minusRoom then
-    addFlatStat(itemList.minus, player.ShotSpeed * 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
-  end
-  
-  -- Speed Stats
-  if minusRoom then
-    addFlatStat(itemList.minus, -0.7 * player.MoveSpeed, CacheFlag.CACHE_SPEED, cacheFlag);
-  end
-  
-  -- All familiar changes
-  if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-    player:CheckFamiliar(familiarList.nightmare, nightmareAmount, RNG())
-  end
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, NLSSMod.cacheUpdate)
@@ -382,100 +160,6 @@ function toDirection(vector)
 	return Direction.NO_DIRECTION
 end
 
--- Initializes Nightmare familiars by placing them into the correct orbit layer
-function NLSSMod:initNightmare(familiar)
-  familiar.OrbitLayer = 11;
-  familiar:RecalculateOrbitOffset(familiar.OrbitLayer, true)
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, NLSSMod.initNightmare, familiarList.nightmare)
-
--- Handles Nightmare AI
-function NLSSMod:nightmareUpdate(familiar)
-  local player = Isaac.GetPlayer(0);
-  familiar.OrbitSpeed = 0.01;
-  familiar.Velocity = familiar:GetOrbitPosition(player.Position + player.Velocity) - familiar.Position;
-  
-  local targetLocation;
-  local entities = Isaac.GetRoomEntities();
-  
-  -- Look for an enemy close enough to chase
-  for i = 1, #entities do
-    entity = entities[i]
-    if entity:IsVulnerableEnemy() then
-      if familiar.Position:Distance(entity.Position, familiar.Position) < 100 then
-        targetLocation = entity.Position;
-        directionVector = entity.Position - familiar.Position;
-        directionVector = directionVector:Normalized() * 5;
-        familiar.Velocity = directionVector
-      end
-    end
-  end
-  
-  -- No enemies to chase
-  if targetLocation == nil then
-    if familiar.Position:Distance(player.Position, familiar.Position) > 75 then
-      
-      -- Chase the player if we are too far away from it
-      targetLocation = player.Position;
-      directionVector = player.Position - familiar.Position;
-      directionVector = directionVector:Normalized() * 5;
-      familiar.Velocity = directionVector
-    else
-      
-      -- Orbit the player
-      targetLocation = familiar:GetOrbitPosition(player.Position)
-      familiar.OrbitDistance = Vector(nightmareDistance, nightmareDistance)
-      if nightmareDistance < 35 then
-        nightmareDistance = nightmareDistance + 1;
-      else
-        nightmareDistance = 50 + 15 * math.sin((math.pi / 180) * (Game():GetFrameCount() * 6))       
-      end
-      familiar.Velocity = targetLocation - familiar.Position
-    end
-  end
-  
-  -- Induce fear in enemies that are close enough
-  for i = 1, #entities do
-    entity = entities[i]
-    if entity:IsVulnerableEnemy() then
-      if familiar.Position:Distance(entity.Position, familiar.Position) < 50 then
-        entity:AddFear(EntityRef(familiar), 150)
-      end
-    end
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.nightmareUpdate, familiarList.nightmare)
-
--- Handles Murph AI
-function NLSSMod:murphUpdate(familiar)
-  local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
-  Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DARK_BALL_SMOKE_PARTICLE, 0, familiar.Position, Vector(0, 0), familiar);
-    
-  for i = 1, #entities do
-    local entity = entities[i]
-    if entity:IsVulnerableEnemy() or entity.Type == EntityType.ENTITY_TEAR or entity.Type == EntityType.ENTITY_PICKUP then
-      local directionVector = familiar.Position - entity.Position
-      directionVector = directionVector:Normalized() * 3;
-      entity.Velocity = entity.Velocity + directionVector
-      
-      if familiar.Position:Distance(entity.Position, familiar.Position) < 15 and entity:IsVulnerableEnemy() then
-        Game():SpawnParticles(entity.Position, 43, 1, 0, Color(0.3, 0.1, 1, 1, 0, 0, 0), 0);
-      end
-    end
-  end
-  
-  if murphTimer == 120 then
-    familiar:Remove();
-  else
-    murphTimer = murphTimer + 1;
-  end
-end
-
-NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, NLSSMod.murphUpdate, familiarList.murph)
-
 -- Returns whether there are enemies in the current room
 function CheckForEnemies()
 	local entities = Isaac.GetRoomEntities()
@@ -484,7 +168,7 @@ function CheckForEnemies()
 			return true
 		end
 	end
-    return false
+  return false
 end
 
 -- Quality of life item spawn function
@@ -498,22 +182,9 @@ end
 function NLSSMod:onUpdate()
   local player = Isaac.GetPlayer(0);
   
-  -- Spawn all mod items on the very first frame
-  if Game():GetFrameCount() == 1 and PREVIEW_ITEMS then
-    SpawnItem(itemList.minus, 420, 350)
-  
-    SpawnItem(itemList.theBeretta, 170, 300)
-    
-    SpawnItem(itemList.murph, 270, 250)
-    SpawnItem(itemList.stapler, 170, 250)
-    
-    SpawnItem(itemList.judo, 470, 150)
-    SpawnItem(itemList.boardgame, 170, 150)
-  end
-  
   -- Workaround for the wonky firedelay stat
   if updateFireDelay then
-    if not usedStapler then
+    if not staplerActive() then
       if (player.MaxFireDelay - fireDelayChange > MIN_TEAR_DELAY) then
         player.MaxFireDelay = player.MaxFireDelay - fireDelayChange;
       elseif (player.MaxFireDelay - fireDelayChange > 4) then
@@ -527,53 +198,6 @@ function NLSSMod:onUpdate()
       player.MaxFireDelay = 1;
     end
     updateFireDelay = false
-  end
-  
-  -- Things at the start of a room
-  if Game():GetRoom():GetFrameCount() == 1 then
-    
-    local entities = Isaac.GetRoomEntities();
-    
-    -- Stapler reset
-    if usedStapler == true then
-      player.MaxFireDelay = player.MaxFireDelay + removedTearDelay;
-      usedStapler = false;
-      player:EvaluateItems();
-    end
-    
-    -- Monster Time Boardgame reset
-    if player:HasCollectible(itemList.boardgame) then
-      nightmareAmount = 0;
-      nightmareDistance = 5;
-      player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS);
-      player:EvaluateItems();
-    end
-    
-    -- Minus Realm reset
-    if currentColor ~= nil then
-      player.Color = currentColor;
-      currentColor = nil;
-    end
-    
-    minusRoom = false;
-    
-    if player:HasCollectible(itemList.minus) then
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-      player:AddCacheFlags(CacheFlag.CACHE_SPEED);
-      player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
-      player.CanFly = false;
-      player:EvaluateItems();
-    end
-  end
-  
-  -- Minus room handling
-  if minusRoom then
-    minusEffect(player);
-  end
-  
-  -- Beretta effect
-  if activeUses.holdingBeretta then
-    updateBeretta(player);
   end
   
   -- Marfle-Pop trinket effect
@@ -613,8 +237,15 @@ require("code/familiars/oceanMan");
 require("code/familiars/petRock");
 require("code/familiars/scumbo");
 require("code/familiars/stammer");
+require("code/familiars/teratomo");
 
 -- Actives
 require("code/items/collectibles/active/chickenNugget");
+require("code/items/collectibles/active/murph");
+require("code/items/collectibles/active/beretta");
+require("code/items/collectibles/active/stapler");
+require("code/items/collectibles/active/blackGlove");
+require("code/items/collectibles/active/monsterTimeBoardgame");
+require("code/items/collectibles/active/minusRealm");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
