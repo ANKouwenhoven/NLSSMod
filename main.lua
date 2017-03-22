@@ -20,6 +20,7 @@ function randomSign()
   if math.random() < 0.5 then return -1 else return 1 end
 end
 
+-- Rounds a number to the given amount of decimals
 function round(number, decimals)
   local multiplier = 10^(decimals or 0)
   return math.floor(number * multiplier + 0.5) / multiplier

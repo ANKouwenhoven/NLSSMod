@@ -8,10 +8,39 @@
 
 local lootHoard = {
   itemID = Isaac.GetItemIdByName("Loot Hoard");
-  costumeID = Isaac.GetCostumeIdByPath("gfx/characters/lootHoard.anm2");
+  costumeID = Isaac.GetCostumeIdByPath("gfx/characters/lootHoarder.anm2");
   hasItem = nil;
   hasLooted = false;
 }
+
+function spawnLoot(currentRoom)
+  local number = math.random(6);
+  
+  if number == 1 then
+    local item = SpawnPreviewItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
+  elseif number == 2 then
+    for i = 1, math.random(3) + 5 do
+      local coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+    end
+  elseif number == 3 then
+    for i = 1, 2 do
+      local chest = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+    end
+  elseif number == 4 then
+    for i = 1, 2 do
+      local key = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_NORMAL, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+      local bomb = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+    end
+  elseif number == 5 then
+    for i = 1, 2 do
+      local chest = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LOCKEDCHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+    end
+  elseif number == 6 then
+    for i = 1, 2 do
+      local chest = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMBCHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
+    end
+  end
+end
 
 function lootHoard:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
@@ -22,7 +51,7 @@ function lootHoard:onPlayerUpdate(player)
   
 	if player:HasCollectible(lootHoard.itemID) then
 		if lootHoard.hasItem == false then
-			--player:AddNullCostume(lootHoard.costumeID)
+			player:AddNullCostume(lootHoard.costumeID)
 			lootHoard.hasItem = true
 		end
 	end
@@ -33,18 +62,7 @@ function lootHoard:onPlayerUpdate(player)
     if currentRoom:GetType() == RoomType.ROOM_BOSS then
       if currentRoom:IsClear() then
         if not lootHoard.hasLooted then
-          local number = math.random(3);
-          if number == 1 then
-            local item = SpawnPreviewItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
-          elseif number == 2 then
-            for i = 1, math.random(3) + 5 do
-              local coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
-            end
-          else
-            for i = 1, 2 do
-              local key = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, ChestSubType.CHEST_CLOSED, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);
-            end
-          end
+          spawnLoot(currentRoom);
           lootHoard.hasLooted = true;
         end
       else
