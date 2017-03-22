@@ -20,13 +20,13 @@ function crackedEgg:eggEffect()
   end
   
   for tears = 1, 25 do
-    local directionVector = Vector(RandomSign() * math.random(1, 10), RandomSign() * math.random(1, 10));
+    local directionVector = RandomVector() * math.random(1, 10);
     tear1 = player:FireTear(player.Position, directionVector, false, false, false);
     tear1.Color = Color(1, 1, 1, 1, 255, 255, 255);
   end
 
   for tears = 1, 5 do
-    local directionVector = Vector(RandomSign() * math.random(1, 3), RandomSign() * math.random(1, 5));
+    local directionVector = RandomVector() * math.random(1, 5);
     tear2 = player:FireTear(player.Position, directionVector, false, false, false);
     tear2.CollisionDamage = player.Damage + 5;
     tear2.Color = Color(1, 1, 1, 1, 255, 255, 0);

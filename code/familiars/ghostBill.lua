@@ -43,7 +43,7 @@ function ghostBill:familiarUpdate(familiar)
       shots = math.random(2, 4);
     end
     for i = 1, shots do
-      local thisTear = player:FireTear(familiar.Position, shootingDirection * 8 + Vector(math.random(-2, 2), math.random(-2, 2)), false, false, false);
+      local thisTear = player:FireTear(familiar.Position, shootingDirection * 8 + RandomVector() * 2, false, false, false);
       local currentSprite = thisTear:GetSprite():GetFilename() 
       if currentSprite ~= "gfx/Effects/ghostTear.anm2" then
         local newTearSprite = thisTear:GetSprite() 

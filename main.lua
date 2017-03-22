@@ -74,7 +74,7 @@ function ToDirection(vector)
     return Direction.LEFT;
 	end
 
-	return Direction.NO_DIRECTION
+	return Direction.NO_DIRECTION;
 end
 
 -- Returns whether there are enemies in the current room
@@ -82,10 +82,10 @@ function CheckForEnemies()
 	local entities = Isaac.GetRoomEntities()
 	for i = 1, #entities do
 		if (entities[i]:IsActiveEnemy(false) and entities[i]:CanShutDoors()) then
-			return true
+			return true;
 		end
 	end
-  return false
+  return false;
 end
 
 -- Quality of life item spawn function
