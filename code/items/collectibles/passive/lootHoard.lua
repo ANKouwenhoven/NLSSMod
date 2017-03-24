@@ -17,7 +17,8 @@ function spawnLoot(currentRoom)
   local number = math.random(6);
   
   if number == 1 then
-    local item = SpawnPreviewItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
+    --local item = SpawnPreviewItem(0, currentRoom:GetCenterPos().X, currentRoom:GetCenterPos().Y + 40);
+    local item = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, currentRoom:GetCenterPos() + Vector(0, 40), Vector(0, 0), nil)
   elseif number == 2 then
     for i = 1, math.random(3) + 5 do
       local coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, currentRoom:GetCenterPos() + Vector(0, 40), RandomVector(), enemy);

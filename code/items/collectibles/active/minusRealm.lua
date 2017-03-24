@@ -60,17 +60,7 @@ function minusRealm:onPlayerUpdate(player)
     SpawnPreviewItem(minusRealm.itemID, 420, 350)
 	end
   
-  if minusRealm.activeRoom then
-    local entities = Isaac.GetRoomEntities();
-    for i = 1, #entities do
-      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
-      if Game():GetFrameCount() % 10 == 0 then
-        entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
-      end
-    end
-  end
-  
-  if Game():GetRoom():GetFrameCount() == 1 then
+  if Game():GetRoom():GetFrameCount() == 0 then
     if minusRealm.currentColor ~= nil then
       player.Color = minusRealm.currentColor;
       minusRealm.currentColor = nil;
@@ -84,6 +74,16 @@ function minusRealm:onPlayerUpdate(player)
       player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
       player.CanFly = false;
       player:EvaluateItems();
+    end
+  end
+  
+  if minusRealm.activeRoom then
+    local entities = Isaac.GetRoomEntities();
+    for i = 1, #entities do
+      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
+      if Game():GetFrameCount() % 10 == 0 then
+        entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
+      end
     end
   end
 end

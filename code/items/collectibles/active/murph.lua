@@ -23,8 +23,14 @@ end
 
 function murph:familiarUpdate(familiar)
   local player = Isaac.GetPlayer(0)
-  local entities = Isaac.GetRoomEntities()
+  local entities = Isaac.GetRoomEntities();
+  
   Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DARK_BALL_SMOKE_PARTICLE, 0, familiar.Position, Vector(0, 0), familiar);
+  if math.random(50) == 1 then
+    local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0, familiar.Position + Vector(0, 10), Vector(0, 0), familiar);
+    poof:SetColor(Color(0, 0, 0, 1, 50, 0, 100), 0, 0, false, false);
+    poof.RenderZOffset = -999;
+  end
     
   for i = 1, #entities do
     local entity = entities[i]

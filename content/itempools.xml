@@ -25,6 +25,9 @@
 		<Item Name="Golden Hat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Staggered Stammer" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Monster Time Boardgame" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Minus Realm" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Loot Hoard" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Poison Mushroom" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
@@ -50,5 +53,7 @@
 		<Item Name="Red Shirt" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Cracked Eggshell" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Ryuka Buddy" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Minus Realm" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Loot Hoard" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 </ItemPools>

@@ -8,23 +8,13 @@
 NLSSMod = RegisterMod("NLSSMod", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
-local PREVIEW_ITEMS = true;
-
--- Returns a random Float between numbers min and max
-function clampedRandom(min, max) 
-  return math.random() * (max - min) + min
-end
-
--- Randomly returns 1 or -1
-function randomSign()
-  if math.random() < 0.5 then return -1 else return 1 end
-end
-
--- Rounds a number to the given amount of decimals
-function round(number, decimals)
-  local multiplier = 10^(decimals or 0)
-  return math.floor(number * multiplier + 0.5) / multiplier
-end
+-----------------------------
+-- | | | | | | | | | | | | --
+----------------------------
+local PREVIEW_ITEMS = false;
+-----------------------------
+-- | | | | | | | | | | | | --
+-----------------------------
 
 -- Adds a stat bonus if the player has the right item
 function addFlatStat(item, bonus, bonustype, cacheFlag)
@@ -46,6 +36,22 @@ function addFlatStat(item, bonus, bonustype, cacheFlag)
       end
     end
   end
+end
+
+-- Returns a random Float between numbers min and max
+function clampedRandom(min, max) 
+  return math.random() * (max - min) + min
+end
+
+-- Randomly returns 1 or -1
+function randomSign()
+  if math.random() < 0.5 then return -1 else return 1 end
+end
+
+-- Rounds a number to the given amount of decimals
+function round(number, decimals)
+  local multiplier = 10^(decimals or 0)
+  return math.floor(number * multiplier + 0.5) / multiplier
 end
 
 -- Makes familiars face the way they are moving
