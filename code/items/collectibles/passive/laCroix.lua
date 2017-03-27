@@ -13,7 +13,7 @@ local laCroix = {
 }
 
 function laCroix:cacheUpdate(player, cacheFlag)
-  addFlatStat(laCroix.itemID, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);
+  addFlatStat(laCroix.itemID, player.MaxFireDelay * 0.3, CacheFlag.CACHE_FIREDELAY, cacheFlag);
 end
 
 function laCroix:onPlayerUpdate(player)

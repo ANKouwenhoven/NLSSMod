@@ -12,7 +12,6 @@
 
 local minusRealm = {
   itemID = Isaac.GetItemIdByName("Minus Realm");
-  currentColor = nil;
   activeRoom = false;
 }
 
@@ -35,7 +34,7 @@ function minusRealm:useItem()
       entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
     end
   end
-  minusRealm.currentColor = player.Color;
+  
   player.Color = Color(0, 0, 0, 1, 0, 0, 0);
   
   return true;
@@ -60,12 +59,7 @@ function minusRealm:onPlayerUpdate(player)
     SpawnPreviewItem(minusRealm.itemID, 420, 350)
 	end
   
-  if Game():GetRoom():GetFrameCount() == 0 then
-    if minusRealm.currentColor ~= nil then
-      player.Color = minusRealm.currentColor;
-      minusRealm.currentColor = nil;
-    end
-    
+  if Game():GetRoom():GetFrameCount() == 0 then    
     minusRealm.activeRoom = false;
     
     if player:HasCollectible(minusRealm.itemID) then
@@ -75,16 +69,23 @@ function minusRealm:onPlayerUpdate(player)
       player.CanFly = false;
       player:EvaluateItems();
     end
+    
+    local entities = Isaac.GetRoomEntities();
+    for i = 1, #entities do
+      entities[i].Color = Color(1, 1, 1, 1, 0, 0, 0);
+    end
   end
   
   if minusRealm.activeRoom then
     local entities = Isaac.GetRoomEntities();
-    for i = 1, #entities do
-      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
-      if Game():GetFrameCount() % 10 == 0 then
+    if Game():GetFrameCount() % 10 == 0 then
+      for i = 1, #entities do
+        entities[i].Color = Color(0, 0, 0, 1, math.random(255), math.random(255), math.random(255));
         entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
       end
     end
+    
+    Game():Darken(math.abs(math.sin((math.pi / 180) * Game():GetFrameCount() * 2)), 1)
   end
 end
 

@@ -42,8 +42,8 @@ function purpleLord:onPlayerUpdate(player)
           tear.Color = Color(1, 1, 1, 1, 50, -100, 250);
           tear.TearFlags = 1<<1;
         elseif math.random(1, 3) == 3 then
-          local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, tear.Position, Vector(0, 0), player);
-          creep:SetColor(Color(1, 1, 1, 1, 0, -150, 200), 0, 0, false, false)
+          local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_GREEN, 0, tear.Position, Vector(0, 0), player);
+          creep:SetColor(Color(1, 1, 1, 1, 100, -100, 250), 0, 0, false, false)
         end
       end
 		end

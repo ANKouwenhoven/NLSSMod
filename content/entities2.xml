@@ -20,7 +20,7 @@
 	<entity anm2path="familiar/murph.anm2" baseHP="0" boss="0" champion="0" collisionDamage="5" collisionMass="3" collisionRadius="13" friction="0" id="3" name="murph" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1007">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
-	<entity anm2path="familiar/chatter.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1.0" id="3" name="chatter" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1008">
+	<entity anm2path="familiar/chatter.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="0" id="3" name="chatter" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1008">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	<entity anm2path="familiar/greenman.anm2" baseHP="0" boss="0" champion="0" collisionDamage="10" collisionMass="3" collisionRadius="32" friction="1.0" id="3" name="greenman" numGridCollisionPoints="10" shadowSize="10" stageHP="0" variant="1009">
@@ -48,6 +48,9 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	<entity anm2path="effects/mushroom.anm2" baseHP="0" boss="0" champion="0" collisionDamage="5" collisionMass="3" collisionRadius="8" friction="1.0" id="2" name="mushroom" numGridCollisionPoints="10" shadowSize="8" stageHP="0" variant="1018">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="items/pick ups/twitchEmote.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1.0" id="5" name="twitchEmote" numGridCollisionPoints="24" shadowSize="17" stageHP="0" variant="1019" subtype="1">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 </entities>

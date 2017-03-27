@@ -35,6 +35,7 @@
 		<Item Name="Tennis" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Madrinas Coffee" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Rattler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Bread with Integrity" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="devil">

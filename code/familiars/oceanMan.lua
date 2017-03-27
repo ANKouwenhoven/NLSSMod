@@ -24,10 +24,12 @@ function oceanMan:cacheUpdate(player, cacheFlag)
   if oceanMan.inAura then
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
       addFlatStat(oceanMan.itemID, 3, CacheFlag.CACHE_DAMAGE, cacheFlag);
+      addFlatStat(oceanMan.itemID, 3, CacheFlag.CACHE_FIREDELAY, cacheFlag);
       addFlatStat(oceanMan.itemID, 5, CacheFlag.CACHE_RANGE, cacheFlag);
       addFlatStat(oceanMan.itemID, 0.4, CacheFlag.CACHE_SPEED, cacheFlag);
     else
       addFlatStat(oceanMan.itemID, 2, CacheFlag.CACHE_DAMAGE, cacheFlag);
+      addFlatStat(oceanMan.itemID, 2, CacheFlag.CACHE_FIREDELAY, cacheFlag);
       addFlatStat(oceanMan.itemID, 3, CacheFlag.CACHE_RANGE, cacheFlag);
       addFlatStat(oceanMan.itemID, 0.2, CacheFlag.CACHE_SPEED, cacheFlag);
     end
@@ -65,6 +67,7 @@ function oceanMan:familiarUpdate(familiar)
   player:AddCacheFlags(CacheFlag.CACHE_RANGE);
   player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
   player:AddCacheFlags(CacheFlag.CACHE_SPEED);
+  player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY);
   player:EvaluateItems();
 end
 

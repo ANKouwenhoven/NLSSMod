@@ -11,7 +11,7 @@ NLSSMod = RegisterMod("NLSSMod", 1);
 -----------------------------
 -- | | | | | | | | | | | | --
 ----------------------------
-local PREVIEW_ITEMS = false;
+local PREVIEW_ITEMS = true;
 -----------------------------
 -- | | | | | | | | | | | | --
 -----------------------------
@@ -103,6 +103,7 @@ function SpawnPreviewItem(Item, X, Y)
 end
 
 -- Passive items
+require("code/items/collectibles/passive/bread");
 require("code/items/collectibles/passive/cobaltsStreak");
 require("code/items/collectibles/passive/theCoin");
 require("code/items/collectibles/passive/crackedEgg");
@@ -147,5 +148,8 @@ require("code/items/trinkets/marflePop");
 
 -- Consumables
 require("code/items/consumables/RURURU");
+
+-- Pick ups
+require("code/items/pick ups/twitchEmote");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
