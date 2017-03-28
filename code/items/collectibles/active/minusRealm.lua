@@ -31,7 +31,7 @@ function minusRealm:useItem()
     if entities[i]:IsVulnerableEnemy() then
       entities[i]:AddFreeze(EntityRef(player), 250, false);
       entities[i]:AddSlowing(EntityRef(player), 1000, 0.1, Color(0, 0, 0, 1, 0, 0, 0))
-      entities[i].Color = Color(0, 0, 0, 1, 0, 0, 0);
+      entities[i].Color = Color(0, 0, 0, 1, math.random(255), math.random(255), math.random(255))
     end
   end
   
@@ -78,8 +78,8 @@ function minusRealm:onPlayerUpdate(player)
   
   if minusRealm.activeRoom then
     local entities = Isaac.GetRoomEntities();
-    if Game():GetFrameCount() % 10 == 0 then
-      for i = 1, #entities do
+    for i = 1, #entities do
+      if Game():GetFrameCount() % 10 == 0 or entities[i].FrameCount == 0 then
         entities[i].Color = Color(0, 0, 0, 1, math.random(255), math.random(255), math.random(255));
         entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
       end
