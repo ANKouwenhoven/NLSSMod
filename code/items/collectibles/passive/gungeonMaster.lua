@@ -20,6 +20,7 @@ function gungeonMaster:cacheUpdate(player, cacheFlag)
 end
 
 function gungeonMaster:onPlayerUpdate(player)
+  
 	if Game():GetFrameCount() == 1 then
 		gungeonMaster.hasItem = false
     SpawnPreviewItem(gungeonMaster.itemID, 320, 300)

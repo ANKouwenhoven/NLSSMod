@@ -17,7 +17,6 @@ local minusRealm = {
 
 function minusRealm:useItem()
   local player = Isaac.GetPlayer(0)
-  Game():GetRoom():TurnGold();
   minusRealm.activeRoom = true;
   
   player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
@@ -83,6 +82,11 @@ function minusRealm:onPlayerUpdate(player)
         entities[i].Color = Color(0, 0, 0, 1, math.random(255), math.random(255), math.random(255));
         entities[i].SpriteScale = Vector(math.random() * 2, math.random() * 2);
       end
+    end
+    
+    if Game():GetFrameCount() % 30 == 0 then
+      Game():GetRoom():SetWallColor(Color(0, 0, 0, 1, math.random(255), math.random(255), math.random(255)));
+      Game():GetRoom():SetFloorColor(Color(0, 0, 0, 1, math.random(255), math.random(255), math.random(255)));
     end
     
     Game():Darken(math.abs(math.sin((math.pi / 180) * Game():GetFrameCount() * 2)), 1)
