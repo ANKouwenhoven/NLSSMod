@@ -20,6 +20,7 @@
 	<passive name="Loot Hoard" description="Mind if I roll need?" gfx="collectible_lootHoard.png"/>
 	<passive name="Poison Mushroom" description="Toxic Shots" gfx="collectible_mushroom.png"/>
 	<passive name="Bread with Integrity" description="Chili Resistant" gfx="collectible_bread.png" maxhearts="2" hearts="2"/>
+	<passive name="Spaghetti Island" description="Why is this inserter not working?" gfx="collectible_spaghetti.png" maxhearts="2" />
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
 	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />
@@ -36,6 +37,7 @@
 	<active name="Black Glove" description="Can I interest you in a J U D O C H O P?" gfx="collectible_judo.png" maxcharges="3" />
 	<active name="Monster Time Boardgame" description="By RaccAttack Inc." gfx="collectible_boardGame.png" maxcharges="3" />
 	<active name="Minus Realm" description="Far below the grinders" gfx="collectible_minusRealm.png" maxcharges="6" />
+	<active name="Rad Canister" description="Nuclear healing" gfx="collectible_radCanister.png" maxcharges="0" />
 	
 	<trinket name="Marfle-Pop!" description="???" gfx="trinket_marflePop.png" />
 </items>

@@ -80,7 +80,7 @@ function ToDirection(vector)
 	elseif vector.X < 0 then
     return Direction.LEFT;
 	end
-
+  
 	return Direction.NO_DIRECTION;
 end
 
@@ -122,6 +122,7 @@ require("code/items/collectibles/passive/purpleLord");
 require("code/items/collectibles/passive/rattler");
 require("code/items/collectibles/passive/redShirt");
 require("code/items/collectibles/passive/ryukaBuddy");
+require("code/items/collectibles/passive/spaghettiIsland");
 require("code/items/collectibles/passive/tennis");
 require("code/items/collectibles/passive/twitchyChatter");
 
@@ -142,6 +143,7 @@ require("code/items/collectibles/active/stapler");
 require("code/items/collectibles/active/blackGlove");
 require("code/items/collectibles/active/monsterTimeBoardgame");
 require("code/items/collectibles/active/minusRealm");
+require("code/items/collectibles/active/radCanister");
 
 -- Trinkets
 require("code/items/trinkets/marflePop");
