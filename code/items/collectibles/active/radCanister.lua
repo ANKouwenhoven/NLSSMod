@@ -15,7 +15,7 @@ end
 
 function radCanister:onPlayerUpdate(player)
 	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(radCanister.itemID, 170, 350)
+    --SpawnPreviewItem(radCanister.itemID, 170, 350)
     radCanister.isActive = false;
 	end
 end

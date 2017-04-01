@@ -28,7 +28,7 @@
 		<Item Name="Minus Realm" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Loot Hoard" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Poison Mushroom" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
-		<Item Name="Bowl of Spaghetti" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
@@ -37,7 +37,7 @@
 		<Item Name="Madrinas Coffee" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Rattler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Bread with Integrity" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
-		<Item Name="Bowl of Spaghetti" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="devil">
@@ -58,5 +58,6 @@
 		<Item Name="Ryuka Buddy" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Minus Realm" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Loot Hoard" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 </ItemPools>
