@@ -151,7 +151,4 @@ require("code/items/trinkets/marflePop");
 -- Consumables
 require("code/items/consumables/RURURU");
 
--- Pick ups
-require("code/items/pick ups/twitchEmote");
-
 Isaac.DebugString("Successfully loaded NLSSMod!")
