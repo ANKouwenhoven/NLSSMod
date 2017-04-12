@@ -33,7 +33,13 @@ function scumbo:cacheUpdate(player, cacheFlag)
 end
 
 function scumbo:onDamage(player_x, damage_amount, damage_flag, damage_source, invincibility_frames)
-  local takenDamage = true;
+  local player = Isaac.GetPlayer(0);
+  
+  if not player:HasCollectible(scumbo.itemID) then
+    return;
+  end
+    
+  local takenDamage = nil;
   scumbo.damageCounter = scumbo.damageCounter + 1;
   
   if scumbo.damageCounter > 10 then

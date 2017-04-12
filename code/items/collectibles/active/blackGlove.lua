@@ -24,12 +24,9 @@ function blackGlove:useItem()
   return true;
 end
 
-function blackGlove:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(blackGlove.itemID, 470, 150)
-    blackGlove.isActive = false;
-	end
+function blackGlove:onGameStart()
+  SpawnPreviewItem(blackGlove.itemID)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, blackGlove.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, blackGlove.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, blackGlove.useItem, blackGlove.itemID)

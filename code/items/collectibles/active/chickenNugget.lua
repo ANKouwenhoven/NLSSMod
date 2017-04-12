@@ -59,13 +59,11 @@ function chickenNugget:cacheUpdate(player, cacheFlag)
   end
 end
 
-function chickenNugget:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(chickenNugget.itemID, 470, 250)
-    chickenNugget.nugsEaten = 0;
-	end
+function chickenNugget:onGameStart()
+  SpawnPreviewItem(chickenNugget.itemID)
+  chickenNugget.nugsEaten = 0;
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, chickenNugget.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, chickenNugget.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, chickenNugget.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, chickenNugget.useItem, chickenNugget.itemID)

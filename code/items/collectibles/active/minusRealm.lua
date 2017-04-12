@@ -53,28 +53,7 @@ function minusRealm:cacheUpdate(player, cacheFlag)
   end
 end
 
-function minusRealm:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(minusRealm.itemID, 420, 350)
-	end
-  
-  if Game():GetRoom():GetFrameCount() == 0 then    
-    minusRealm.activeRoom = false;
-    
-    if player:HasCollectible(minusRealm.itemID) then
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
-      player:AddCacheFlags(CacheFlag.CACHE_SPEED);
-      player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
-      player.CanFly = false;
-      player:EvaluateItems();
-    end
-    
-    local entities = Isaac.GetRoomEntities();
-    for i = 1, #entities do
-      entities[i].Color = Color(1, 1, 1, 1, 0, 0, 0);
-    end
-  end
-  
+function minusRealm:onPlayerUpdate(player)  
   if minusRealm.activeRoom then
     local entities = Isaac.GetRoomEntities();
     for i = 1, #entities do
@@ -93,6 +72,30 @@ function minusRealm:onPlayerUpdate(player)
   end
 end
 
+function minusRealm:onNewRoom()
+  minusRealm.activeRoom = false;
+  local player = Isaac.GetPlayer(0);  
+  
+  if player:HasCollectible(minusRealm.itemID) then
+    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE);
+    player:AddCacheFlags(CacheFlag.CACHE_SPEED);
+    player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED);
+    player.CanFly = false;
+    player:EvaluateItems();
+  end
+    
+  local entities = Isaac.GetRoomEntities();
+  for i = 1, #entities do
+    entities[i].Color = Color(1, 1, 1, 1, 0, 0, 0);
+  end
+end
+
+function minusRealm:onGameStart()
+  SpawnPreviewItem(minusRealm.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, minusRealm.onNewRoom)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, minusRealm.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, minusRealm.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, minusRealm.useItem, minusRealm.itemID)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, minusRealm.cacheUpdate)

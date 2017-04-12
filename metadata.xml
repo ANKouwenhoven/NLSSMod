@@ -3,7 +3,7 @@
     <name>NLSS Mod</name>
     <directory>nlss mod</directory>
     <id>848747396</id>
-    <description>Adds NLSS themed items to the game! So far this mod includes 34 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
+    <description>Adds NLSS themed items to the game! So far this mod includes 36 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
 
 If you want easy access to all new items, there's a variable called PREVIEW_ITEMS at the top of the main.lua file. Just turn that variable from false to true, and all items will spawn when you start a run!
 
@@ -29,6 +29,8 @@ PASSIVES:
 - Rattler : Shotspeed + Speed down, Damage up
 - Loot Hoard : At the end of a floor boss, receive additional rewards
 - Poison Mushroom : Tears have a chance to release a poison cloud when hitting an enemy
+- Bread with Integrity : HP up, immunity to creep damage
+- Spaghetti Island : HP up, heart drop types depend on whether you have full red hearts or not
 
 FAMILIARS:
 
@@ -57,7 +59,7 @@ TRINKETS:
 Credits:
 - Custom Phase for code on tear spread (used in Eye for Aesthetic)
 - Sinsthar for code on spawning Entities randomly in combat (used in Twitchy Chatter and Mr Greenman)</description>
-    <version>1.35</version>
+    <version>1.37</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>

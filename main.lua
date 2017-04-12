@@ -5,7 +5,7 @@
 --------------------------------------------------------
 
 -- Registers this mod
-NLSSMod = RegisterMod("NLSSMod", 1);
+NLSSMod = RegisterMod("NLSS Memes Itempack", 1);
 
 -- Enable this to spawn all new items in the first room when starting a run
 -----------------------------
@@ -95,12 +95,32 @@ function CheckForEnemies()
   return false;
 end
 
--- Quality of life item spawn function
-function SpawnPreviewItem(Item, X, Y)
+-- For item placement in the start room
+local previewGrid = {
+  yCoord = 150;
+  xCoord = 100;
+}
+
+-- Spawns an item in the starting room when PREVIEW_ITEMS is true
+-- Automatically adjusts spawning position
+function SpawnPreviewItem(Item)
   if PREVIEW_ITEMS then
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, Item, Vector(X, Y), Vector(0, 0), nil)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, Item, Vector(previewGrid.xCoord, previewGrid.yCoord), Vector(0, 0), nil)
+    if previewGrid.xCoord > 500 then
+      previewGrid.yCoord = previewGrid.yCoord + 50;
+      previewGrid.xCoord = 100;
+    else
+      previewGrid.xCoord = previewGrid.xCoord + 50;
+    end
   end
 end
+
+function NLSSMod:ResetSpawnPositions()
+  previewGrid.xCoord = 100;
+  previewGrid.yCoord = 150;
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, NLSSMod.ResetSpawnPositions)
 
 -- Passive items
 require("code/items/collectibles/passive/bread");
@@ -136,17 +156,19 @@ require("code/familiars/stammer");
 require("code/familiars/teratomo");
 
 -- Active items
-require("code/items/collectibles/active/chickenNugget");
-require("code/items/collectibles/active/murph");
 require("code/items/collectibles/active/beretta");
-require("code/items/collectibles/active/stapler");
 require("code/items/collectibles/active/blackGlove");
-require("code/items/collectibles/active/monsterTimeBoardgame");
+require("code/items/collectibles/active/bookOfBolegda");
+require("code/items/collectibles/active/chickenNugget");
 require("code/items/collectibles/active/minusRealm");
+require("code/items/collectibles/active/monsterTimeBoardgame");
+require("code/items/collectibles/active/murph");
 require("code/items/collectibles/active/radCanister");
+require("code/items/collectibles/active/stapler");
 
 -- Trinkets
 require("code/items/trinkets/marflePop");
+require("code/items/trinkets/radMedkit");
 
 -- Consumables
 require("code/items/consumables/RURURU");

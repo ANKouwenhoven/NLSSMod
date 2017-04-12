@@ -37,7 +37,8 @@
 	<active name="Black Glove" description="Can I interest you in a J U D O C H O P?" gfx="collectible_judo.png" maxcharges="3" />
 	<active name="Monster Time Boardgame" description="By RaccAttack Inc." gfx="collectible_boardGame.png" maxcharges="3" />
 	<active name="Minus Realm" description="Far below the grinders" gfx="collectible_minusRealm.png" maxcharges="6" />
-	<active name="Rad Canister" description="Nuclear healing" gfx="collectible_radCanister.png" maxcharges="0" />
+	<active name="Book of Bolegda" description="Ancient Jamaican Rituals" gfx="collectible_bookOfBolegda.png" maxcharges="3" />
 	
 	<trinket name="Marfle-Pop!" description="???" gfx="trinket_marflePop.png" />
+	<trinket name="Irradiated Medkit" description="Nuclear Healing" gfx="trinket_radMedkit.png" />
 </items>

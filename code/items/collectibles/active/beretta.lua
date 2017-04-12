@@ -62,15 +62,16 @@ function updateBeretta()
   end
 end
 
-function beretta:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(beretta.itemID, 170, 300)
-	end
-  
+function beretta:onPlayerUpdate(player)  
   if beretta.isActive then
     updateBeretta();
   end
 end
 
+function beretta:onGameStart()
+  SpawnPreviewItem(beretta.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, beretta.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, beretta.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, beretta.useItem, beretta.itemID)

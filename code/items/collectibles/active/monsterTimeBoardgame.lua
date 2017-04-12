@@ -100,22 +100,22 @@ function boardGame:familiarUpdate(familiar)
   end
 end
 
-function boardGame:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(boardGame.itemID, 170, 150)
-	end
-  
-  if Game():GetRoom():GetFrameCount() == 1 then
-    if player:HasCollectible(boardGame.itemID) then
-      boardGame.activeAmount = 0;
-      boardGame.orbitDistance = 5;
-      player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS);
-      player:EvaluateItems();
-    end
+function boardGame:onGameStart()
+  SpawnPreviewItem(boardGame.itemID)
+end
+
+function boardGame:onNewRoom()
+  local player = Isaac.GetPlayer(0);
+  if player:HasCollectible(boardGame.itemID) then
+    boardGame.activeAmount = 0;
+    boardGame.orbitDistance = 5;
+    player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS);
+    player:EvaluateItems();
   end
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, boardGame.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, boardGame.onNewRoom)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, boardGame.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, boardGame.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, boardGame.useItem, boardGame.itemID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, boardGame.initFamiliar, boardGame.variantID)

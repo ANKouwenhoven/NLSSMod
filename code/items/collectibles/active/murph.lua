@@ -55,12 +55,10 @@ function murph:familiarUpdate(familiar)
   sprite.Rotation = Game():GetFrameCount() * 20;
 end
 
-function murph:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-    SpawnPreviewItem(murph.itemID, 270, 250)
-	end
+function murph:onGameStart()
+  SpawnPreviewItem(murph.itemID)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, murph.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, murph.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_USE_ITEM, murph.useItem, murph.itemID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, murph.familiarUpdate, murph.variantID)
