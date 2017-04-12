@@ -29,6 +29,8 @@
 		<Item Name="Loot Hoard" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Poison Mushroom" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Book of Bolegda" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Duality of Chat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
@@ -38,6 +40,7 @@
 		<Item Name="Rattler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Bread with Integrity" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Duality of Chat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="devil">
@@ -45,6 +48,7 @@
 		<Item Name="The Beretta" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Cobalt's Streak" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Monster Time Boardgame" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Book of Bolegda" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="angel">

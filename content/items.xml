@@ -21,6 +21,7 @@
 	<passive name="Poison Mushroom" description="Toxic Shots" gfx="collectible_mushroom.png"/>
 	<passive name="Bread with Integrity" description="Chili Resistant" gfx="collectible_bread.png" maxhearts="2" hearts="2"/>
 	<passive name="Spaghetti Island" description="Why is this inserter not working?" gfx="collectible_spaghetti.png" maxhearts="2" />
+	<passive name="Duality of Chat" description="M A L F | J O S H | D N A" gfx="collectible_dualityOfChat.png"/>
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
 	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />

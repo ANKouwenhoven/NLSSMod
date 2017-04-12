@@ -131,6 +131,7 @@ require("code/items/collectibles/passive/bread");
 require("code/items/collectibles/passive/cobaltsStreak");
 require("code/items/collectibles/passive/theCoin");
 require("code/items/collectibles/passive/crackedEgg");
+require("code/items/collectibles/passive/dualityOfChat");
 require("code/items/collectibles/passive/eyeForAesthetic");
 require("code/items/collectibles/passive/goldHat");
 require("code/items/collectibles/passive/gungeonMaster");
