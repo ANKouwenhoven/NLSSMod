@@ -19,12 +19,7 @@ function rattler:cacheUpdate(player, cacheFlag)
   addFlatStat(rattler.itemID, -0.15, CacheFlag.CACHE_SPEED, cacheFlag);
 end
 
-function rattler:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		rattler.hasItem = false
-    SpawnPreviewItem(rattler.itemID, 470, 350)
-	end
-  
+function rattler:onPlayerUpdate(player)  
 	if player:HasCollectible(rattler.itemID) then
 		if rattler.hasItem == false then
 			player:AddNullCostume(rattler.costumeID)
@@ -33,5 +28,11 @@ function rattler:onPlayerUpdate(player)
 	end
 end
 
+function rattler:onGameStart()
+  rattler.hasItem = false
+  SpawnPreviewItem(rattler.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, rattler.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, rattler.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, rattler.cacheUpdate)

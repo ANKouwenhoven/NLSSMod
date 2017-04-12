@@ -12,12 +12,7 @@ local redShirt = {
   hasItem = nil;
 }
 
-function redShirt:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		redShirt.hasItem = false
-    SpawnPreviewItem(redShirt.itemID, 220, 250)
-	end
-  
+function redShirt:onPlayerUpdate(player)  
 	if player:HasCollectible(redShirt.itemID) then
 		if redShirt.hasItem == false then
 			player:AddNullCostume(redShirt.costumeID)
@@ -37,4 +32,10 @@ function redShirt:onPlayerUpdate(player)
   end
 end
 
+function redShirt:onGameStart()
+  redShirt.hasItem = false
+  SpawnPreviewItem(redShirt.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, redShirt.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, redShirt.onPlayerUpdate)

@@ -19,12 +19,7 @@ function bread:onDamage(player_x, damage, flag, source, countdown)
 	end
 end
 
-function bread:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		bread.hasItem = false
-    SpawnPreviewItem(bread.itemID, 270, 350)
-	end
-  
+function bread:onPlayerUpdate(player)  
 	if player:HasCollectible(bread.itemID) then
 		if bread.hasItem == false then
 			player:AddNullCostume(bread.costumeID)
@@ -33,5 +28,11 @@ function bread:onPlayerUpdate(player)
 	end
 end
 
+function bread:onGameStart()
+  bread.hasItem = false
+  SpawnPreviewItem(bread.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, bread.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bread.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, bread.onDamage, EntityType.ENTITY_PLAYER)

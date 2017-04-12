@@ -42,13 +42,11 @@ function stammer:familiarUpdate(familiar)
   end
 end
 
-function stammer:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(stammer.itemID, 220, 150)
-	end
+function stammer:onGameStart()
+  SpawnPreviewItem(stammer.itemID)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, stammer.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, stammer.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, stammer.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, stammer.initFamiliar, stammer.variantID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, stammer.familiarUpdate, stammer.variantID)

@@ -19,12 +19,7 @@ function madrinas:cacheUpdate(player, cacheFlag)
   addFlatStat(madrinas.itemID, 0.2, CacheFlag.CACHE_SPEED, cacheFlag);
 end
 
-function madrinas:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		madrinas.hasItem = false
-    SpawnPreviewItem(madrinas.itemID, 320, 200)
-	end
-  
+function madrinas:onPlayerUpdate(player)  
 	if player:HasCollectible(madrinas.itemID) then
 		if madrinas.hasItem == false then
 			player:AddNullCostume(madrinas.costumeID)
@@ -33,5 +28,11 @@ function madrinas:onPlayerUpdate(player)
 	end
 end
 
+function madrinas:onGameStart()
+  madrinas.hasItem = false
+  SpawnPreviewItem(madrinas.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, madrinas.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, madrinas.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, madrinas.cacheUpdate)

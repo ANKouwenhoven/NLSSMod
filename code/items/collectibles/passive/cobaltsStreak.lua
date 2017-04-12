@@ -28,14 +28,7 @@ function cobaltsStreak:streakReset(player_broken, damage_amount, damage_flag, da
   end
 end
 
-function cobaltsStreak:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		cobaltsStreak.hasItem = false
-    SpawnPreviewItem(cobaltsStreak.itemID, 270, 200)
-    cobaltsStreak.streak = 0;
-    cobaltsStreak.roomCleared = false;
-	end
-  
+function cobaltsStreak:onPlayerUpdate(player)  
 	if player:HasCollectible(cobaltsStreak.itemID) then
 		if cobaltsStreak.hasItem == false then
 			player:AddNullCostume(cobaltsStreak.costumeID)
@@ -60,6 +53,14 @@ function cobaltsStreak:onPlayerUpdate(player)
   end
 end
 
+function cobaltsStreak:onGameStart()
+  cobaltsStreak.hasItem = false
+  SpawnPreviewItem(cobaltsStreak.itemID)
+  cobaltsStreak.streak = 0;
+  cobaltsStreak.roomCleared = false;
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, cobaltsStreak.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, cobaltsStreak.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, cobaltsStreak.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, cobaltsStreak.streakReset, EntityType.ENTITY_PLAYER)

@@ -17,12 +17,7 @@ local spaghetti = {
   hasItem = nil;
 }
 
-function spaghetti:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		spaghetti.hasItem = false
-    SpawnPreviewItem(spaghetti.itemID, 220, 350)
-	end
-  
+function spaghetti:onPlayerUpdate(player)  
 	if player:HasCollectible(spaghetti.itemID) then
 		if spaghetti.hasItem == false then
 			--player:AddNullCostume(spaghetti.costumeID)
@@ -115,4 +110,10 @@ function spaghetti:onPlayerUpdate(player)
   end
 end
 
+function spaghetti:onGameStart()
+  spaghetti.hasItem = false
+  SpawnPreviewItem(spaghetti.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, spaghetti.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, spaghetti.onPlayerUpdate)

@@ -21,12 +21,7 @@ function mindFlood:cacheUpdate(player, cacheFlag)
   end
 end
 
-function mindFlood:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		mindFlood.hasItem = false
-    SpawnPreviewItem(mindFlood.itemID, 470, 200)
-	end
-  
+function mindFlood:onPlayerUpdate(player)  
 	if player:HasCollectible(mindFlood.itemID) then
 		if mindFlood.hasItem == false then
 			player:AddNullCostume(mindFlood.costumeID)
@@ -59,5 +54,11 @@ function mindFlood:onPlayerUpdate(player)
   player:EvaluateItems();
 end
 
+function mindFlood:onGameStart()
+  mindFlood.hasItem = false
+  SpawnPreviewItem(mindFlood.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mindFlood.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, mindFlood.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mindFlood.cacheUpdate)

@@ -21,11 +21,7 @@ function matricide:cacheUpdate(player, cacheFlag)
   addFlatStat(matricide.itemID, player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
 end
 
-function matricide:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		matricide.hasItem = false
-	end
-  
+function matricide:onPlayerUpdate(player)  
 	if player:HasCollectible(matricide.itemID) then
 		if matricide.hasItem == false then
 			player:AddNullCostume(matricide.costumeID)
@@ -72,5 +68,10 @@ function matricide:onPlayerUpdate(player)
   end
 end
 
+function matricide:onGameStart()
+  matricide.hasItem = false
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, matricide.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, matricide.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, matricide.cacheUpdate)

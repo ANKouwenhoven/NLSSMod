@@ -45,7 +45,11 @@ end
 
 -- Randomly returns 1 or -1
 function randomSign()
-  if math.random() < 0.5 then return -1 else return 1 end
+  if math.random() < 0.5 then
+    return -1;
+  else
+    return 1;
+  end
 end
 
 -- Rounds a number to the given amount of decimals

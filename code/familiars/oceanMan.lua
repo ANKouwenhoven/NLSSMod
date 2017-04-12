@@ -71,14 +71,12 @@ function oceanMan:familiarUpdate(familiar)
   player:EvaluateItems();
 end
 
-function oceanMan:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(oceanMan.itemID, 370, 250)
-		oceanMan.aura = nil;
-	end
+function oceanMan:onGameStart()
+  SpawnPreviewItem(oceanMan.itemID)	
+  oceanMan.aura = nil;
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, oceanMan.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, oceanMan.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, oceanMan.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, oceanMan.initFamiliar, oceanMan.variantID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, oceanMan.familiarUpdate, oceanMan.variantID)

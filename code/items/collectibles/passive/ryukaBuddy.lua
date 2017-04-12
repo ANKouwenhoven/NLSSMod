@@ -16,12 +16,7 @@ function ryuka:cacheUpdate(player, cacheFlag)
   addFlatStat(ryuka.itemID, 0.3, CacheFlag.CACHE_SPEED, cacheFlag);
 end
 
-function ryuka:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		ryuka.hasItem = false
-    SpawnPreviewItem(ryuka.itemID, 420, 150)
-	end
-  
+function ryuka:onPlayerUpdate(player)  
 	if player:HasCollectible(ryuka.itemID) then
 		if ryuka.hasItem == false then
 			player:AddNullCostume(ryuka.costumeID)
@@ -41,5 +36,11 @@ function ryuka:onPlayerUpdate(player)
   end
 end
 
+function ryuka:onGameStart()
+  ryuka.hasItem = false
+  SpawnPreviewItem(ryuka.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ryuka.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, ryuka.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, ryuka.cacheUpdate)

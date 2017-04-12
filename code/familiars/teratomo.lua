@@ -38,28 +38,17 @@ function teratomo:familiarUpdate(familiar)
   end
 end
 
-function teratomo:onPlayerUpdate(player)
-  if Game():GetFrameCount() == 1 then
-	  SpawnPreviewItem(teratomo.itemID, 370, 150)
-  end
-	
-  if Game():GetRoom():GetFrameCount() == 1 then
-    local entities = Isaac.GetRoomEntities();
-    
-    if player:HasCollectible(teratomo.itemID) then
-      for i = 1, #entities do
-        local entity = entities[i]
-        if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == teratomo.variantID then
-          entity:Remove();
-        end
-      end
-
-	  local newTomo = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, teratomo.variantID, 0, player.Position, RandomVector(), player)
-    end
-  end
+function teratomo:onNewRoom()
+  local player = Isaac.GetPlayer(0);
+  player:CheckFamiliar(teratomo.variantID, player:GetCollectibleNum(teratomo.itemID), RNG())
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, teratomo.onPlayerUpdate)
+function teratomo:onGameStart()
+  SpawnPreviewItem(teratomo.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, teratomo.onNewRoom)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, teratomo.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, teratomo.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, teratomo.initFamiliar, teratomo.variantID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, teratomo.familiarUpdate, teratomo.variantID)

@@ -78,12 +78,7 @@ function aestheticEffect(player)
 	end
 end
 
-function eyeForA:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		eyeForA.hasItem = false
-    SpawnPreviewItem(eyeForA.itemID, 220, 300)
-	end
-  
+function eyeForA:onPlayerUpdate(player)  
 	if player:HasCollectible(eyeForA.itemID) then
 		if eyeForA.hasItem == false then
 			player:AddNullCostume(eyeForA.costumeID)
@@ -94,5 +89,11 @@ function eyeForA:onPlayerUpdate(player)
 	end
 end
 
+function eyeForA:onGameStart()
+  eyeForA.hasItem = false
+  SpawnPreviewItem(eyeForA.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, eyeForA.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, eyeForA.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, eyeForA.cacheUpdate)

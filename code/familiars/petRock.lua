@@ -49,13 +49,11 @@ function petRock:familiarUpdate(familiar)
   setOrientation(familiar, false);
 end
 
-function petRock:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(petRock.itemID, 370, 300)
-	end
+function petRock:onGameStart()
+  SpawnPreviewItem(petRock.itemID)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, petRock.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, petRock.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, petRock.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, petRock.initFamiliar, petRock.variantID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, petRock.familiarUpdate, petRock.variantID)

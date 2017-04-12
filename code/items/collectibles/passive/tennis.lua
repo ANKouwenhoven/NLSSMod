@@ -21,12 +21,7 @@ function tennis:cacheUpdate(player, cacheFlag)
   addFlatStat(tennis.itemID, 2, CacheFlag.CACHE_RANGE, cacheFlag);
 end
 
-function tennis:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		tennis.hasItem = false
-    SpawnPreviewItem(tennis.itemID, 320, 250)
-	end
-  
+function tennis:onPlayerUpdate(player)  
 	if player:HasCollectible(tennis.itemID) then
 		if tennis.hasItem == false then
 			player:AddNullCostume(tennis.costumeID)
@@ -35,5 +30,11 @@ function tennis:onPlayerUpdate(player)
 	end
 end
 
+function tennis:onGameStart()
+  tennis.hasItem = false
+  SpawnPreviewItem(tennis.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, tennis.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, tennis.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, tennis.cacheUpdate)

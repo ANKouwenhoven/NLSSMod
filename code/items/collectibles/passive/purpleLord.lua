@@ -19,12 +19,7 @@ function purpleLord:cacheUpdate(player, cacheFlag)
   addFlatStat(purpleLord.itemID, 0.5 * player.Damage, CacheFlag.CACHE_DAMAGE, cacheFlag);
 end
 
-function purpleLord:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		purpleLord.hasItem = false
-    SpawnPreviewItem(purpleLord.itemID, 170, 200)
-	end
-  
+function purpleLord:onPlayerUpdate(player)  
 	if player:HasCollectible(purpleLord.itemID) then
 		if purpleLord.hasItem == false then
 			player:AddNullCostume(purpleLord.costumeID)
@@ -50,5 +45,11 @@ function purpleLord:onPlayerUpdate(player)
 	end
 end
 
+function purpleLord:onGameStart()
+  purpleLord.hasItem = false
+  SpawnPreviewItem(purpleLord.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, purpleLord.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, purpleLord.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, purpleLord.cacheUpdate)

@@ -82,18 +82,19 @@ function greenmanUpdate()
 	end
 end
 
-function mrGreenman:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(mrGreenman.itemID, 370, 200)
-    
-    greenmanSpawn = nil;
-    spawnDelay = 10;
-    activeRoom = nil;
-	end
-  
+function mrGreenman:onPlayerUpdate(player)  
   if player:HasCollectible(mrGreenman.itemID) then
     greenmanUpdate();
   end
 end
 
+function mrGreenman:onGameStart()
+  mrGreenman.hasItem = false
+  greenmanSpawn = nil;
+  spawnDelay = 10;
+  activeRoom = nil;
+  SpawnPreviewItem(mrGreenman.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mrGreenman.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, mrGreenman.onPlayerUpdate)

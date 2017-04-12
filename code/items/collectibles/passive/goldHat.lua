@@ -18,12 +18,7 @@ function goldHat:cacheUpdate(player, cacheFlag)
   addFlatStat(goldHat.itemID, player.Damage * goldHat.hatBuff, CacheFlag.CACHE_DAMAGE, cacheFlag);
 end
 
-function goldHat:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		goldHat.hasItem = false
-    SpawnPreviewItem(goldHat.itemID, 270, 150)
-	end
-  
+function goldHat:onPlayerUpdate(player)  
 	if player:HasCollectible(goldHat.itemID) then
 		if goldHat.hasItem == false then
 			player:AddNullCostume(goldHat.costumeID)
@@ -62,5 +57,11 @@ function goldHat:onPlayerUpdate(player)
   end
 end
 
+function goldHat:onGameStart()
+  goldHat.hasItem = false
+  SpawnPreviewItem(goldHat.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, goldHat.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, goldHat.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, goldHat.cacheUpdate)

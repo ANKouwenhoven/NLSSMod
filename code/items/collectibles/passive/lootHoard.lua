@@ -43,13 +43,7 @@ function spawnLoot(currentRoom)
   end
 end
 
-function lootHoard:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		lootHoard.hasItem = false;
-    lootHoard.hasLooted = false;
-    SpawnPreviewItem(lootHoard.itemID, 370, 350)
-	end
-  
+function lootHoard:onPlayerUpdate(player)  
 	if player:HasCollectible(lootHoard.itemID) then
 		if lootHoard.hasItem == false then
 			player:AddNullCostume(lootHoard.costumeID)
@@ -73,4 +67,11 @@ function lootHoard:onPlayerUpdate(player)
   end
 end
 
+function lootHoard:onGameStart()
+  lootHoard.hasItem = false
+  lootHoard.hasLooted = false;
+  SpawnPreviewItem(lootHoard.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, lootHoard.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, lootHoard.onPlayerUpdate)

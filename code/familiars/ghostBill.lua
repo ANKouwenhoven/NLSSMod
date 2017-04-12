@@ -54,13 +54,11 @@ function ghostBill:familiarUpdate(familiar)
   end
 end
 
-function ghostBill:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(ghostBill.itemID, 220, 200)
-	end
+function ghostBill:onGameStart()
+  SpawnPreviewItem(ghostBill.itemID)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, ghostBill.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ghostBill.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, ghostBill.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, ghostBill.initFamiliar, ghostBill.variantID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, ghostBill.familiarUpdate, ghostBill.variantID)

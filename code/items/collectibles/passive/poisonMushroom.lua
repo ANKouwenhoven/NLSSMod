@@ -23,12 +23,7 @@ function poisonMushroom:onDamage(entity, amount, flag, source, countdown)
   end
 end
 
-function poisonMushroom:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		poisonMushroom.hasItem = false
-    SpawnPreviewItem(poisonMushroom.itemID, 320, 350)
-	end
-  
+function poisonMushroom:onPlayerUpdate(player)  
 	if player:HasCollectible(poisonMushroom.itemID) then
 		if poisonMushroom.hasItem == false then
 			player:AddNullCostume(poisonMushroom.costumeID)
@@ -71,5 +66,11 @@ function poisonMushroom:onPlayerUpdate(player)
   end
 end
 
+function poisonMushroom:onGameStart()
+  poisonMushroom.hasItem = false
+  SpawnPreviewItem(poisonMushroom.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, poisonMushroom.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, poisonMushroom.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, poisonMushroom.onDamage)

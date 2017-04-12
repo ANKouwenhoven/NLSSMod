@@ -33,12 +33,7 @@ function crackedEgg:eggEffect()
   end
 end
 
-function crackedEgg:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		crackedEgg.hasItem = false
-    SpawnPreviewItem(crackedEgg.itemID, 470, 300)
-	end
-  
+function crackedEgg:onPlayerUpdate(player)  
 	if player:HasCollectible(crackedEgg.itemID) then
 		if crackedEgg.hasItem == false then
 			player:AddNullCostume(crackedEgg.costumeID)
@@ -47,5 +42,11 @@ function crackedEgg:onPlayerUpdate(player)
 	end
 end
 
+function crackedEgg:onGameStart()
+  crackedEgg.hasItem = false
+  SpawnPreviewItem(crackedEgg.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, crackedEgg.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, crackedEgg.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, crackedEgg.eggEffect, EntityType.ENTITY_PLAYER)

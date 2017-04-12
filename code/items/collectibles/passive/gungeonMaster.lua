@@ -19,13 +19,7 @@ function gungeonMaster:cacheUpdate(player, cacheFlag)
   addFlatStat(gungeonMaster.itemID, 1.5, CacheFlag.CACHE_SHOTSPEED, cacheFlag);
 end
 
-function gungeonMaster:onPlayerUpdate(player)
-  
-	if Game():GetFrameCount() == 1 then
-		gungeonMaster.hasItem = false
-    SpawnPreviewItem(gungeonMaster.itemID, 320, 300)
-	end
-  
+function gungeonMaster:onPlayerUpdate(player)  
 	if player:HasCollectible(gungeonMaster.itemID) then
 		if gungeonMaster.hasItem == false then
 			player:AddNullCostume(gungeonMaster.costumeID)
@@ -50,5 +44,11 @@ function gungeonMaster:onPlayerUpdate(player)
 	end
 end
 
+function gungeonMaster:onGameStart()
+  gungeonMaster.hasItem = false
+  SpawnPreviewItem(gungeonMaster.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, gungeonMaster.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, gungeonMaster.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, gungeonMaster.cacheUpdate)

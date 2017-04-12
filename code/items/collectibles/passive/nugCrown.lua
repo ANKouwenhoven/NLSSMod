@@ -24,11 +24,7 @@ function nugCrown:cacheUpdate(player, cacheFlag)
   addFlatStat(nugCrown.itemID, 2, CacheFlag.CACHE_LUCK, cacheFlag);
 end
 
-function nugCrown:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		nugCrown.hasItem = false;
-	end
-  
+function nugCrown:onPlayerUpdate(player)  
 	if player:HasCollectible(nugCrown.itemID) then
 		if nugCrown.hasItem == false then
 			player:AddNullCostume(nugCrown.costumeID)
@@ -37,5 +33,10 @@ function nugCrown:onPlayerUpdate(player)
 	end
 end
 
+function nugCrown:onGameStart()
+  nugCrown.hasItem = false
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, nugCrown.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, nugCrown.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, nugCrown.cacheUpdate)

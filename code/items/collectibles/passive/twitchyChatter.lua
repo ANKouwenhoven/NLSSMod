@@ -85,23 +85,27 @@ function chatterUpdate()
 	end
 end
 
-function twitchyChatter:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(twitchyChatter.itemID, 420, 200)
-	end
-  
+function twitchyChatter:onPlayerUpdate(player)  
   if player:HasCollectible(twitchyChatter.itemID) then
     chatterUpdate();
   end
+end
+
+function twitchyChatter:onNewRoom()
+  local player = Isaac.GetPlayer(0);
   
-  if Game():GetRoom():GetFrameCount() == 1 then
-    if player:HasCollectible(twitchyChatter.itemID) then
-      twitchyChatter.buffCount = 0;
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-      player:EvaluateItems();
-    end
+  if player:HasCollectible(twitchyChatter.itemID) then
+    twitchyChatter.buffCount = 0;
+    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+    player:EvaluateItems();
   end
 end
 
+function twitchyChatter:onGameStart()
+  SpawnPreviewItem(twitchyChatter.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, twitchyChatter.onNewRoom)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, twitchyChatter.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, twitchyChatter.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, twitchyChatter.cacheUpdate)

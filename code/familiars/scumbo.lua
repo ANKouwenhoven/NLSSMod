@@ -120,13 +120,11 @@ function scumbo:familiarUpdate(familiar)
   end
 end
 
-function scumbo:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(scumbo.itemID, 320, 150)
-	end
+function scumbo:onGameStart()
+  SpawnPreviewItem(scumbo.itemID)
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, scumbo.onPlayerUpdate)
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, scumbo.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, scumbo.cacheUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, scumbo.initFamiliar, scumbo.variantID)
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, scumbo.familiarUpdate, scumbo.variantID)

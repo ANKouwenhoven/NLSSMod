@@ -111,13 +111,6 @@ function jellies:familiarUpdate4(familiar)
   setOrientation(familiar, true);
 end
 
-function jellies:onPlayerUpdate(player)
-	if Game():GetFrameCount() == 1 then
-		SpawnPreviewItem(jellies.itemID, 420, 250)
-		jellies.amount = 0;		
-	end
-end
-
 -- Returns a random Jelly to spawn
 function randomJelly()
   jellyNum = math.random(1, 4)
@@ -133,7 +126,12 @@ function randomJelly()
   end
 end
 
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, jellies.onPlayerUpdate)
+function jellies:onGameStart()
+  jellies.amount = 0;	
+  SpawnPreviewItem(jellies.itemID)
+end
+
+NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, jellies.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, jellies.cacheUpdate)
 
 NLSSMod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, jellies.initFamiliar, jellies.variantID1)
