@@ -131,7 +131,6 @@ require("code/items/collectibles/passive/bread");
 require("code/items/collectibles/passive/cobaltsStreak");
 require("code/items/collectibles/passive/theCoin");
 require("code/items/collectibles/passive/crackedEgg");
-require("code/items/collectibles/passive/dualityOfChat");
 require("code/items/collectibles/passive/eyeForAesthetic");
 require("code/items/collectibles/passive/goldHat");
 require("code/items/collectibles/passive/gungeonMaster");
@@ -150,6 +149,7 @@ require("code/items/collectibles/passive/ryukaBuddy");
 require("code/items/collectibles/passive/spaghettiIsland");
 require("code/items/collectibles/passive/tennis");
 require("code/items/collectibles/passive/twitchyChatter");
+require("code/items/collectibles/passive/virtualBart");
 
 -- Familiars
 require("code/familiars/ghostBill");
