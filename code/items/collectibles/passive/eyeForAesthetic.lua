@@ -25,7 +25,7 @@ function aestheticEffect(player)
 
     -- Normal tears
     if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].FrameCount == 0 and entities[i].SpawnerType == EntityType.ENTITY_PLAYER then
-      entities[i].Color = Color(1, 1, 1, 1, math.random(255) * randomSign(), math.random(255) * randomSign(), math.random(255) * randomSign());
+      entities[i].Color = Color(math.random(), math.random(), math.random(), 1, 0, 0, 0);
       entities[i].Velocity = entities[i].Velocity:Rotated(clampedRandom(-12, 12))
       entities[i].Velocity = entities[i].Velocity * clampedRandom(0.6, 1.4);
     end
@@ -35,15 +35,16 @@ function aestheticEffect(player)
       if entities[i]:ToLaser() ~= nil and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and clampedRandom(1, 2) > 1.5 then
         entities[i]:ToLaser().Angle = entities[i]:ToLaser().Angle + clampedRandom(1.5, 3) * randomSign()
         entities[i].Color = eyeForA.laserColor;
-        if Game():GetFrameCount() % 15 == 0 then
-          eyeForA.laserColor = Color(1, 1, 1, 1, math.random(255) * randomSign(), math.random(255) * randomSign(), math.random(255) * randomSign());
-        end
       end
       
       -- Brimstone + Ludovico Technique synergy
       if entities[i]:ToLaser() ~= nil and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and entities[i]:ToLaser():IsCircleLaser() then
         entities[i]:AddVelocity(RandomVector() * clampedRandom(0.5, 1.4))
         entities[i].Color = eyeForA.laserColor;
+      end
+      
+      if Game():GetFrameCount() % 15 == 0 then
+        eyeForA.laserColor = Color(math.random(), math.random(), math.random(), 1, math.random(250), math.random(250), math.random(250));
       end
     end
     
@@ -62,7 +63,7 @@ function aestheticEffect(player)
       if entities[i].Type == EntityType.ENTITY_TEAR then
         entities[i]:AddVelocity(RandomVector() * clampedRandom(0.3, 1.2))
         if Game():GetFrameCount() % 30 == 0 then
-          entities[i].Color = Color(1, 1, 1, 1, math.random(255) * randomSign(), math.random(255) * randomSign(), math.random(255) * randomSign());
+          entities[i].Color = Color(math.random(), math.random(), math.random(), 1, 0, 0, 0);
         end
       end
     end
