@@ -64,4 +64,3 @@ end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, goldHat.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, goldHat.onPlayerUpdate)
-NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, goldHat.cacheUpdate)

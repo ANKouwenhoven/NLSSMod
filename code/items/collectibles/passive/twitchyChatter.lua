@@ -9,6 +9,7 @@
 
 local twitchyChatter = {
   itemID = Isaac.GetItemIdByName("Twitchy Chatter");
+  entityID = Isaac.GetEntityTypeByName("chatter");
   variantID = Isaac.GetEntityVariantByName("chatter");
   
   chatterSpawn = nil;
@@ -39,7 +40,7 @@ function chatterUpdate()
 			if (twitchyChatter.spawnDelay <= 0) then
 				pos = room:GetGridPosition(room:GetGridIndex(Isaac:GetRandomPosition())) 
 				pos = room:FindFreeTilePosition(pos, 100) 
-				twitchyChatter.chatterSpawn = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, twitchyChatter.variantID, 0, pos, Vector(0, 0), player)
+				twitchyChatter.chatterSpawn = Isaac.Spawn(twitchyChatter.entityID, twitchyChatter.variantID, 0, pos, Vector(0, 0), player)
         twitchyChatter.animationMode = 0;
 				twitchyChatter.activeRoom = Game():GetLevel():GetCurrentRoomIndex()
 			end
@@ -108,4 +109,3 @@ end
 NLSSMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, twitchyChatter.onNewRoom)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, twitchyChatter.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, twitchyChatter.onPlayerUpdate)
-NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, twitchyChatter.cacheUpdate)

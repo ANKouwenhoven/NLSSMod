@@ -50,7 +50,7 @@ function poisonMushroom:onPlayerUpdate(player)
 			end
       
 			if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= poisonMushroom.tearVariantID and
-      entity.FrameCount == 0 and math.random(1, math.max(1, 15 - player.Luck)) == 1 then
+      entity.FrameCount == 0 and math.random(1, math.floor(math.max(1, 15 - player.Luck))) == 1 then
 				entity:ToTear():ChangeVariant(poisonMushroom.tearVariantID);
 				poisonMushroom.tearList[entity.Index] = entity;
 			end

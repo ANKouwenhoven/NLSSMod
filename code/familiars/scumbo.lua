@@ -50,12 +50,13 @@ function scumbo:onDamage(player_x, damage_amount, damage_flag, damage_source, in
   
   scumbo.scumboFlag = true;
 
-  if scumbo.scumboStage == 3 then
+  if scumbo.scumboStage == 3 and not(damage_flag == DamageFlag.DAMAGE_FAKE) then
     local entities = Isaac.GetRoomEntities();
     local player = Isaac.GetPlayer(0);
     
     if math.random(1, 4) == 1 then
       local coin = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_LUCKYPENNY, player.Position, Vector(0, 0), enemy);
+      player:TakeDamage(1, DamageFlag.DAMAGE_FAKE, EntityRef(player), 0);
       takenDamage = false;
     end
   end
@@ -122,6 +123,8 @@ end
 
 function scumbo:onGameStart()
   SpawnPreviewItem(scumbo.itemID)
+  scumbo.scumboStage = 0;
+  scumbo.damageCounter = 0;
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, scumbo.onGameStart)

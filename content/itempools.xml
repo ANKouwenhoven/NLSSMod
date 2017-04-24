@@ -31,6 +31,7 @@
 		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Book of Bolegda" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Duality of Chat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Virtual Bart" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
@@ -41,6 +42,7 @@
 		<Item Name="Bread with Integrity" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Duality of Chat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Virtual Bart" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="devil">

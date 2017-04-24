@@ -46,4 +46,3 @@ end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, theCoin.onGameStart)
 NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, theCoin.onPlayerUpdate)
-NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, theCoin.cacheUpdate)

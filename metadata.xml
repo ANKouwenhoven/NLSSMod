@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>NLSS Mod</name>
+    <name>NLSS Memes Itempack</name>
     <directory>nlss mod</directory>
     <id>848747396</id>
-    <description>Adds NLSS themed items to the game! So far this mod includes 36 all new items, 1 new trinket and 1 new pill effect! Feedback / bug reports are always appreciated!
+    <description>Adds NLSS themed items to the game! So far this mod includes 39 all new items, 2 new trinkets and 1 new pill effect! Feedback / bug reports are always appreciated!
 
 If you want easy access to all new items, there's a variable called PREVIEW_ITEMS at the top of the main.lua file. Just turn that variable from false to true, and all items will spawn when you start a run!
 
@@ -31,6 +31,9 @@ PASSIVES:
 - Poison Mushroom : Tears have a chance to release a poison cloud when hitting an enemy
 - Bread with Integrity : HP up, immunity to creep damage
 - Spaghetti Island : HP up, heart drop types depend on whether you have full red hearts or not
+- Book of Bolegda : Trade heart containers for permanent damage upgrades
+- Virtual Bart : Random stats up every room with small chance of all starts down.
+- Duality of Chat : Tears have a chance to incite an argument among enemies
 
 FAMILIARS:
 
@@ -55,11 +58,12 @@ ACTIVES:
 TRINKETS:
 
 - Marfle-Pop! : Has a chance to obliterate an enemy upon entering a room
+- Irradiated Medkit : On next hit: heal all red hearts, gain 1 soul heart and poison all enemies in the room
 
 Credits:
 - Custom Phase for code on tear spread (used in Eye for Aesthetic)
 - Sinsthar for code on spawning Entities randomly in combat (used in Twitchy Chatter and Mr Greenman)</description>
-    <version>1.37</version>
+    <version>1.39</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>

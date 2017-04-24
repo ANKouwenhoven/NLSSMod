@@ -18,7 +18,7 @@ local oceanMan = {
 
 function oceanMan:cacheUpdate(player, cacheFlag)  
   if cacheFlag == CacheFlag.CACHE_FAMILIARS then
-	player:CheckFamiliar(oceanMan.variantID, player:GetCollectibleNum(oceanMan.itemID), RNG())
+    player:CheckFamiliar(oceanMan.variantID, player:GetCollectibleNum(oceanMan.itemID), RNG())
   end
   
   if oceanMan.inAura then

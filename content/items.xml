@@ -17,7 +17,7 @@
 	<passive name="Ryuka Buddy" description="Open the door!" gfx="collectible_ryuka.png" cache="speed" />
 	<passive name="Golden Hat" description="He's here, baby!" gfx="collectible_goldHat.png" />
 	<passive name="Rattler" description="!!! DELTTAR M'I !!!" gfx="collectible_rattler.png" cache="shotspeed damage speed"/>
-	<passive name="Loot Hoard" description="Mind if I roll need?" gfx="collectible_lootHoard.png"/>
+	<passive name="Loot Hoard" description="Mind if I roll need?" gfx="collectible_lootHoard.png" cache="luck"/>
 	<passive name="Poison Mushroom" description="Toxic Shots" gfx="collectible_mushroom.png"/>
 	<passive name="Bread with Integrity" description="Chili Resistant" gfx="collectible_bread.png" maxhearts="2" hearts="2"/>
 	<passive name="Spaghetti Island" description="Why is this inserter not working?" gfx="collectible_spaghetti.png" maxhearts="2" />

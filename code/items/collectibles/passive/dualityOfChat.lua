@@ -125,7 +125,7 @@ function dualityOfChat:onPlayerUpdate(player)
         trackingTableN[entity.Index] = nil;
 			end
       
-      local procChance = math.random(1, math.max(1, 15 - player.Luck));
+      local procChance = math.random(1, math.floor(math.max(1, 15 - player.Luck)));
       
 			if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= dualityOfChat.tearVariantIDY and
       entity.FrameCount == 0 and dualityOfChat.currentTearType == 1 and procChance == 1 then

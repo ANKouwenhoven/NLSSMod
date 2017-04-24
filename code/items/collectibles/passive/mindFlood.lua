@@ -60,5 +60,4 @@ function mindFlood:onGameStart()
 end
 
 NLSSMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mindFlood.onGameStart)
-NLSSMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, mindFlood.onPlayerUpdate)
 NLSSMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mindFlood.cacheUpdate)

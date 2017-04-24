@@ -16,7 +16,7 @@ local eyeForA = {
 }
 
 function eyeForA:cacheUpdate(player, cacheFlag)
-  addFlatStat(eyeForA.itemID, player.MaxFireDelay * 0.5, CacheFlag.CACHE_FIREDELAY, cacheFlag);
+  addFlatStat(eyeForA.itemID, math.floor(player.MaxFireDelay * 0.5), CacheFlag.CACHE_FIREDELAY, cacheFlag);
 end
 
 function aestheticEffect(player)
