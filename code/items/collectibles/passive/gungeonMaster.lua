@@ -50,7 +50,7 @@ function gungeonMaster:onPlayerUpdate(player)
 			end
       
 			if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= gungeonMaster.tearVariantID then
-        if entity.FrameCount == 0 then
+        if entity.FrameCount == 1 then
           local tear = entity:ToTear();
           
           tear:ChangeVariant(gungeonMaster.tearVariantID);

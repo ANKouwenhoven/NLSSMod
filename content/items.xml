@@ -24,6 +24,7 @@
 	<passive name="Virtual Bart" description="The only game you need" gfx="collectible_virtualBart.png"/>
 	<passive name="Duality of Chat" description="M A L F | J O S H | D N A" gfx="collectible_dualityOfChat.png"/>
 	<passive name="The Swarm" description="BZZZZZ Bombs" gfx="collectible_theSwarm.png" bombs="5"/>
+	<passive name="Spreadsheet" description="It's not cheating!" gfx="collectible_spreadsheet.png"/>
 	
 	<familiar name="Pet Rock" cache="familiars luck" description="Golden touch" gfx="collectible_petRock.png" />
 	<familiar name="Jar of Jellies" cache="familiars" description="It's too hot in here" gfx="collectible_jellies.png" />

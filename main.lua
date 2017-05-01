@@ -148,6 +148,7 @@ require("code/items/collectibles/passive/rattler");
 require("code/items/collectibles/passive/redShirt");
 require("code/items/collectibles/passive/ryukaBuddy");
 require("code/items/collectibles/passive/spaghettiIsland");
+require("code/items/collectibles/passive/spreadsheet");
 require("code/items/collectibles/passive/tennis");
 require("code/items/collectibles/passive/theSwarm");
 require("code/items/collectibles/passive/twitchyChatter");
