@@ -15,7 +15,7 @@ local spreadsheet = {
 function spreadsheet:onPlayerUpdate(player)  
 	if player:HasCollectible(spreadsheet.itemID) then
 		if spreadsheet.hasItem == false then
-			--player:AddNullCostume(spreadsheet.costumeID)
+			player:AddNullCostume(spreadsheet.costumeID)
 			spreadsheet.hasItem = true
 		end
 	end
