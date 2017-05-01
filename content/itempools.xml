@@ -32,6 +32,7 @@
 		<Item Name="Book of Bolegda" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Duality of Chat" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Virtual Bart" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Telefragger" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 	
 	<Pool Name="boss">
@@ -65,5 +66,7 @@
 		<Item Name="Minus Realm" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Loot Hoard" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 		<Item Name="Spaghetti Island" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Telefragger" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
+		<Item Name="Zane Enabler" Weight="1" DecreaseBy="0.1" RemoveOn="0.1" />
 	</Pool>
 </ItemPools>

@@ -20,7 +20,7 @@ local spaghetti = {
 function spaghetti:onPlayerUpdate(player)  
 	if player:HasCollectible(spaghetti.itemID) then
 		if spaghetti.hasItem == false then
-			--player:AddNullCostume(spaghetti.costumeID)
+			player:AddNullCostume(spaghetti.costumeID)
 			spaghetti.hasItem = true
 		end
 	end

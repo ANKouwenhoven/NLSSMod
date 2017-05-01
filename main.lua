@@ -149,6 +149,7 @@ require("code/items/collectibles/passive/redShirt");
 require("code/items/collectibles/passive/ryukaBuddy");
 require("code/items/collectibles/passive/spaghettiIsland");
 require("code/items/collectibles/passive/tennis");
+require("code/items/collectibles/passive/theSwarm");
 require("code/items/collectibles/passive/twitchyChatter");
 require("code/items/collectibles/passive/virtualBart");
 
@@ -171,6 +172,8 @@ require("code/items/collectibles/active/monsterTimeBoardgame");
 require("code/items/collectibles/active/murph");
 require("code/items/collectibles/active/radCanister");
 require("code/items/collectibles/active/stapler");
+require("code/items/collectibles/active/telefragger");
+require("code/items/collectibles/active/zaneEnabler");
 
 -- Trinkets
 require("code/items/trinkets/marflePop");
@@ -178,5 +181,6 @@ require("code/items/trinkets/radMedkit");
 
 -- Consumables
 require("code/items/consumables/RURURU");
+require("code/items/consumables/beAdvised");
 
 Isaac.DebugString("Successfully loaded NLSSMod!")
